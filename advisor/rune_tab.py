@@ -197,6 +197,90 @@ def _digit_clusters(bw):
     return boxes
 
 
+def _baseline_group(bw):
+    """Digit glyphs of the count in a WIDE bottom band: the count is
+    right-anchored, so the rightmost valid glyph fixes the text baseline;
+    sprite highlights sit above it and are dropped by the overlap test.
+    Returns the left-to-right component list, or None."""
+    n, _lbl, stats, _c = cv2.connectedComponentsWithStats(bw)
+    H = bw.shape[0]
+    comps = [tuple(stats[i]) for i in range(1, n)
+             if 0.25 * H <= stats[i][3] <= 0.85 * H and stats[i][4] >= 12]
+    if not comps:
+        return None
+    ref = max(comps, key=lambda s: s[0] + s[2])
+    ry0, ry1 = ref[1], ref[1] + ref[3]
+    keep = [c for c in comps
+            if min(ry1, c[1] + c[3]) - max(ry0, c[1])
+            >= 0.5 * min(ref[3], c[3])]
+    keep.sort(key=lambda s: s[0])
+    gap = max(12, int(1.2 * ref[3]))
+    grp = [keep[-1]]
+    for c in reversed(keep[:-1]):
+        if grp[0][0] - (c[0] + c[2]) <= gap:
+            grp.insert(0, c)
+        else:
+            break
+    return grp
+
+
+def _ocr_digits_band(crop, tesseract_cmd=None):
+    """Count OCR for cells where the sprite bleeds into the digit zone
+    (gems): find the baseline glyph group, OCR its bbox, validate the
+    digit count against the glyph count, and rescue per glyph — a bare
+    stem is a '1' tesseract refuses to read on its own. Tuned to 35/35
+    on a raw 4K gems-tab frame."""
+    try:
+        import os
+        import pytesseract
+        from d2rlootreader.cfg import TESSDATA_DIR
+        if tesseract_cmd:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+        os.environ["TESSDATA_PREFIX"] = str(TESSDATA_DIR)
+        g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        g = cv2.resize(g, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+
+        def read(image, psm=7):
+            txt = pytesseract.image_to_string(
+                image, lang="d2r",
+                config=f"--psm {psm} -c tessedit_char_whitelist=0123456789")
+            m = re.search(r"\d+", txt or "")
+            return m.group(0) if m else None
+
+        def glyph(bw, c):
+            x, y, ww, hh, _a = c
+            if ww <= 0.45 * hh:
+                return "1"
+            pad = 10
+            return read(255 - bw[max(0, y - pad):y + hh + pad,
+                                 max(0, x - pad):x + ww + pad], psm=10)
+
+        for thresh in (210, 235):
+            _, bw = cv2.threshold(g, thresh, 255, cv2.THRESH_BINARY)
+            if cv2.countNonZero(bw) < 8:
+                continue
+            grp = _baseline_group(bw)
+            if not grp:
+                continue
+            x0 = min(c[0] for c in grp)
+            y0 = min(c[1] for c in grp)
+            x1 = max(c[0] + c[2] for c in grp)
+            y1 = max(c[1] + c[3] for c in grp)
+            pad = 14
+            got = read(255 - bw[max(0, y0 - pad):y1 + pad,
+                                max(0, x0 - pad):x1 + pad])
+            if got and len(got) == len(grp):
+                return int(got)
+            digits = [glyph(bw, c) for c in grp]
+            if all(digits):
+                return int("".join(digits))
+            if got:
+                return int(got)
+        return None
+    except Exception:
+        return None
+
+
 def _ocr_digits(crop, tesseract_cmd=None):
     """Count digits use the game font — the bundled d2r model reads them
     where eng failed. Threshold 210 won a grid search on a real 4K
@@ -248,10 +332,12 @@ GEM_ORDER = [f"{q} {t}".strip() for q in GEM_QUALITIES for t in GEM_TYPES]
 
 
 def scan_counted_tab(img, calib_pts, names, screen_rect=None,
-                     tesseract_cmd=None, debug_out=None):
-    """Generic fixed-layout counted tab (runes, gems): {name: count}."""
+                     tesseract_cmd=None, debug_out=None, band=False):
+    """Generic fixed-layout counted tab (runes, gems): {name: count}.
+    band=True uses the wide-band baseline OCR — needed for gems, whose
+    bright sprites bleed into the narrow digit zone."""
     return _scan(img, calib_pts, names, screen_rect, tesseract_cmd,
-                 debug_out=debug_out)
+                 debug_out=debug_out, band=band)
 
 
 def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
@@ -260,7 +346,7 @@ def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
 
 
 def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
-          debug_out=None):
+          debug_out=None, band=False):
     got = cell_centers(calib_pts, total=len(names), img=img,
                        screen_rect=screen_rect)
     if got is None:
@@ -288,14 +374,16 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
         crop = img[y0:y1, x0:x1]
         # counts render at the BOTTOM-RIGHT of the cell — the proven
         # narrow zone (14/14 live); the in-OCR cluster rescue handles
-        # cells where this zone reads nothing
-        dz_x0 = int(max(0, cx - off_x + 0.02 * px))
+        # cells where this zone reads nothing. band mode widens the zone
+        # left (2-digit counts start before the cell center) and relies
+        # on baseline filtering to shed sprite highlights
+        dz_x0 = int(max(0, cx - off_x + (-0.45 if band else 0.02) * px))
         dz_x1 = int(round(min(w, cx - off_x + 0.66 * px)))
         dz_y0 = int(max(0, cy - off_y + 0.05 * py))
-        dz_y1 = int(round(min(h, cy - off_y + 0.60 * py)))
+        dz_y1 = int(round(min(h, cy - off_y + (0.62 if band else 0.60) * py)))
         digits_zone = img[dz_y0:dz_y1, dz_x0:dz_x1]
-        n = _ocr_digits(digits_zone, tesseract_cmd) \
-            if digits_zone.size else None
+        ocr = _ocr_digits_band if band else _ocr_digits
+        n = ocr(digits_zone, tesseract_cmd) if digits_zone.size else None
         src = "ocr"
         if n is None:
             # no digits read: owned cells are bright, missing ones grayed

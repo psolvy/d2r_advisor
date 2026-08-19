@@ -288,7 +288,7 @@ class GoalsWindow(tk.Toplevel):
 
         capture(0, 4)
 
-    def _scan_counted(self, key, names, apply_fn, what):
+    def _scan_counted(self, key, names, apply_fn, what, band=False):
         from advisor import capture_guard
         if not capture_guard.acquire(f"{what} tab scan"):
             self.status.configure(
@@ -335,7 +335,7 @@ class GoalsWindow(tk.Toplevel):
                 counts = scan_counted_tab(img, pts, names,
                                           screen_rect=rect,
                                           tesseract_cmd=tess,
-                                          debug_out=dbg)
+                                          debug_out=dbg, band=band)
             except Exception as e:
                 capture_guard.release()
                 self.status.configure(text=f"scan failed: {e}", fg=RED)
@@ -363,4 +363,4 @@ class GoalsWindow(tk.Toplevel):
     def _scan_gems(self):
         from advisor.rune_tab import GEM_ORDER
         self._scan_counted("gemstab", GEM_ORDER, goals.set_gem_counts,
-                           "gem")
+                           "gem", band=True)

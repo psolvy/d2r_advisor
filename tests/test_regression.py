@@ -260,4 +260,24 @@ check("clicker: calib check", calib_ok(calib) and not calib_ok({}))
 check("clicker: cell math", cell_to_screen(calib, 0, 0) == (100, 100)
       and cell_to_screen(calib, 9, 1, 1, 2) == (550, 175))
 
+# ------------------------------------------------------------ tab-scan OCR
+
+import numpy as np
+from advisor.rune_tab import _baseline_group
+
+_bw = np.zeros((100, 300), np.uint8)
+_bw[70:95, 240:252] = 255   # bare "1" stem, right-anchored
+_bw[68:94, 200:220] = 255   # left digit on the same baseline
+_bw[5:40, 60:150] = 255     # sprite highlight above the text line
+_grp = _baseline_group(_bw)
+check("tabscan: baseline group keeps digits, drops sprite",
+      _grp is not None and len(_grp) == 2
+      and all(c[1] > 50 for c in _grp))
+_bw2 = np.zeros((100, 300), np.uint8)
+_bw2[70:95, 240:252] = 255
+_grp2 = _baseline_group(_bw2)
+check("tabscan: lone stem is one glyph and thin (reads as '1')",
+      _grp2 is not None and len(_grp2) == 1
+      and _grp2[0][2] <= 0.45 * _grp2[0][3])
+
 print(f"\nALL {ok} REGRESSION TESTS PASSED")
