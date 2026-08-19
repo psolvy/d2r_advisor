@@ -89,10 +89,11 @@ jobs:
             simulator with a buy planner and auto-clicker. No game memory
             is read — screen capture only.
 
-            **Single player / offline only:** the seed mechanics exist
-            only in offline play — online/ladder RNG is server-side and
-            cannot be predicted by this (or any) tool. Provided for
-            offline play and educational interest.
+            **Scope:** the item advisor (verdicts, roll ranges, advice)
+            works anywhere — online and offline. The **gambling seed
+            features are single player / offline only**: online/ladder
+            RNG is server-side and cannot be predicted by this (or any)
+            tool; that part is for offline play and educational interest.
 
             ## Install — standalone exe (recommended)
 

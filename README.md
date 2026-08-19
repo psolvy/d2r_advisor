@@ -19,11 +19,15 @@ read, nothing is injected into the process** (the safest class of tools;
 still, any third-party program is formally a gray area under Blizzard's
 ToS — use at your own risk).
 
-> **Single player / offline only.** The gambling seed mechanics exist
-> only in offline play, where the RNG runs locally — **online/ladder
-> RNG is server-side and cannot be predicted or influenced by this tool
-> (or any tool)**. The project is provided for offline play and
-> educational interest in the game's RNG internals.
+> **Scope note.** The item advisor (verdicts, roll ranges, runeword /
+> craft / gamble advice) reads your screen and works **anywhere —
+> online and offline alike**. Only the **gambling seed features**
+> (Seed Finder, refresh forecasts, buy planner, auto-clicker) are
+> **single player / offline only**: the seed mechanics exist only where
+> the RNG runs locally — online/ladder RNG is server-side and cannot be
+> predicted or influenced by this tool (or any tool); that part is
+> provided for offline play and educational interest in the game's RNG
+> internals.
 
 <p align="center">
   <img src="docs/img/verdict.png" width="600"
