@@ -13,7 +13,7 @@ from advisor.seedfinder_ui import (BG, DIM, FG, FIELD, GOLD, GOLD_HI, GREEN,
 _open_window = None
 
 
-def open_goals(root, scale=1.0):
+def open_goals(root, scale=1.0, cfg=None):
     global _open_window
     if _open_window is not None:
         try:
@@ -25,13 +25,14 @@ def open_goals(root, scale=1.0):
         except tk.TclError:
             pass
         _open_window = None
-    _open_window = GoalsWindow(root, scale)
+    _open_window = GoalsWindow(root, scale, cfg)
     return _open_window
 
 
 class GoalsWindow(tk.Toplevel):
-    def __init__(self, root, scale=1.0):
+    def __init__(self, root, scale=1.0, cfg=None):
         super().__init__(root)
+        self.cfg = cfg or {}
         self.s = s = max(1.0, float(scale))
         self.title("D2R Item Advisor — Season Goals")
         self.configure(bg=BG)
@@ -71,7 +72,7 @@ class GoalsWindow(tk.Toplevel):
 
         row = tk.Frame(self, bg=BG)
         row.grid(row=4, column=0, columnspan=3, sticky="ew", padx=pad,
-                 pady=(int(8 * s), pad))
+                 pady=(int(8 * s), 0))
         self.add_cb = ttk.Combobox(row, values=goals.all_runeword_names(),
                                    width=22, font=self.f_sub)
         self.add_cb.pack(side="left")
@@ -79,6 +80,18 @@ class GoalsWindow(tk.Toplevel):
         self._btn(row, "Remove", self._remove).pack(side="left", padx=4)
         self._btn(row, "🏁 I made it", self._made,
                   hot=True).pack(side="right")
+
+        # one-shot stash scan: open the RUNES tab in game, hit the button
+        scan = tk.Frame(self, bg=BG)
+        scan.grid(row=5, column=0, columnspan=3, sticky="ew", padx=pad,
+                  pady=(int(6 * s), pad))
+        self._btn(scan, "📷 Scan runes tab", self._scan_tab,
+                  hot=True).pack(side="left")
+        self._btn(scan, "Set rune grid (3 points)",
+                  self._calibrate).pack(side="left", padx=6)
+        self.status = tk.Label(scan, text="", bg=BG, fg=DIM,
+                               font=self.f_sub)
+        self.status.pack(side="left", padx=6)
         self.refresh()
 
     def _btn(self, parent, text, cmd, hot=False):
@@ -153,3 +166,82 @@ class GoalsWindow(tk.Toplevel):
         if sel:
             goals.mark_made(sel[0])
             self.refresh()
+
+    # -------------------------------------------------- stash-tab scanning
+
+    def _calibrate(self):
+        """3 hovered points pin the whole rune lattice: El cell, the LAST
+        cell of the FIRST row, then the LAST rune cell (Zod)."""
+        from advisor.autoclicker import get_cursor_pos, load_calib, save_calib
+        prompts = ["hover the EL cell (first rune)…",
+                   "hover the LAST cell of the FIRST row…",
+                   "hover the LAST rune cell (Zod)…"]
+        points = []
+
+        def capture(step, countdown):
+            if countdown > 0:
+                self.status.configure(
+                    text=f"{prompts[step]}  {countdown}", fg=GOLD_HI)
+                self.after(1000, lambda: capture(step, countdown - 1))
+                return
+            points.extend(get_cursor_pos())
+            if step + 1 < len(prompts):
+                capture(step + 1, 4)
+            else:
+                calib = load_calib()
+                calib["runetab"] = points
+                save_calib(calib)
+                self.status.configure(text="✓ rune grid saved", fg=GREEN)
+
+        capture(0, 4)
+
+    def _scan_tab(self):
+        from advisor.autoclicker import load_calib
+        calib = load_calib()
+        pts = calib.get("runetab")
+        if not pts or len(pts) != 6:
+            self.status.configure(
+                text="set the rune grid first (3 points)", fg=RED)
+            return
+
+        def go(countdown):
+            if countdown > 0:
+                self.status.configure(
+                    text=f"open the stash RUNES tab — scanning in "
+                         f"{countdown}", fg=GOLD_HI)
+                self.after(1000, lambda: go(countdown - 1))
+                return
+            self.status.configure(text="scanning…", fg=GOLD_HI)
+            self.update_idletasks()
+            try:
+                import mss
+                import numpy as np
+                from advisor.app import load_config, resolve_tesseract
+                from advisor.rune_tab import scan_rune_tab
+                with mss.MSS() as s:
+                    mon = next((m for m in s.monitors[1:]
+                                if m["left"] <= pts[0] < m["left"] + m["width"]
+                                and m["top"] <= pts[1] < m["top"] + m["height"]),
+                               s.monitors[0])
+                    img = np.array(s.grab(mon))[:, :, :3]
+                    rect = (mon["left"], mon["top"],
+                            mon["width"], mon["height"])
+                tess = resolve_tesseract(self.cfg or load_config())
+                counts = scan_rune_tab(img, pts, screen_rect=rect,
+                                       tesseract_cmd=tess)
+            except Exception as e:
+                self.status.configure(text=f"scan failed: {e}", fg=RED)
+                return
+            if not counts:
+                self.status.configure(text="scan failed: bad grid points",
+                                      fg=RED)
+                return
+            goals.set_counts(counts)
+            total = sum(counts.values())
+            kinds = sum(1 for n in counts.values() if n > 0)
+            self.status.configure(
+                text=f"✓ {total} runes ({kinds} kinds) — counters set",
+                fg=GREEN)
+            self.refresh()
+
+        go(4)

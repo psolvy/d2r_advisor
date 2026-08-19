@@ -59,6 +59,15 @@ def add_scanned_rune(rune):
     return True
 
 
+def set_counts(counts):
+    """Replace the whole rune pool — the scanned stash tab is
+    authoritative."""
+    st = load_state()
+    st["runes"] = {r: int(n) for r, n in counts.items() if int(n) > 0}
+    save_state(st)
+    return st
+
+
 def adjust_rune(rune, delta):
     st = load_state()
     st["runes"][rune] = max(0, st["runes"].get(rune, 0) + delta)
