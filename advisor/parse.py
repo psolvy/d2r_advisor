@@ -366,17 +366,21 @@ def parse_best(line_variants, quality_hint=None):
     """
     best, best_score = None, -1.0
     seen = []
+    variant_items = []
     for lines in line_variants:
         seen.append(lines)
         item = parse_tooltip(lines, quality_hint=quality_hint)
+        variant_items.append(item)
         sc = _score(item)
         if sc > best_score:
             best_score, best = sc, item
         # Only stop early on a confident *named* item — a "Base" parse can be
         # a misread Unique/Set, so always try the next OCR variant for those.
         # A zero-valued affix is a misread digit: give the next pass a chance.
+        # Unknown names (mod items) have no database to validate rolls
+        # against — force the second pass so digits get a second opinion.
         if (best_score >= GOOD_ENOUGH and best.get("quality") != "Base"
-                and _zero_param_affixes(best) == 0):
+                and _zero_param_affixes(best) == 0 and _name_known(best)):
             break
     if best is None:
         best = parse_tooltip([], quality_hint=quality_hint)
@@ -390,4 +394,28 @@ def parse_best(line_variants, quality_hint=None):
             cands.append(parse_tooltip(lines, quality_hint=None))
     cands = [_fix_runeword_base(_runeword_rescue(c)) for c in cands]
     best = _charm_base_recovery(max(cands, key=_adjusted_score))
-    return _magic_affix_synthesis(best)
+    best = _magic_affix_synthesis(best)
+
+    # Digit cross-check: when the OCR passes disagree on an affix value
+    # ('+13' vs '+15' — 3/5 confusion in the game font), keep the chosen
+    # value but FLAG it so the popup says "check by eye" instead of
+    # presenting a silent misread as fact.
+    uncertain = {}
+    chosen = {t: p for t, p in best.get("affixes") or []}
+    for other in variant_items:
+        if other is best:
+            continue
+        for tmpl, params in other.get("affixes") or []:
+            if tmpl not in chosen:
+                continue
+            a = next((p for p in chosen[tmpl] or []
+                      if isinstance(p, (int, float))
+                      and not isinstance(p, bool)), None)
+            b = next((p for p in params or []
+                      if isinstance(p, (int, float))
+                      and not isinstance(p, bool)), None)
+            if a is not None and b is not None and a != b and 0 not in (a, b):
+                uncertain.setdefault(tmpl, set()).update((a, b))
+    if uncertain:
+        best["uncertain"] = {t: sorted(v) for t, v in uncertain.items()}
+    return best

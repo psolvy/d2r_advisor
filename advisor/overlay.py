@@ -138,8 +138,15 @@ class Overlay:
                             color = "#ffd94d"
                 lines.append((text, color))
         else:
+            uncertain = item.get("uncertain") or {}
             for entry in item.get("affixes") or []:
-                lines.append((_render_affix(entry[0], entry[1]), "#e8e8e8"))
+                text = _render_affix(entry[0], entry[1])
+                if entry[0] in uncertain:
+                    alts = "/".join(str(v) for v in uncertain[entry[0]])
+                    lines.append((f"{text}  ⚠ {alts}? — check by eye",
+                                  "#ff9a6a"))
+                else:
+                    lines.append((text, "#e8e8e8"))
         return lines
 
     TIER_STYLE = {
