@@ -236,9 +236,16 @@ class GoalsWindow(tk.Toplevel):
         """3 hovered points pin a whole tab lattice: first cell, LAST cell
         of the FIRST row, then the LAST cell overall."""
         from advisor.autoclicker import get_cursor_pos, load_calib, save_calib
-        prompts = [f"hover the FIRST {what} cell…",
-                   "hover the LAST cell of the FIRST row…",
-                   f"hover the LAST {what} cell…"]
+        if what == "rune":
+            prompts = ["hover EL (first rune, top-left)…",
+                       "hover the LAST rune of the TOP row…",
+                       "hover the rune DIRECTLY BELOW El (row 2 start)…",
+                       "hover ZOD (the very last rune)…"]
+        else:
+            prompts = ["hover Chipped Amethyst (top-left)…",
+                       "hover the LAST gem of the TOP row…",
+                       "hover the gem DIRECTLY BELOW the first (row 2)…",
+                       "hover Perfect Skull (the very last gem)…"]
         points = []
 
         def capture(step, countdown):
@@ -262,9 +269,9 @@ class GoalsWindow(tk.Toplevel):
         from advisor.autoclicker import load_calib
         calib = load_calib()
         pts = calib.get(key)
-        if not pts or len(pts) != 6:
+        if not pts or len(pts) != 8:
             self.status.configure(
-                text=f"set the {what} grid first (3 points)", fg=RED)
+                text=f"set the {what} grid first (4 points)", fg=RED)
             return
 
         def go(countdown):
