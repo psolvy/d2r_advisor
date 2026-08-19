@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: DBM gambling simulator (reference site)
+    url: https://gambling.diablo.deadlybossmods.com/
+    about: The Seed Finder is a local port of this simulator — check how it behaves there first.

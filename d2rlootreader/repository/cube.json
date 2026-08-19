@@ -1,0 +1,715 @@
+{
+ "crafts": [
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Helm",
+   "bases": [
+    "Full Helm",
+    "Basinet",
+    "Giant Conch"
+   ],
+   "rune": "Ith",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Boots",
+   "bases": [
+    "Chain Boots",
+    "Mesh Boots",
+    "Boneweave Boots"
+   ],
+   "rune": "Ral",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Gloves",
+   "bases": [
+    "Chain Gloves",
+    "Heavy Bracers",
+    "Vambraces"
+   ],
+   "rune": "Ort",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Belt",
+   "bases": [
+    "Heavy Belt",
+    "Battle Belt",
+    "Troll Belt"
+   ],
+   "rune": "Tal",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Shield",
+   "bases": [
+    "Gothic Shield",
+    "Ancient Shield",
+    "Ward"
+   ],
+   "rune": "Eth",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Body",
+   "bases": [
+    "Field Plate",
+    "Sharktooth Armor",
+    "Kraken Shell"
+   ],
+   "rune": "Nef",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Amulet",
+   "bases": [
+    "Amulet"
+   ],
+   "rune": "Thul",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Ring",
+   "bases": [
+    "Ring"
+   ],
+   "rune": "Amn",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Hit Power",
+   "result": "Hit Power Weapon",
+   "bases": [
+    "Blunt Weapon"
+   ],
+   "rune": "Tir",
+   "gem": "P.Sapphire"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Helm",
+   "bases": [
+    "Helm",
+    "Casque",
+    "Armet"
+   ],
+   "rune": "Ral",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Boots",
+   "bases": [
+    "Light Plated Boots",
+    "Battle Boots",
+    "Mirrored Boots"
+   ],
+   "rune": "Eth",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Gloves",
+   "bases": [
+    "Heavy Gloves",
+    "Sharkskin Gloves",
+    "Vampirebone Gloves"
+   ],
+   "rune": "Nef",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Belt",
+   "bases": [
+    "Belt",
+    "Mesh Belt",
+    "Mithril Coil"
+   ],
+   "rune": "Tal",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Shield",
+   "bases": [
+    "Spiked Shield",
+    "Barbed Shield",
+    "Blade Barrier"
+   ],
+   "rune": "Ith",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Body",
+   "bases": [
+    "Plate Mail",
+    "Templar Coat",
+    "Hellforge Plate"
+   ],
+   "rune": "Thul",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Amulet",
+   "bases": [
+    "Amulet"
+   ],
+   "rune": "Amn",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Ring",
+   "bases": [
+    "Ring"
+   ],
+   "rune": "Sol",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Blood",
+   "result": "Blood Weapon",
+   "bases": [
+    "Axe"
+   ],
+   "rune": "Ort",
+   "gem": "P.Ruby"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Helm",
+   "bases": [
+    "Mask",
+    "Death Mask",
+    "Demonhead"
+   ],
+   "rune": "Nef",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Boots",
+   "bases": [
+    "Boots",
+    "Demonhide Boots",
+    "Wyrmhide Boots"
+   ],
+   "rune": "Thul",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Gloves",
+   "bases": [
+    "Leather Gloves",
+    "Demonhide Gloves",
+    "Bramble Mitts"
+   ],
+   "rune": "Ort",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Belt",
+   "bases": [
+    "Light Belt",
+    "Sharkskin Belt",
+    "Vampirefang Belt"
+   ],
+   "rune": "Ith",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Shield",
+   "bases": [
+    "Small Shield",
+    "Round Shield",
+    "Luna"
+   ],
+   "rune": "Eth",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Body",
+   "bases": [
+    "Light Plate",
+    "Mage Plate",
+    "Archon Plate"
+   ],
+   "rune": "Tal",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Amulet",
+   "bases": [
+    "Amulet"
+   ],
+   "rune": "Ral",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Ring",
+   "bases": [
+    "Ring"
+   ],
+   "rune": "Amn",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Caster",
+   "result": "Caster Weapon",
+   "bases": [
+    "Rod"
+   ],
+   "rune": "Tir",
+   "gem": "P.Amethyst"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Helm",
+   "bases": [
+    "Crown",
+    "Grand Crown",
+    "Corona"
+   ],
+   "rune": "Ith",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Boots",
+   "bases": [
+    "Plated Boots"
+   ],
+   "rune": "Ort",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Gloves",
+   "bases": [
+    "Gauntlets",
+    "War Gauntlets",
+    "Ogre Gauntlets"
+   ],
+   "rune": "Ral",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Belt",
+   "bases": [
+    "Sash",
+    "Demonhide Sash",
+    "Spiderweb Sash"
+   ],
+   "rune": "Tal",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Shield",
+   "bases": [
+    "Kite Shield",
+    "Dragon Shield",
+    "Monarch"
+   ],
+   "rune": "Nef",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Body",
+   "bases": [
+    "Breast Plate",
+    "Cuirass",
+    "Great Hauberk"
+   ],
+   "rune": "Eth",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Amulet",
+   "bases": [
+    "Amulet"
+   ],
+   "rune": "Thul",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Ring",
+   "bases": [
+    "Ring"
+   ],
+   "rune": "Amn",
+   "gem": "P.Emerald"
+  },
+  {
+   "type": "Safety",
+   "result": "Safety Weapon",
+   "bases": [
+    "Spear"
+   ],
+   "rune": "Sol",
+   "gem": "P.Emerald"
+  }
+ ],
+ "tier_up": {
+  "Double Axe": "Twin Axe",
+  "Two-Handed Sword": "Espandon",
+  "Gothic Staff": "Shillelagh",
+  "Double Bow": "Great Bow",
+  "Cedar Staff": "Elder Staff",
+  "Razor Bow": "Blade Bow",
+  "Ballista": "Colossus Crossbow",
+  "Long Siege Bow": "Crusader Bow",
+  "Cedar Bow": "Shadow Bow",
+  "Quarterstaff": "Stalagmite",
+  "Gothic Bow": "Hydra Bow",
+  "Arbalest": "Pellet Bow",
+  "Siege Crossbow": "Gorgon Crossbow",
+  "Chu-Ko-Nu": "Demon Crossbow",
+  "Short Siege Bow": "Diamond Bow",
+  "Edge Bow": "Spider Bow",
+  "Jo Staff": "Walking Stick",
+  "Rune Bow": "Ward Bow",
+  "Rune Staff": "Archon Staff",
+  "Twin Axe": "Ettin Axe",
+  "Espandon": "Legend Sword",
+  "Quhab": "Suwayyah",
+  "Cleaver": "Small Crescent",
+  "Lochaber Axe": "Ogre Axe",
+  "Hurlbat": "Winged Axe",
+  "Gothic Sword": "Champion Sword",
+  "Bearded Axe": "Silver-edged Axe",
+  "War Dart": "Winged Knife",
+  "Stilleto": "Legend Spike",
+  "War Fork": "Mancatcher",
+  "Battle Sword": "Conquest Sword",
+  "Tabar": "Decapitator",
+  "Tomb Wand": "Lich Wand",
+  "Cudgel": "Truncheon",
+  "Dacian Falx": "Highland Blade",
+  "Dimensional Blade": "Phase Blade",
+  "Hand Scythe": "Battle Cestus",
+  "Poignard": "Bone Knife",
+  "Rondel": "Mithral Point",
+  "Zweihander": "Colossal Sword",
+  "Tulwar": "Hydra Edge",
+  "Knout": "Scourge",
+  "Gothic Axe": "Champion Axe",
+  "Executioner Sword": "Colossus Blade",
+  "Ancient Axe": "Glorious Axe",
+  "Spiculum": "Ghost Glaive",
+  "Martel de Fer": "Thunder Maul",
+  "Tusk Sword": "Balrog Blade",
+  "Grave Wand": "Unearthed Wand",
+  "Bec-de-Corbin": "Great Poleaxe",
+  "Hatchet": "Tomahawk",
+  "War Javelin": "Hyperion Javelin",
+  "Cinquedeas": "Fanged Knife",
+  "Military Axe": "Feral Axe",
+  "Rune Sword": "Cryptic Sword",
+  "Greater Claws": "Feral Claws",
+  "War Club": "Ogre Maul",
+  "Flanged Mace": "Reinforced Mace",
+  "Crowbill": "War Spike",
+  "Jagged Star": "Devil Star",
+  "Lance": "War Pike",
+  "Partizan": "Cryptic Axe",
+  "Great Pilum": "Stygian Pilum",
+  "Scissors Quhab": "Scissors Suwayyah",
+  "Holy Water Sprinkler": "Seraph Rod",
+  "Battle Scythe": "Thresher",
+  "Simbilan": "Balrog Spear",
+  "Shamshir": "Elegant Blade",
+  "Rune Scepter": "Mighty Scepter",
+  "Cutlass": "Ataghan",
+  "Barbed Club": "Tyrant Club",
+  "War Spear": "Hyperion Spear",
+  "Gladius": "Falcata",
+  "Yari": "Ghost Spear",
+  "Francisca": "Flying Axe",
+  "Battle Dart": "Flying Knife",
+  "Fuscina": "Stygian Pike",
+  "Harpoon": "Winged Harpoon",
+  "Greater Talons": "Runic Talons",
+  "Bill": "Colossus Voulge",
+  "Naga": "Berserker Axe",
+  "Wrist Spike": "Wrist Sword",
+  "Grim Scythe": "Giant Thresher",
+  "Ancient Sword": "Mythical Sword",
+  "Battle Hammer": "Legendary Mallet",
+  "Burnt Wand": "Polished Wand",
+  "Divine Scepter": "Caduceus",
+  "Fascia": "War Fist",
+  "Petrified Wand": "Ghost Wand",
+  "Stag Bow": "Ashwood Bow",
+  "Reflex Bow": "Ceremonial Bow",
+  "Maiden Spear": "Ceremonial Spear",
+  "Maiden Pike": "Ceremonial Pike",
+  "Maiden Javelin": "Ceremonial Javelin",
+  "Ashwood Bow": "Matriarchal Bow",
+  "Ceremonial Bow": "Grand Matron Bow",
+  "Ceremonial Spear": "Matriarchal Spear",
+  "Ceremonial Pike": "Matriarchal Pike",
+  "Ceremonial Javelin": "Matriarchal Javelin",
+  "Axe": "Cleaver",
+  "Hatchet Hands": "Fascia",
+  "Balanced Axe": "Hurlbat",
+  "Bardiche": "Lochaber Axe",
+  "Broad Axe": "Bearded Axe",
+  "Balanced Knife": "War Dart",
+  "Blade": "Stilleto",
+  "Brandistock": "War Fork",
+  "Broad Sword": "Battle Sword",
+  "Battle Staff": "Gothic Staff",
+  "Bastard Sword": "Gothic Sword",
+  "Blade Talons": "Greater Talons",
+  "Battle Axe": "Tabar",
+  "Bone Wand": "Tomb Wand",
+  "Composite Bow": "Double Bow",
+  "Cestus": "Hand Scythe",
+  "Club": "Cudgel",
+  "Claymore": "Dacian Falx",
+  "Claws": "Greater Claws",
+  "Crystal Sword": "Dimensional Blade",
+  "Gnarled Staff": "Cedar Staff",
+  "Dagger": "Poignard",
+  "Dirk": "Rondel",
+  "Flail": "Knout",
+  "Flamberge": "Zweihander",
+  "Falchion": "Tulwar",
+  "Great Axe": "Gothic Axe",
+  "Giant Sword": "Tusk Sword",
+  "Giant Axe": "Ancient Axe",
+  "Glaive": "Spiculum",
+  "Great Maul": "Martel de Fer",
+  "Grand Scepter": "Holy Water Sprinkler",
+  "Great Sword": "Executioner Sword",
+  "Grim Wand": "Grave Wand",
+  "Halberd": "Bec-de-Corbin",
+  "Hand Axe": "Hatchet",
+  "Hunter's Bow": "Razor Bow",
+  "Heavy Crossbow": "Ballista",
+  "Javelin": "War Javelin",
+  "Kriss": "Cinquedeas",
+  "Katar": "Quhab",
+  "Large Axe": "Military Axe",
+  "Long Battle Bow": "Long Siege Bow",
+  "Long Bow": "Cedar Bow",
+  "Long Sword": "Rune Sword",
+  "Long Staff": "Quarterstaff",
+  "Long War Bow": "Gothic Bow",
+  "Light Crossbow": "Arbalest",
+  "Mace": "Flanged Mace",
+  "Maul": "War Club",
+  "Military Pick": "Crowbill",
+  "Morning Star": "Jagged Star",
+  "Crossbow": "Siege Crossbow",
+  "Eagle Orb": "Glowing Orb",
+  "Sacred Globe": "Crystalline Globe",
+  "Smoked Sphere": "Cloudy Sphere",
+  "Clasped Orb": "Sparkling Ball",
+  "Jared's Stone": "Swirling Crystal",
+  "Glowing Orb": "Heavenly Stone",
+  "Crystalline Globe": "Eldritch Orb",
+  "Cloudy Sphere": "Demon Heart",
+  "Sparkling Ball": "Vortex Orb",
+  "Swirling Crystal": "Dimensional Shard",
+  "Poleaxe": "Partizan",
+  "Pike": "Lance",
+  "Pilum": "Great Pilum",
+  "Repeating Crossbow": "Chu-Ko-Nu",
+  "Short Battle Bow": "Short Siege Bow",
+  "Saber": "Shamshir",
+  "Short Bow": "Edge Bow",
+  "Scimitar": "Cutlass",
+  "Scepter": "Rune Scepter",
+  "Scythe": "Battle Scythe",
+  "Scissors Katar": "Scissors Quhab",
+  "Spiked Club": "Barbed Club",
+  "Spear": "War Spear",
+  "Spetum": "Yari",
+  "Short Sword": "Gladius",
+  "Short Spear": "Simbilan",
+  "Short Staff": "Jo Staff",
+  "Short War Bow": "Rune Bow",
+  "Throwing Axe": "Francisca",
+  "Throwing Knife": "Battle Dart",
+  "Trident": "Fuscina",
+  "Throwing Spear": "Harpoon",
+  "Voulge": "Bill",
+  "War Axe": "Naga",
+  "War Hammer": "Battle Hammer",
+  "Wand": "Burnt Wand",
+  "Wrist Blade": "Wrist Spike",
+  "War Scythe": "Grim Scythe",
+  "War Sword": "Ancient Sword",
+  "War Scepter": "Divine Scepter",
+  "War Staff": "Rune Staff",
+  "Yew Wand": "Petrified Wand",
+  "Ancient Armor": "Ornate Armor",
+  "Jawbone Cap": "Jawbone Visor",
+  "Fanged Helm": "Lion Helm",
+  "Horned Helm": "Rage Mask",
+  "Assault Helmet": "Savage Helmet",
+  "Avenger Guard": "Slayer Guard",
+  "Jawbone Visor": "Carnage Helm",
+  "Lion Helm": "Fury Visor",
+  "Rage Mask": "Destroyer Helm",
+  "Savage Helmet": "Conqueror Crown",
+  "Slayer Guard": "Guardian Crown",
+  "Bone Helm": "Grim Helm",
+  "Breast Plate": "Cuirass",
+  "Bone Shield": "Grim Shield",
+  "Buckler": "Defender",
+  "Cap": "War Hat",
+  "Chain Mail": "Mesh Armor",
+  "Circlet": "Tiara",
+  "Coronet": "Tiara",
+  "Tiara": "Diadem",
+  "Crown": "Grand Crown",
+  "Wolf Head": "Alpha Helm",
+  "Hawk Helm": "Griffon Headress",
+  "Antlers": "Hunter's Guise",
+  "Falcon Mask": "Sacred Feathers",
+  "Spirit Mask": "Totemic Mask",
+  "Alpha Helm": "Blood Spirit",
+  "Griffon Headress": "Sun Spirit",
+  "Hunter's Guise": "Earth Spirit",
+  "Sacred Feathers": "Sky Spirit",
+  "Totemic Mask": "Dream Spirit",
+  "Full Helm": "Basinet",
+  "Field Plate": "Sharktooth Armor",
+  "Full Plate Mail": "Chaos Armor",
+  "Great Helm": "Winged Helm",
+  "Gothic Plate": "Embossed Plate",
+  "Gothic Shield": "Ancient Shield",
+  "Plated Belt": "War Belt",
+  "Greaves": "War Boots",
+  "Gauntlets": "War Gauntlets",
+  "Hard Leather Armor": "Demonhide Armor",
+  "Helm": "Casque",
+  "Kite Shield": "Dragon Shield",
+  "Sash": "Demonhide Sash",
+  "Boots": "Demonhide Boots",
+  "Leather Armor": "Serpentskin Armor",
+  "Leather Gloves": "Demonhide Gloves",
+  "Large Shield": "Scutum",
+  "Light Plate": "Mage Plate",
+  "Belt": "Mesh Belt",
+  "Chain Boots": "Mesh Boots",
+  "Chain Gloves": "Heavy Bracers",
+  "Mask": "Death Mask",
+  "Preserved Head": "Mummified Trophy",
+  "Zombie Head": "Fetish Trophy",
+  "Unraveller Head": "Sexton Trophy",
+  "Gargoyle Head": "Cantor Trophy",
+  "Demon Head": "Heirophant Trophy",
+  "Mummified Trophy": "Minion Skull",
+  "Fetish Trophy": "Hellspawn Skull",
+  "Sexton Trophy": "Overseer Skull",
+  "Cantor Trophy": "Succubus Skull",
+  "Heirophant Trophy": "Bloodlord Skull",
+  "Targe": "Akaran Targe",
+  "Rondache": "Akaran Rondache",
+  "Heraldic Shield": "Protector Shield",
+  "Aerin Shield": "Gilded Shield",
+  "Crown Shield": "Royal Shield",
+  "Akaran Targe": "Sacred Targe",
+  "Akaran Rondache": "Sacred Rondache",
+  "Protector Shield": "Ancient Shield",
+  "Gilded Shield": "Zakarum Shield",
+  "Royal Shield": "Vortex Shield",
+  "Plate Mail": "Templar Coat",
+  "Quilted Armor": "Ghost Armor",
+  "Ring Mail": "Linked Mail",
+  "Scale Mail": "Tigulated Mail",
+  "Skull Cap": "Sallet",
+  "Small Shield": "Round Shield",
+  "Spiked Shield": "Barbed Shield",
+  "Splint Mail": "Russet Armor",
+  "Studded Leather": "Trellised Armor",
+  "Heavy Belt": "Battle Belt",
+  "Light Plated Boots": "Battle Boots",
+  "Light Gauntlets": "Battle Gauntlets",
+  "Tower Shield": "Pavise",
+  "Light Belt": "Sharkskin Belt",
+  "Heavy Boots": "Sharkskin Boots",
+  "Heavy Gloves": "Sharkskin Gloves",
+  "Old Book": "Burnt Text",
+  "Tome": "Dark Tome",
+  "Codex": "Dark Codex",
+  "Compendium": "Possessed Compendium",
+  "Grimoire": "Possessed Grimoire",
+  "Burnt Text": "Forgotten Volume",
+  "Dark Tome": "Occult Tome",
+  "Dark Codex": "Occult Codex",
+  "Possessed Compendium": "Blasphemous Compendium",
+  "Possessed Grimoire": "Blasphemous Grimoire",
+  "War Hat": "Shako",
+  "Ornate Armor": "Sacred Armor",
+  "Tigulated Mail": "Loricated Mail",
+  "Serpentskin Armor": "Wyrmhide",
+  "Grim Helm": "Bone Visage",
+  "War Boots": "Myrmidon Greaves",
+  "War Gauntlets": "Ogre Gauntlets",
+  "Basinet": "Giant Conch",
+  "Winged Helm": "Spired Helm",
+  "Mesh Armor": "Boneweave",
+  "Dragon Shield": "Monarch",
+  "Sallet": "Hydraskull",
+  "Demonhide Armor": "Scarab Husk",
+  "Demonhide Boots": "Wyrmhide Boots",
+  "Sharktooth Armor": "Kraken Shell",
+  "Demonhide Gloves": "Bramble Mitts",
+  "Casque": "Armet",
+  "Templar Coat": "Hellforge Plate",
+  "Mesh Boots": "Boneweave Boots",
+  "Heavy Bracers": "Vambraces",
+  "Round Shield": "Luna",
+  "Linked Mail": "Diamond Mail",
+  "Pavise": "Aegis",
+  "Barbed Shield": "Blade Barrier",
+  "Russet Armor": "Balrog Skin",
+  "Scutum": "Hyperion",
+  "Grand Crown": "Corona",
+  "Cuirass": "Great Hauberk",
+  "Grim Shield": "Troll Nest",
+  "Death Mask": "Demonhead",
+  "Battle Boots": "Mirrored Boots",
+  "Battle Gauntlets": "Crusader Gauntlets",
+  "Embossed Plate": "Lacquered Plate",
+  "Mage Plate": "Archon Plate",
+  "Ancient Shield": "Ward",
+  "Trellised Armor": "Wire Fleece",
+  "Defender": "Heater",
+  "Ghost Armor": "Dusk Shroud",
+  "Chaos Armor": "Shadow Plate",
+  "Sharkskin Boots": "Scarabshell Boots",
+  "Sharkskin Gloves": "Vampirebone Gloves",
+  "War Belt": "Colossus Girdle",
+  "Demonhide Sash": "Spiderweb Sash",
+  "Mesh Belt": "Mithril Coil",
+  "Battle Belt": "Troll Belt",
+  "Sharkskin Belt": "Vampirefang Belt"
+ }
+}

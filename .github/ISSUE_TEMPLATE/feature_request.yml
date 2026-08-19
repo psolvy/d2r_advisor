@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an improvement or a new capability
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that the tool doesn't help with today? Describe the problem, not only the solution.
+      placeholder: After executing a plan I have to re-scan with F10 to keep gambling, which wastes time...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How you imagine it working. UI sketches / screenshots welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Tooltip verdicts / rules
+        - Gamble scan (F10)
+        - Seed Finder / seed search
+        - Buy planner
+        - Auto-clicker
+        - Config / presets
+        - Packaging / releases
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: Reference behavior
+      description: For gamble/seed features — does the DBM simulator (or another tool) already do this? How?
+    validations:
+      required: false

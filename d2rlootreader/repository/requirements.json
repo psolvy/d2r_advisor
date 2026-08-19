@@ -1,0 +1,12 @@
+{
+  "(Amazon Only)": "class",
+  "(Assassin Only)": "class",
+  "(Barbarian Only)": "class",
+  "(Druid Only)": "class",
+  "(Necromancer Only)": "class",
+  "(Paladin Only)": "class",
+  "(Sorceress Only)": "class",
+  "Required Dexterity: #": "dexterity",
+  "Required Strength: #": "strength",
+  "Required Level: #": "level"
+}

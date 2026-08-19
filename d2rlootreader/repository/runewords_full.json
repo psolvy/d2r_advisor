@@ -1,0 +1,1177 @@
+{
+ "Ancients' Pledge": {
+  "runes": [
+   "Ral",
+   "Ort",
+   "Tal"
+  ],
+  "sockets": 3,
+  "types": [
+   "shld"
+  ]
+ },
+ "Authority": {
+  "runes": [
+   "Hel",
+   "Shael",
+   "Ral"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Beast": {
+  "runes": [
+   "Ber",
+   "Tir",
+   "Um",
+   "Mal",
+   "Lum"
+  ],
+  "sockets": 5,
+  "types": [
+   "axe",
+   "scep",
+   "hamm"
+  ]
+ },
+ "Black": {
+  "runes": [
+   "Thul",
+   "Io",
+   "Nef"
+  ],
+  "sockets": 3,
+  "types": [
+   "club",
+   "hamm",
+   "mace"
+  ]
+ },
+ "Bone": {
+  "runes": [
+   "Sol",
+   "Um",
+   "Um"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Bramble": {
+  "runes": [
+   "Ral",
+   "Ohm",
+   "Sur",
+   "Eth"
+  ],
+  "sockets": 4,
+  "types": [
+   "tors"
+  ]
+ },
+ "Brand": {
+  "runes": [
+   "Jah",
+   "Lo",
+   "Mal",
+   "Gul"
+  ],
+  "sockets": 4,
+  "types": [
+   "miss"
+  ]
+ },
+ "Breath of the Dying": {
+  "runes": [
+   "Vex",
+   "Hel",
+   "El",
+   "Eld",
+   "Zod",
+   "Eth"
+  ],
+  "sockets": 6,
+  "types": [
+   "weap"
+  ]
+ },
+ "Bulwark": {
+  "runes": [
+   "Shael",
+   "Io",
+   "Sol"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Call to Arms": {
+  "runes": [
+   "Amn",
+   "Ral",
+   "Mal",
+   "Ist",
+   "Ohm"
+  ],
+  "sockets": 5,
+  "types": [
+   "weap"
+  ]
+ },
+ "Chains of Honor": {
+  "runes": [
+   "Dol",
+   "Um",
+   "Ber",
+   "Ist"
+  ],
+  "sockets": 4,
+  "types": [
+   "tors"
+  ]
+ },
+ "Chaos": {
+  "runes": [
+   "Fal",
+   "Ohm",
+   "Um"
+  ],
+  "sockets": 3,
+  "types": [
+   "h2h"
+  ]
+ },
+ "Coven": {
+  "runes": [
+   "Ist",
+   "Ral",
+   "Io"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Crescent Moon": {
+  "runes": [
+   "Shael",
+   "Um",
+   "Tir"
+  ],
+  "sockets": 3,
+  "types": [
+   "axe",
+   "swor",
+   "pole"
+  ]
+ },
+ "Cure": {
+  "runes": [
+   "Shael",
+   "Io",
+   "Tal"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Death": {
+  "runes": [
+   "Hel",
+   "El",
+   "Vex",
+   "Ort",
+   "Gul"
+  ],
+  "sockets": 5,
+  "types": [
+   "swor",
+   "axe"
+  ]
+ },
+ "Delirium": {
+  "runes": [
+   "Lem",
+   "Ist",
+   "Io"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Destruction": {
+  "runes": [
+   "Vex",
+   "Lo",
+   "Ber",
+   "Jah",
+   "Ko"
+  ],
+  "sockets": 5,
+  "types": [
+   "pole",
+   "swor"
+  ]
+ },
+ "Doom": {
+  "runes": [
+   "Hel",
+   "Ohm",
+   "Um",
+   "Lo",
+   "Cham"
+  ],
+  "sockets": 5,
+  "types": [
+   "axe",
+   "pole",
+   "hamm"
+  ]
+ },
+ "Dragon": {
+  "runes": [
+   "Sur",
+   "Lo",
+   "Sol"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors",
+   "shld"
+  ]
+ },
+ "Dream": {
+  "runes": [
+   "Io",
+   "Jah",
+   "Pul"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm",
+   "shld"
+  ]
+ },
+ "Duress": {
+  "runes": [
+   "Shael",
+   "Um",
+   "Thul"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Edge": {
+  "runes": [
+   "Tir",
+   "Tal",
+   "Amn"
+  ],
+  "sockets": 3,
+  "types": [
+   "miss"
+  ]
+ },
+ "Enigma": {
+  "runes": [
+   "Jah",
+   "Ith",
+   "Ber"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Enlightenment": {
+  "runes": [
+   "Pul",
+   "Ral",
+   "Sol"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Eternity": {
+  "runes": [
+   "Amn",
+   "Ber",
+   "Ist",
+   "Sol",
+   "Sur"
+  ],
+  "sockets": 5,
+  "types": [
+   "mele"
+  ]
+ },
+ "Exile": {
+  "runes": [
+   "Vex",
+   "Ohm",
+   "Ist",
+   "Dol"
+  ],
+  "sockets": 4,
+  "types": [
+   "pala"
+  ]
+ },
+ "Faith": {
+  "runes": [
+   "Ohm",
+   "Jah",
+   "Lem",
+   "Eld"
+  ],
+  "sockets": 4,
+  "types": [
+   "miss"
+  ]
+ },
+ "Famine": {
+  "runes": [
+   "Fal",
+   "Ohm",
+   "Ort",
+   "Jah"
+  ],
+  "sockets": 4,
+  "types": [
+   "axe",
+   "hamm"
+  ]
+ },
+ "Flickering Flame": {
+  "runes": [
+   "Nef",
+   "Pul",
+   "Vex"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Fortitude": {
+  "runes": [
+   "El",
+   "Sol",
+   "Dol",
+   "Lo"
+  ],
+  "sockets": 4,
+  "types": [
+   "weap",
+   "tors"
+  ]
+ },
+ "Fury": {
+  "runes": [
+   "Jah",
+   "Gul",
+   "Eth"
+  ],
+  "sockets": 3,
+  "types": [
+   "mele"
+  ]
+ },
+ "Gloom": {
+  "runes": [
+   "Fal",
+   "Um",
+   "Pul"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Grief": {
+  "runes": [
+   "Eth",
+   "Tir",
+   "Lo",
+   "Mal",
+   "Ral"
+  ],
+  "sockets": 5,
+  "types": [
+   "swor",
+   "axe"
+  ]
+ },
+ "Ground": {
+  "runes": [
+   "Shael",
+   "Io",
+   "Ort"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Hand of Justice": {
+  "runes": [
+   "Sur",
+   "Cham",
+   "Amn",
+   "Lo"
+  ],
+  "sockets": 4,
+  "types": [
+   "weap"
+  ]
+ },
+ "Harmony": {
+  "runes": [
+   "Tir",
+   "Ith",
+   "Sol",
+   "Ko"
+  ],
+  "sockets": 4,
+  "types": [
+   "miss"
+  ]
+ },
+ "Heart of the Oak": {
+  "runes": [
+   "Ko",
+   "Vex",
+   "Pul",
+   "Thul"
+  ],
+  "sockets": 4,
+  "types": [
+   "staf",
+   "mace"
+  ]
+ },
+ "Hearth": {
+  "runes": [
+   "Shael",
+   "Io",
+   "Thul"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Holy Thunder": {
+  "runes": [
+   "Eth",
+   "Ral",
+   "Ort",
+   "Tal"
+  ],
+  "sockets": 4,
+  "types": [
+   "scep"
+  ]
+ },
+ "Honor": {
+  "runes": [
+   "Amn",
+   "El",
+   "Ith",
+   "Tir",
+   "Sol"
+  ],
+  "sockets": 5,
+  "types": [
+   "mele"
+  ]
+ },
+ "Hustle (armor)": {
+  "runes": [
+   "Shael",
+   "Ko",
+   "Eld"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Hustle (weapon)": {
+  "runes": [
+   "Shael",
+   "Ko",
+   "Eld"
+  ],
+  "sockets": 3,
+  "types": [
+   "weap"
+  ]
+ },
+ "Ice": {
+  "runes": [
+   "Amn",
+   "Shael",
+   "Jah",
+   "Lo"
+  ],
+  "sockets": 4,
+  "types": [
+   "miss"
+  ]
+ },
+ "Infinity": {
+  "runes": [
+   "Ber",
+   "Mal",
+   "Ber",
+   "Ist"
+  ],
+  "sockets": 4,
+  "types": [
+   "pole",
+   "spea"
+  ]
+ },
+ "Insight": {
+  "runes": [
+   "Ral",
+   "Tir",
+   "Tal",
+   "Sol"
+  ],
+  "sockets": 4,
+  "types": [
+   "pole",
+   "staf",
+   "miss"
+  ]
+ },
+ "King's Grace": {
+  "runes": [
+   "Amn",
+   "Ral",
+   "Thul"
+  ],
+  "sockets": 3,
+  "types": [
+   "swor",
+   "scep"
+  ]
+ },
+ "Kingslayer": {
+  "runes": [
+   "Mal",
+   "Um",
+   "Gul",
+   "Fal"
+  ],
+  "sockets": 4,
+  "types": [
+   "swor",
+   "axe"
+  ]
+ },
+ "Last Wish": {
+  "runes": [
+   "Jah",
+   "Mal",
+   "Jah",
+   "Sur",
+   "Jah",
+   "Ber"
+  ],
+  "sockets": 6,
+  "types": [
+   "swor",
+   "hamm",
+   "axe"
+  ]
+ },
+ "Lawbringer": {
+  "runes": [
+   "Amn",
+   "Lem",
+   "Ko"
+  ],
+  "sockets": 3,
+  "types": [
+   "swor",
+   "hamm",
+   "scep"
+  ]
+ },
+ "Leaf": {
+  "runes": [
+   "Tir",
+   "Ral"
+  ],
+  "sockets": 2,
+  "types": [
+   "staf"
+  ]
+ },
+ "Lionheart": {
+  "runes": [
+   "Hel",
+   "Lum",
+   "Fal"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Lore": {
+  "runes": [
+   "Ort",
+   "Sol"
+  ],
+  "sockets": 2,
+  "types": [
+   "helm"
+  ]
+ },
+ "Malice": {
+  "runes": [
+   "Ith",
+   "El",
+   "Eth"
+  ],
+  "sockets": 3,
+  "types": [
+   "mele"
+  ]
+ },
+ "Melody": {
+  "runes": [
+   "Shael",
+   "Ko",
+   "Nef"
+  ],
+  "sockets": 3,
+  "types": [
+   "miss"
+  ]
+ },
+ "Memory": {
+  "runes": [
+   "Lum",
+   "Io",
+   "Sol",
+   "Eth"
+  ],
+  "sockets": 4,
+  "types": [
+   "staf"
+  ]
+ },
+ "Metamorphosis": {
+  "runes": [
+   "Io",
+   "Cham",
+   "Fal"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Mist": {
+  "runes": [
+   "Cham",
+   "Shael",
+   "Gul",
+   "Thul",
+   "Ith"
+  ],
+  "sockets": 5,
+  "types": [
+   "miss"
+  ]
+ },
+ "Mosaic": {
+  "runes": [
+   "Mal",
+   "Gul",
+   "Amn"
+  ],
+  "sockets": 3,
+  "types": [
+   "h2h"
+  ]
+ },
+ "Myth": {
+  "runes": [
+   "Hel",
+   "Amn",
+   "Nef"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Nadir": {
+  "runes": [
+   "Nef",
+   "Tir"
+  ],
+  "sockets": 2,
+  "types": [
+   "helm"
+  ]
+ },
+ "Oath": {
+  "runes": [
+   "Shael",
+   "Pul",
+   "Mal",
+   "Lum"
+  ],
+  "sockets": 4,
+  "types": [
+   "swor",
+   "axe",
+   "mace"
+  ]
+ },
+ "Obedience": {
+  "runes": [
+   "Hel",
+   "Ko",
+   "Thul",
+   "Eth",
+   "Fal"
+  ],
+  "sockets": 5,
+  "types": [
+   "pole",
+   "spea"
+  ]
+ },
+ "Obsession": {
+  "runes": [
+   "Zod",
+   "Ist",
+   "Lem",
+   "Lum",
+   "Io",
+   "Nef"
+  ],
+  "sockets": 6,
+  "types": [
+   "staf"
+  ]
+ },
+ "Passion": {
+  "runes": [
+   "Dol",
+   "Ort",
+   "Eld",
+   "Lem"
+  ],
+  "sockets": 4,
+  "types": [
+   "weap"
+  ]
+ },
+ "Pattern": {
+  "runes": [
+   "Tal",
+   "Ort",
+   "Thul"
+  ],
+  "sockets": 3,
+  "types": [
+   "h2h"
+  ]
+ },
+ "Peace": {
+  "runes": [
+   "Shael",
+   "Thul",
+   "Amn"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Phoenix": {
+  "runes": [
+   "Vex",
+   "Vex",
+   "Lo",
+   "Jah"
+  ],
+  "sockets": 4,
+  "types": [
+   "weap",
+   "shld"
+  ]
+ },
+ "Plague": {
+  "runes": [
+   "Cham",
+   "Shael",
+   "Um"
+  ],
+  "sockets": 3,
+  "types": [
+   "swor",
+   "knif",
+   "h2h"
+  ]
+ },
+ "Pride": {
+  "runes": [
+   "Cham",
+   "Sur",
+   "Io",
+   "Lo"
+  ],
+  "sockets": 4,
+  "types": [
+   "pole",
+   "spea"
+  ]
+ },
+ "Principle": {
+  "runes": [
+   "Ral",
+   "Gul",
+   "Eld"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Prudence": {
+  "runes": [
+   "Mal",
+   "Tir"
+  ],
+  "sockets": 2,
+  "types": [
+   "tors"
+  ]
+ },
+ "Radiance": {
+  "runes": [
+   "Nef",
+   "Sol",
+   "Ith"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Rain": {
+  "runes": [
+   "Ort",
+   "Mal",
+   "Ith"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Rhyme": {
+  "runes": [
+   "Shael",
+   "Eth"
+  ],
+  "sockets": 2,
+  "types": [
+   "shld"
+  ]
+ },
+ "Rift": {
+  "runes": [
+   "Hel",
+   "Ko",
+   "Lem",
+   "Gul"
+  ],
+  "sockets": 4,
+  "types": [
+   "pole",
+   "scep"
+  ]
+ },
+ "Ritual": {
+  "runes": [
+   "Amn",
+   "Shael",
+   "Ohm"
+  ],
+  "sockets": 3,
+  "types": [
+   "knif"
+  ]
+ },
+ "Sanctuary": {
+  "runes": [
+   "Ko",
+   "Ko",
+   "Mal"
+  ],
+  "sockets": 3,
+  "types": [
+   "shld"
+  ]
+ },
+ "Silence": {
+  "runes": [
+   "Dol",
+   "Eld",
+   "Hel",
+   "Ist",
+   "Tir",
+   "Vex"
+  ],
+  "sockets": 6,
+  "types": [
+   "weap"
+  ]
+ },
+ "Smoke": {
+  "runes": [
+   "Nef",
+   "Lum"
+  ],
+  "sockets": 2,
+  "types": [
+   "tors"
+  ]
+ },
+ "Spirit": {
+  "runes": [
+   "Tal",
+   "Thul",
+   "Ort",
+   "Amn"
+  ],
+  "sockets": 4,
+  "types": [
+   "swor",
+   "shld"
+  ]
+ },
+ "Splendor": {
+  "runes": [
+   "Eth",
+   "Lum"
+  ],
+  "sockets": 2,
+  "types": [
+   "shld"
+  ]
+ },
+ "Stealth": {
+  "runes": [
+   "Tal",
+   "Eth"
+  ],
+  "sockets": 2,
+  "types": [
+   "tors"
+  ]
+ },
+ "Steel": {
+  "runes": [
+   "Tir",
+   "El"
+  ],
+  "sockets": 2,
+  "types": [
+   "swor",
+   "axe",
+   "mace"
+  ]
+ },
+ "Stone": {
+  "runes": [
+   "Shael",
+   "Um",
+   "Pul",
+   "Lum"
+  ],
+  "sockets": 4,
+  "types": [
+   "tors"
+  ]
+ },
+ "Strength": {
+  "runes": [
+   "Amn",
+   "Tir"
+  ],
+  "sockets": 2,
+  "types": [
+   "mele"
+  ]
+ },
+ "Temper": {
+  "runes": [
+   "Shael",
+   "Io",
+   "Ral"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Treachery": {
+  "runes": [
+   "Shael",
+   "Thul",
+   "Lem"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "Unbending Will": {
+  "runes": [
+   "Fal",
+   "Io",
+   "Ith",
+   "Eld",
+   "El",
+   "Hel"
+  ],
+  "sockets": 6,
+  "types": [
+   "swor"
+  ]
+ },
+ "Venom": {
+  "runes": [
+   "Tal",
+   "Dol",
+   "Mal"
+  ],
+  "sockets": 3,
+  "types": [
+   "weap"
+  ]
+ },
+ "Vigilance": {
+  "runes": [
+   "Dol",
+   "Gul"
+  ],
+  "sockets": 2,
+  "types": [
+   "grim",
+   "shld",
+   "head",
+   "ashd"
+  ]
+ },
+ "Voice of Reason": {
+  "runes": [
+   "Lem",
+   "Ko",
+   "El",
+   "Eld"
+  ],
+  "sockets": 4,
+  "types": [
+   "swor",
+   "mace"
+  ]
+ },
+ "Void": {
+  "runes": [
+   "Thul",
+   "Zod",
+   "Ist"
+  ],
+  "sockets": 3,
+  "types": [
+   "knif"
+  ]
+ },
+ "Wealth": {
+  "runes": [
+   "Lem",
+   "Ko",
+   "Tir"
+  ],
+  "sockets": 3,
+  "types": [
+   "tors"
+  ]
+ },
+ "White": {
+  "runes": [
+   "Dol",
+   "Io"
+  ],
+  "sockets": 2,
+  "types": [
+   "wand"
+  ]
+ },
+ "Wind": {
+  "runes": [
+   "Sur",
+   "El"
+  ],
+  "sockets": 2,
+  "types": [
+   "mele"
+  ]
+ },
+ "Wisdom": {
+  "runes": [
+   "Pul",
+   "Ith",
+   "Eld"
+  ],
+  "sockets": 3,
+  "types": [
+   "helm"
+  ]
+ },
+ "Wrath": {
+  "runes": [
+   "Pul",
+   "Lum",
+   "Ber",
+   "Mal"
+  ],
+  "sockets": 4,
+  "types": [
+   "miss"
+  ]
+ },
+ "Zephyr": {
+  "runes": [
+   "Ort",
+   "Eth"
+  ],
+  "sockets": 2,
+  "types": [
+   "miss"
+  ]
+ }
+}

@@ -1,0 +1,122 @@
+name: Release
+
+# Two paths into CD:
+#  - tag v*                       -> versioned release (runs tests itself)
+#  - CI success on a main push    -> rolling "latest" pre-release
+# PRs get CI checks; a merge to main triggers CI, and only a green CI
+# triggers this workflow (workflow_run) — CI then CD, never CD alone.
+on:
+  push:
+    tags: ["v*"]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # for the CI-chained path, build exactly the commit CI validated
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
+
+      - name: Resolve version label
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests before releasing
+        # The workflow_run path already had CI pass on this exact commit.
+        if: github.event_name == 'push'
+        run: python tests/test_regression.py
+        env:
+          PYTHONIOENCODING: utf-8
+
+      - name: Package source archive
+        # git archive ships ONLY tracked files — no personal state and no
+        # third-party assets (users fetch those with tools/setup_assets.py,
+        # which install.bat runs automatically).
+        run: git archive --format=zip --prefix=d2r-advisor/ -o d2r-advisor-${{ steps.ver.outputs.version }}-source.zip HEAD
+
+      - name: Build standalone exe (PyInstaller onedir)
+        # Built from the checkout, which contains no third-party assets —
+        # the exe downloads icons + fast-search workers on its first run.
+        run: |
+          pip install pyinstaller
+          python -m PyInstaller --noconfirm --clean --windowed --name d2r-advisor --icon assets/icon.ico --hidden-import pystray._win32 --add-data "config.yaml;." --add-data "rules.yaml;." --add-data "presets;presets" --add-data "assets;assets" --add-data "d2rlootreader/repository;d2rlootreader/repository" --add-data "d2rlootreader/tessdata;d2rlootreader/tessdata" --add-data "advisor/brute_host.js;advisor" --add-data "tools/setup_assets.py;tools" --add-data "tools/get_gamble_icons.py;tools" --add-data "tools/get_dbm_workers.py;tools" main.py
+
+      - name: Zip the exe bundle
+        run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.version == 'latest' && 'latest' || github.ref_name }}
+          prerelease: ${{ steps.ver.outputs.version == 'latest' }}
+          name: ${{ steps.ver.outputs.version == 'latest' && 'Latest build (main)' || '' }}
+          target_commitish: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
+          files: |
+            d2r-advisor-${{ steps.ver.outputs.version }}-source.zip
+            d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
+          generate_release_notes: ${{ steps.ver.outputs.version != 'latest' }}
+          body: |
+            Screenshot+OCR loot advisor for Diablo II: Resurrected:
+            KEEP / CHECK / TRASH verdicts with roll ranges, a gamble offer
+            scanner, and a bit-exact local port of the DBM gambling-seed
+            simulator with a buy planner and auto-clicker. No game memory
+            is read — screen capture only.
+
+            ## Install — standalone exe (recommended)
+
+            1. Download **d2r-advisor-…-windows-x64.zip**, unpack anywhere,
+               run `d2r-advisor.exe`.
+            2. The app lives in the **system tray** (check the `^` overflow
+               area). Double-click the icon → **Settings**, with a health
+               panel that tells you if anything below is missing.
+            3. First run downloads the gamble icons and fast-search workers
+               automatically, and adds a Start Menu shortcut.
+            4. Install **Tesseract OCR** for the tooltip verdicts (F8/F9):
+               `winget install UB-Mannheim.TesseractOCR` — every other
+               feature works without it.
+            5. Optional: **Node.js** (nodejs.org) turns the seed search
+               from minutes into seconds.
+            6. In game: **Windowed / Windowed Fullscreen**, **Large Font
+               Mode ON** (Options → Interface), English client.
+
+            Default hotkeys: **F8/F9** — item verdict, **F10** — read the
+            gamble offer, **Shift+F10** — Seed Finder. All configurable in
+            Settings.
+
+            ## Run from source (only if you prefer to)
+
+            1. Download **d2r-advisor-…-source.zip** (needs Python 3.9+).
+            2. Run `install.bat` — installs dependencies, Tesseract (via
+               winget) and the assets; then start with `run.bat`.
+
+            Third-party assets (item icons, fast-search workers, game data
+            tables) are **not** part of these archives — they are fetched
+            at install / first run. See the README for details and
+            licensing.
