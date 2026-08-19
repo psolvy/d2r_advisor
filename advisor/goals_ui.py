@@ -81,17 +81,30 @@ class GoalsWindow(tk.Toplevel):
         self._btn(row, "🏁 I made it", self._made,
                   hot=True).pack(side="right")
 
-        # one-shot stash scan: open the RUNES tab in game, hit the button
+        # one-shot stash scans: open the tab in game, hit the button
         scan = tk.Frame(self, bg=BG)
         scan.grid(row=5, column=0, columnspan=3, sticky="ew", padx=pad,
-                  pady=(int(6 * s), pad))
-        self._btn(scan, "📷 Scan runes tab", self._scan_tab,
+                  pady=(int(6 * s), 0))
+        self._btn(scan, "📷 Scan runes tab", self._scan_runes,
                   hot=True).pack(side="left")
-        self._btn(scan, "Set rune grid (3 points)",
-                  self._calibrate).pack(side="left", padx=6)
-        self.status = tk.Label(scan, text="", bg=BG, fg=DIM,
-                               font=self.f_sub)
-        self.status.pack(side="left", padx=6)
+        self._btn(scan, "Set rune grid",
+                  lambda: self._calibrate("runetab", "rune")
+                  ).pack(side="left", padx=(4, 12))
+        self._btn(scan, "📷 Scan gems tab", self._scan_gems,
+                  hot=True).pack(side="left")
+        self._btn(scan, "Set gems grid",
+                  lambda: self._calibrate("gemstab", "gem")
+                  ).pack(side="left", padx=4)
+        self.status = tk.Label(self, text="", bg=BG, fg=DIM,
+                               font=self.f_sub, anchor="w")
+        self.status.grid(row=6, column=0, columnspan=3, sticky="ew",
+                         padx=pad)
+
+        # craft stock from the scanned gems
+        self.craft_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
+                                  highlightbackground=LINE)
+        self.craft_box.grid(row=7, column=0, columnspan=3, sticky="ew",
+                            padx=pad, pady=(int(6 * s), pad))
         self.refresh()
 
     def _btn(self, parent, text, cmd, hot=False):
@@ -117,6 +130,17 @@ class GoalsWindow(tk.Toplevel):
         if keep and self.tv.exists(keep):
             self.tv.selection_set(keep)
         self._pick()
+        if hasattr(self, "craft_box"):
+            for w in self.craft_box.winfo_children():
+                w.destroy()
+            tk.Label(self.craft_box, text="CRAFT STOCK (from the gems tab)",
+                     bg=PANEL, fg=GOLD, font=self.f_sub
+                     ).pack(anchor="w", padx=8, pady=(4, 0))
+            for text, ok in goals.craft_lines():
+                tk.Label(self.craft_box, text=("✓ " if ok else "· ") + text,
+                         bg=PANEL, fg=GREEN if ok else DIM,
+                         font=self.f_sub, anchor="w"
+                         ).pack(fill="x", padx=8, pady=1)
 
     def _pick(self, _ev=None):
         for w in self.rune_row.winfo_children():
@@ -169,13 +193,13 @@ class GoalsWindow(tk.Toplevel):
 
     # -------------------------------------------------- stash-tab scanning
 
-    def _calibrate(self):
-        """3 hovered points pin the whole rune lattice: El cell, the LAST
-        cell of the FIRST row, then the LAST rune cell (Zod)."""
+    def _calibrate(self, key, what):
+        """3 hovered points pin a whole tab lattice: first cell, LAST cell
+        of the FIRST row, then the LAST cell overall."""
         from advisor.autoclicker import get_cursor_pos, load_calib, save_calib
-        prompts = ["hover the EL cell (first rune)…",
+        prompts = [f"hover the FIRST {what} cell…",
                    "hover the LAST cell of the FIRST row…",
-                   "hover the LAST rune cell (Zod)…"]
+                   f"hover the LAST {what} cell…"]
         points = []
 
         def capture(step, countdown):
@@ -189,25 +213,25 @@ class GoalsWindow(tk.Toplevel):
                 capture(step + 1, 4)
             else:
                 calib = load_calib()
-                calib["runetab"] = points
+                calib[key] = points
                 save_calib(calib)
-                self.status.configure(text="✓ rune grid saved", fg=GREEN)
+                self.status.configure(text=f"✓ {what} grid saved", fg=GREEN)
 
         capture(0, 4)
 
-    def _scan_tab(self):
+    def _scan_counted(self, key, names, apply_fn, what):
         from advisor.autoclicker import load_calib
         calib = load_calib()
-        pts = calib.get("runetab")
+        pts = calib.get(key)
         if not pts or len(pts) != 6:
             self.status.configure(
-                text="set the rune grid first (3 points)", fg=RED)
+                text=f"set the {what} grid first (3 points)", fg=RED)
             return
 
         def go(countdown):
             if countdown > 0:
                 self.status.configure(
-                    text=f"open the stash RUNES tab — scanning in "
+                    text=f"open the stash {what.upper()} tab — scanning in "
                          f"{countdown}", fg=GOLD_HI)
                 self.after(1000, lambda: go(countdown - 1))
                 return
@@ -217,7 +241,7 @@ class GoalsWindow(tk.Toplevel):
                 import mss
                 import numpy as np
                 from advisor.app import load_config, resolve_tesseract
-                from advisor.rune_tab import scan_rune_tab
+                from advisor.rune_tab import scan_counted_tab
                 with mss.MSS() as s:
                     mon = next((m for m in s.monitors[1:]
                                 if m["left"] <= pts[0] < m["left"] + m["width"]
@@ -227,8 +251,9 @@ class GoalsWindow(tk.Toplevel):
                     rect = (mon["left"], mon["top"],
                             mon["width"], mon["height"])
                 tess = resolve_tesseract(self.cfg or load_config())
-                counts = scan_rune_tab(img, pts, screen_rect=rect,
-                                       tesseract_cmd=tess)
+                counts = scan_counted_tab(img, pts, names,
+                                          screen_rect=rect,
+                                          tesseract_cmd=tess)
             except Exception as e:
                 self.status.configure(text=f"scan failed: {e}", fg=RED)
                 return
@@ -236,12 +261,21 @@ class GoalsWindow(tk.Toplevel):
                 self.status.configure(text="scan failed: bad grid points",
                                       fg=RED)
                 return
-            goals.set_counts(counts)
+            apply_fn(counts)
             total = sum(counts.values())
             kinds = sum(1 for n in counts.values() if n > 0)
             self.status.configure(
-                text=f"✓ {total} runes ({kinds} kinds) — counters set",
+                text=f"✓ {total} {what}s ({kinds} kinds) — counters set",
                 fg=GREEN)
             self.refresh()
 
         go(4)
+
+    def _scan_runes(self):
+        from advisor.knowledge import RUNE_ORDER
+        self._scan_counted("runetab", RUNE_ORDER, goals.set_counts, "rune")
+
+    def _scan_gems(self):
+        from advisor.rune_tab import GEM_ORDER
+        self._scan_counted("gemstab", GEM_ORDER, goals.set_gem_counts,
+                           "gem")

@@ -15,6 +15,15 @@ gamble_hotkey: f10
 # Empty = off.
 seed_hotkey: shift+f10
 
+# Gear compare: hover an item, HOLD SHIFT (the game shows the
+# equipped item next to it), then press this — the popup lists what
+# the hovered item gains and loses vs what you wear. Empty = off.
+compare_hotkey: shift+f9
+
+# Price check: adds a clickable line to unique/set/runeword/rare
+# verdicts that opens this URL ({query} = item name). Empty = off.
+price_link_template: "https://traderie.com/diablo2resurrected/products?search={query}"
+
 # Rules preset for the current stage of the season:
 #   leveling — ladder start / leveling (generous rules)
 #   midgame  — 75+, first builds and farming
@@ -85,6 +94,11 @@ seedfinder:
 # Check GitHub releases for a new version on start and offer the
 # update (tray menu -> Check for updates does it on demand)
 auto_update: true
+
+# Terror Zone widget (tray -> Terror Zone). Needs a FREE community
+# API token: d2runewizard.com/integration or d2emu.com/terms.
+tz_api_url: ""
+tz_api_token: ""
 
 # Path to tesseract.exe. Empty = auto-detect
 # (PATH, then C:\Program Files\Tesseract-OCR\tesseract.exe)

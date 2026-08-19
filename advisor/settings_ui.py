@@ -45,6 +45,10 @@ GENERAL = [
     ("ui_scale", "Popup scale", "float", None),
     ("seedfinder_scale", "Seed Finder scale (empty = popup scale)", "str", None),
     ("link_template", "Link template ({query})", "str", None),
+    ("price_link_template", "Price-check link ({query})", "str", None),
+    ("compare_hotkey", "Gear-compare hotkey", "str", None),
+    ("tz_api_url", "Terror Zone API url", "str", None),
+    ("tz_api_token", "Terror Zone API token", "str", None),
     ("tesseract_cmd", "Tesseract path (empty = auto)", "str", None),
 ]
 SEEDFINDER = [
@@ -147,10 +151,11 @@ class Settings(tk.Toplevel):
         sf = dict(self.cfg.get("seedfinder") or {})
         right = self._panel("SEED FINDER DEFAULTS", 2, 1, SEEDFINDER,
                             self.sf_vars, sf.get)
-        # tesseract browse button
+        # tesseract browse button — fields start at grid row 1, so the
+        # LAST field (tesseract_cmd) sits at row len(GENERAL)
         tk.Button(left, text="…", command=self._browse_tesseract,
                   bg=FIELD, fg=FG, relief="flat",
-                  font=self.f_sub).grid(row=len(GENERAL) - 1, column=2,
+                  font=self.f_sub).grid(row=len(GENERAL), column=2,
                                         sticky="w")
 
         btns = tk.Frame(self, bg=BG)

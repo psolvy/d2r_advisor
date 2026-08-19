@@ -68,6 +68,37 @@ def set_counts(counts):
     return st
 
 
+def set_gem_counts(counts):
+    st = load_state()
+    st["gems"] = {g: int(n) for g, n in counts.items() if int(n) > 0}
+    save_state(st)
+    return st
+
+
+# craft families: the perfect gem is fixed; the rune varies by slot
+CRAFT_GEMS = {"Caster": "Perfect Amethyst", "Blood": "Perfect Ruby",
+              "Hit Power": "Perfect Sapphire", "Safety": "Perfect Emerald"}
+
+
+def craft_lines():
+    """[(text, ok)] — perfect-gem stock per craft family + reroll info."""
+    st = load_state()
+    gems = st.get("gems") or {}
+    out = []
+    for family, gem in CRAFT_GEMS.items():
+        n = gems.get(gem, 0)
+        out.append((f"{family} crafts: {gem} ×{n} (+ jewel + slot rune)",
+                    n > 0))
+    skulls = gems.get("Perfect Skull", 0)
+    if skulls:
+        out.append((f"Perfect Skull ×{skulls} — rare rerolls / socket "
+                    "quests", True))
+    total_perfect = sum(n for g, n in gems.items() if g.startswith("Perfect"))
+    out.append((f"perfect gems total: {total_perfect} — 3× same quality "
+                "rerolls a Grand Charm", total_perfect >= 3))
+    return out
+
+
 def adjust_rune(rune, delta):
     st = load_state()
     st["runes"][rune] = max(0, st["runes"].get(rune, 0) + delta)

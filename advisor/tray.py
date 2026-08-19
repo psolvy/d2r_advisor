@@ -73,9 +73,13 @@ def start_tray(app):
     def on_goals(icon, item):
         app.root.after(0, app.open_goals)
 
+    def on_tz(icon, item):
+        app.root.after(0, app.show_tz)
+
     menu = pystray.Menu(
         pystray.MenuItem("Settings", on_settings, default=True),
         pystray.MenuItem("Season goals", on_goals),
+        pystray.MenuItem("Terror Zone", on_tz),
         pystray.MenuItem("Seed Finder", on_finder),
         pystray.MenuItem("Health check", on_health),
         pystray.MenuItem("Check for updates", on_update),

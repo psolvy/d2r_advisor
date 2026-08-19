@@ -116,6 +116,56 @@ def find_tooltip(img_bgr, cursor=None):
     return img_bgr[y0:y1, x0:x1], (x0, y0, x1 - x0, y1 - y0)
 
 
+def find_two_tooltips(img_bgr, cursor=None):
+    """The game's Shift-compare shows TWO tooltips: the hovered item near
+    the cursor and the equipped one over the paperdoll. Returns
+    (hovered_crop, equipped_crop) — either may be None."""
+    H, W = img_bgr.shape[:2]
+    scale = H / 1080.0
+    bright = _text_bright(img_bgr)
+    gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+    boxes = _detect_blocks(bright, scale, 64)
+
+    scored = []
+    for x, y, w, h in boxes:
+        if w < 110 * scale or h < 70 * scale or w > W * 0.7:
+            continue
+        block = bright[y:y + h, x:x + w]
+        density = cv2.countNonZero(block) / float(w * h)
+        rows = (block.sum(axis=1) > 0).astype(np.uint8)
+        row_groups = int(np.count_nonzero(np.diff(rows) == 1)) + int(rows[0])
+        if not (0.03 <= density <= 0.55 and row_groups >= 3):
+            continue
+        non_text = gray[y:y + h, x:x + w][block == 0]
+        bg = float(non_text.mean()) if non_text.size else 255.0
+        if bg > 90:  # tooltips sit on dark translucent boxes
+            continue
+        scored.append(((x, y, w, h), float(w * h)))
+    if not scored:
+        return None, None
+    scored.sort(key=lambda b: _cursor_dist(b[0], cursor))
+    hovered = scored[0][0]
+
+    def overlaps(a, b):
+        ax, ay, aw, ah = a
+        bx, by, bw, bh = b
+        return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
+
+    equipped = next((b for b, _a in scored[1:]
+                     if not overlaps(b, hovered)), None)
+
+    def crop(box):
+        if box is None:
+            return None
+        x, y, w, h = box
+        pad_x, pad_t, pad_b = int(50 * scale), int(45 * scale), int(18 * scale)
+        x0, y0 = max(0, x - pad_x), max(0, y - pad_t)
+        x1, y1 = min(W, x + w + pad_x), min(H, y + h + pad_b)
+        return img_bgr[y0:y1, x0:x1]
+
+    return crop(hovered), crop(equipped)
+
+
 def fallback_region(img_bgr, cursor, width=760, height=640):
     """Fixed crop around the cursor when detection fails."""
     H, W = img_bgr.shape[:2]

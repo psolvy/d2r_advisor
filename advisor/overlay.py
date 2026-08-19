@@ -8,6 +8,7 @@ COLORS = {
     "trash": ("#330d0d", "#ff6a4d"),
     "error": ("#222222", "#cccccc"),
     "scan": ("#101c2b", "#6db3f2"),    # in-progress notice
+    "compare": ("#101c2b", "#6db3f2"),  # gear diff vs equipped
 }
 TITLES = {
     "keep": "KEEP",
@@ -15,6 +16,7 @@ TITLES = {
     "trash": "TRASH",
     "error": "ERROR",
     "scan": "SCANNING…",
+    "compare": "COMPARE",
 }
 # D2 item-name colors, for the recognized item line.
 QUALITY_COLORS = {

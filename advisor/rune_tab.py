@@ -75,9 +75,26 @@ def _ocr_digits(crop, tesseract_cmd=None):
         return None
 
 
+# the mod's GEMS tab: quality columns (Chipped→Perfect) × gem-type rows
+GEM_QUALITIES = ["Chipped", "Flawed", "", "Flawless", "Perfect"]
+GEM_TYPES = ["Amethyst", "Topaz", "Sapphire", "Emerald", "Ruby", "Diamond",
+             "Skull"]
+GEM_ORDER = [f"{q} {t}".strip() for t in GEM_TYPES for q in GEM_QUALITIES]
+
+
+def scan_counted_tab(img, calib_pts, names, screen_rect=None,
+                     tesseract_cmd=None):
+    """Generic fixed-layout counted tab (runes, gems): {name: count}."""
+    return _scan(img, calib_pts, names, screen_rect, tesseract_cmd)
+
+
 def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
     """{rune: count} read from a full-screen capture. img is BGR."""
-    got = cell_centers(calib_pts)
+    return _scan(img, calib_pts, RUNE_ORDER, screen_rect, tesseract_cmd)
+
+
+def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None):
+    got = cell_centers(calib_pts, total=len(names))
     if got is None:
         return None
     centers, px, py = got
@@ -87,7 +104,7 @@ def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
     half = max(8, int(cell * 0.48))
     counts = {}
     h, w = img.shape[:2]
-    for rune, (cx, cy) in zip(RUNE_ORDER, centers):
+    for rune, (cx, cy) in zip(names, centers):
         x, y = int(cx - off_x), int(cy - off_y)
         x0, x1 = max(0, x - half), min(w, x + half)
         y0, y1 = max(0, y - half), min(h, y + half)

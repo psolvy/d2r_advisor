@@ -236,6 +236,15 @@ class App:
                 if flags.get("shop") and not item.get("affixes"):
                     extra = (gamble_advice(item, char_level=int(self.cfg.get("char_level") or 0))
                              or []) + extra
+                # Price check: clickable line for tradeable qualities.
+                price_tmpl = (self.cfg.get("price_link_template") or "").strip()
+                if price_tmpl and item.get("quality") in (
+                        "Unique", "Set", "Runeword", "Rare", "Crafted"):
+                    from urllib.parse import quote
+                    q = item.get("name") or item.get("base") or ""
+                    if q:
+                        extra += [("💰 Price check", "#ffd94d",
+                                   price_tmpl.replace("{query}", quote(q)))]
                 extra = extra or None
                 tier = get_value_tier(item)
             if quest:
@@ -439,6 +448,53 @@ class App:
         self.root.after(0, self.overlay.hide)
         threading.Thread(target=self.scan_gamble, daemon=True).start()
 
+    def scan_compare(self):
+        """Both Shift-compare tooltips -> what the hovered item gains and
+        loses vs the equipped one."""
+        if not self.busy.acquire(blocking=False):
+            return
+        try:
+            time.sleep(0.15)
+            cursor = get_cursor_pos()
+            img, local_cursor, screen_rect = capture_monitor_at(cursor)
+            from advisor.tooltip import find_two_tooltips
+            hov, eq = find_two_tooltips(img, local_cursor)
+            if hov is None or eq is None:
+                self.results.put({
+                    "verdict": "error",
+                    "note": "Need BOTH tooltips: hold Shift so the game "
+                            "shows the equipped item, keep hovering, then "
+                            "press the compare hotkey",
+                    "cursor": cursor, "screen_rect": screen_rect})
+                return
+            items = []
+            for crop in (hov, eq):
+                variants, hint, _fl = scan_tooltip(
+                    crop, tesseract_cmd=self.tesseract)
+                items.append(parse_best(variants, quality_hint=hint))
+            new_item, old_item = items
+            if not new_item.get("tooltip") or not old_item.get("tooltip"):
+                self.results.put({
+                    "verdict": "error",
+                    "note": "Could not read one of the tooltips — try again",
+                    "cursor": cursor, "screen_rect": screen_rect})
+                return
+            from advisor.compare import diff_items
+            self.results.put({
+                "verdict": "compare",
+                "item": new_item,
+                "extra": diff_items(new_item, old_item),
+                "cursor": cursor, "screen_rect": screen_rect})
+        except Exception as e:
+            self.results.put({"verdict": "error",
+                              "note": f"{type(e).__name__}: {e}",
+                              "cursor": get_cursor_pos()})
+        finally:
+            self.busy.release()
+
+    def on_compare_hotkey(self):
+        threading.Thread(target=self.scan_compare, daemon=True).start()
+
     def on_hotkey(self):
         # Hide our own popup first — otherwise it gets captured and OCR'd.
         self.root.after(0, self.overlay.hide)
@@ -510,6 +566,10 @@ class App:
         from advisor.goals_ui import open_goals
         open_goals(self.root, scale=self._ui_scale(), cfg=self.cfg)
 
+    def show_tz(self):
+        from advisor.tz import open_tz_window
+        open_tz_window(self.root, self.cfg, scale=self._ui_scale())
+
     def check_updates(self, interactive=False):
         """Compare against the newest GitHub release in the background;
         offer the update dialog when there is one."""
@@ -573,6 +633,9 @@ class App:
         seed_key = (self.cfg.get("seed_hotkey") or "").strip()
         if seed_key:
             keyboard.add_hotkey(seed_key, self.open_finder)
+        compare_key = (self.cfg.get("compare_hotkey") or "").strip()
+        if compare_key:
+            keyboard.add_hotkey(compare_key, self.on_compare_hotkey)
         print(f"=== {APP_NAME} === Hover an item and press [{hotkey.upper()}]."
               + (f" Gamble screen: [{gamble_key.upper()}]." if gamble_key else "")
               + " Ctrl+C to quit.")

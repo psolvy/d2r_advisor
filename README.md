@@ -112,6 +112,10 @@ start, `auto_update` in the config): when a new GitHub release exists,
 one click downloads it and swaps the build in place — your config,
 calibration and downloaded assets survive.
 
+**Terror Zone** in the tray shows the current and next zone (needs a
+free community API token — d2runewizard.com/integration or
+d2emu.com/terms; put the url + token in Settings).
+
 <p align="center">
   <img src="docs/img/update.png" width="560"
        alt="Update dialog offering the new release">
@@ -156,6 +160,18 @@ destination via `link_template` in config.yaml (web search by default;
 diablo2.io etc. work too). Clicking a link keeps the popup open; clicking
 anywhere else closes it.
 
+## Gear compare (Shift+F9)
+
+Hover an item and **hold Shift** — the game shows the equipped piece
+next to it. Press **Shift+F9** (configurable) and the popup lists what
+the hovered item **gains and loses** vs what you wear: green `+` lines,
+red `−` lines, `▲/▼` for changed values. Pure screen reading — works
+online while leveling, exactly when "is this better?" matters most.
+
+Tradeable finds (unique/set/runeword/rare/craft) also get a clickable
+**💰 Price check** line — the destination is `price_link_template` in
+the config (Traderie search by default).
+
 ## Season goals (runeword tracker)
 
 <p align="center">
@@ -168,7 +184,10 @@ Tray → **Season goals**: pick the runewords you are building this ladder
 counters either with the **📷 Scan runes tab** button — open the stash
 RUNES tab in game, and one screenshot sets every counter (a one-time
 3-point grid calibration: hover El, the last cell of the first row, and
-Zod) — or by hand with the +/− chips. The verdict popup on a scanned
+Zod) — or by hand with the +/− chips. The **gems tab scans the same
+way** (its own 3-point grid) and feeds the **Craft stock** panel:
+perfect gems per craft family (Caster / Blood / Hit Power / Safety) and
+Grand-Charm reroll readiness. The verdict popup on a scanned
 rune shows live progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES
 READY — make it!" when the last one is in place. The "I made it" button
 spends the runes from the pool. State lives in `season_goals.json`
