@@ -573,6 +573,7 @@ class SeedFinder(tk.Toplevel):
         self._lbl(r2, "Seed").pack(side="left")
         self.seed_var = tk.StringVar()
         self._entry(r2, 12, self.seed_var).pack(side="left", padx=(3, 4))
+        self._btn(r2, "🎲", self.random_seed).pack(side="left", padx=(0, 4))
         self.game_seed = tk.BooleanVar(value=False)
         tk.Checkbutton(r2, text="in-game seed", variable=self.game_seed,
                        bg=PANEL, fg=DIM, selectcolor=FIELD, relief="flat",
@@ -1281,6 +1282,30 @@ class SeedFinder(tk.Toplevel):
 
     def _npc(self):
         return dict(NPC_CHOICES).get(self.npc.get(), "gheed")
+
+    def random_seed(self):
+        """🎲 — explore without scanning anything: roll a random store
+        seed, show its offer on the grid and preview the refreshes."""
+        import random
+        sd = random.getrandbits(32)
+        self._clear_session("random seed")
+        self._invalidate(plans=True, preview=True, candidates=True)
+        self.seed_var.set(str(sd))
+        self.game_seed.set(False)
+        self.offset_var.set("0")
+        from advisor.gamble_seed import offer_with_positions
+        offer = offer_with_positions(sd, self._ctx())
+        self.slots = [{"idx": i, "x": p[0], "y": p[1]}
+                      for i, p in offer if p is not None]
+        self.unplaced = []
+        self._preview_off()
+        self.redraw()
+        self.log(f"🎲 random seed {sd} — its offer is on the grid; "
+                 "Preview refreshes / Plan buys away", "hot")
+        try:
+            self.show_future(sd, int(self.n_refresh.get() or 30))
+        except Exception:
+            pass
 
     def _use_candidate(self, _ev=None):
         sel = self.cand_list.curselection()
