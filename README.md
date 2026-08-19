@@ -19,6 +19,12 @@ read, nothing is injected into the process** (the safest class of tools;
 still, any third-party program is formally a gray area under Blizzard's
 ToS — use at your own risk).
 
+> **Single player / offline only.** The gambling seed mechanics exist
+> only in offline play, where the RNG runs locally — **online/ladder
+> RNG is server-side and cannot be predicted or influenced by this tool
+> (or any tool)**. The project is provided for offline play and
+> educational interest in the game's RNG internals.
+
 <p align="center">
   <img src="docs/img/verdict.png" width="600"
        alt="F9 verdict popup: Harlequin Crest — CHECK, S-tier, full roll ranges">
@@ -134,6 +140,9 @@ Cube and crafts:
   is worth gambling.
 
 ## Gambling: F10 and the Seed Finder (Shift+F10)
+
+*(offline characters only — online gambling is rolled on Blizzard's
+servers and no simulator can predict it)*
 
 <p align="center">
   <img src="docs/img/seedfinder.png" width="900"

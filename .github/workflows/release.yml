@@ -89,6 +89,11 @@ jobs:
             simulator with a buy planner and auto-clicker. No game memory
             is read — screen capture only.
 
+            **Single player / offline only:** the seed mechanics exist
+            only in offline play — online/ladder RNG is server-side and
+            cannot be predicted by this (or any) tool. Provided for
+            offline play and educational interest.
+
             ## Install — standalone exe (recommended)
 
             1. Download **d2r-advisor-…-windows-x64.zip**, unpack anywhere,
