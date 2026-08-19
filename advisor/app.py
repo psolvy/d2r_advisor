@@ -459,7 +459,20 @@ class App:
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             from advisor.tooltip import find_two_tooltips
             hov, eq = find_two_tooltips(img, local_cursor)
+
+            def dump(reason):
+                dbg = ROOT / "debug"
+                dbg.mkdir(exist_ok=True)
+                stamp = datetime.now().strftime("%H%M%S")
+                cv2.imwrite(str(dbg / f"{stamp}_cmp_full.png"), img)
+                if hov is not None:
+                    cv2.imwrite(str(dbg / f"{stamp}_cmp_hovered.png"), hov)
+                if eq is not None:
+                    cv2.imwrite(str(dbg / f"{stamp}_cmp_equipped.png"), eq)
+                print(f"compare debug saved ({reason}) -> debug/{stamp}_cmp_*")
+
             if hov is None or eq is None:
+                dump("missing tooltip")
                 self.results.put({
                     "verdict": "error",
                     "note": "Need BOTH tooltips: hold Shift so the game "
@@ -474,11 +487,17 @@ class App:
                 items.append(parse_best(variants, quality_hint=hint))
             new_item, old_item = items
             if not new_item.get("tooltip") or not old_item.get("tooltip"):
+                dump("unreadable "
+                     + ("hovered" if not new_item.get("tooltip")
+                        else "equipped"))
                 self.results.put({
                     "verdict": "error",
-                    "note": "Could not read one of the tooltips — try again",
+                    "note": "Could not read one of the tooltips — try "
+                            "again (debug images saved)",
                     "cursor": cursor, "screen_rect": screen_rect})
                 return
+            if self.cfg.get("debug"):
+                dump("ok")
             from advisor.compare import diff_items
             self.results.put({
                 "verdict": "compare",
@@ -636,9 +655,17 @@ class App:
         compare_key = (self.cfg.get("compare_hotkey") or "").strip()
         if compare_key:
             keyboard.add_hotkey(compare_key, self.on_compare_hotkey)
-        print(f"=== {APP_NAME} === Hover an item and press [{hotkey.upper()}]."
-              + (f" Gamble screen: [{gamble_key.upper()}]." if gamble_key else "")
-              + " Ctrl+C to quit.")
+        bits = [f"[{hotkey.upper()}] item verdict"]
+        if compare_key:
+            bits.append(f"[{compare_key.upper()}] compare vs equipped "
+                        "(hold Shift in game)")
+        if gamble_key:
+            bits.append(f"[{gamble_key.upper()}] gamble offer")
+        if seed_key:
+            bits.append(f"[{seed_key.upper()}] Seed Finder")
+        print(f"=== {APP_NAME} === " + " · ".join(bits))
+        print("tray: Settings / Season goals / Terror Zone / Health / "
+              "updates · Ctrl+C to quit")
 
         from advisor import tray
         tray_icon = tray.start_tray(self)

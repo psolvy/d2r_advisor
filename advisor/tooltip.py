@@ -116,15 +116,47 @@ def find_tooltip(img_bgr, cursor=None):
     return img_bgr[y0:y1, x0:x1], (x0, y0, x1 - x0, y1 - y0)
 
 
+def _split_fused(bright, box, scale):
+    """Two side-by-side tooltips can merge into one wide block — split it
+    at wide vertical whitespace gaps."""
+    x, y, w, h = box
+    col = bright[y:y + h, x:x + w].sum(axis=0)
+    empty = col == 0
+    gaps, start = [], None
+    for i, e in enumerate(empty):
+        if e and start is None:
+            start = i
+        elif not e and start is not None:
+            if i - start >= 40 * scale:
+                gaps.append((start, i))
+            start = None
+    parts, prev = [], 0
+    for g0, g1 in gaps:
+        if g0 - prev > 90 * scale:
+            parts.append((x + prev, y, g0 - prev, h))
+        prev = g1
+    if w - prev > 90 * scale:
+        parts.append((x + prev, y, w - prev, h))
+    return parts if len(parts) > 1 else [box]
+
+
 def find_two_tooltips(img_bgr, cursor=None):
     """The game's Shift-compare shows TWO tooltips: the hovered item near
-    the cursor and the equipped one over the paperdoll. Returns
-    (hovered_crop, equipped_crop) — either may be None."""
+    the cursor and the equipped one elsewhere. Returns
+    (hovered_crop, equipped_crop) — either may be None.
+
+    Unlike the single-tooltip path this must not hard-reject bright
+    backgrounds (a tooltip over the stash grid still counts) — the dark
+    box only boosts the score."""
     H, W = img_bgr.shape[:2]
     scale = H / 1080.0
     bright = _text_bright(img_bgr)
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-    boxes = _detect_blocks(bright, scale, 64)
+    raw = _detect_blocks(bright, scale, 64)
+    boxes = []
+    for b in raw:
+        boxes.extend(_split_fused(bright, b, scale)
+                     if b[2] > W * 0.45 else [b])
 
     scored = []
     for x, y, w, h in boxes:
@@ -134,25 +166,29 @@ def find_two_tooltips(img_bgr, cursor=None):
         density = cv2.countNonZero(block) / float(w * h)
         rows = (block.sum(axis=1) > 0).astype(np.uint8)
         row_groups = int(np.count_nonzero(np.diff(rows) == 1)) + int(rows[0])
-        if not (0.03 <= density <= 0.55 and row_groups >= 3):
+        if not (0.02 <= density <= 0.55 and row_groups >= 4):
             continue
         non_text = gray[y:y + h, x:x + w][block == 0]
         bg = float(non_text.mean()) if non_text.size else 255.0
-        if bg > 90:  # tooltips sit on dark translucent boxes
-            continue
-        scored.append(((x, y, w, h), float(w * h)))
+        score = ((float(w * h) ** 0.5) * row_groups
+                 / (1.0 + max(0.0, bg - 25.0) / 20.0))
+        scored.append(((x, y, w, h), score))
     if not scored:
         return None, None
-    scored.sort(key=lambda b: _cursor_dist(b[0], cursor))
-    hovered = scored[0][0]
+    # hovered: best candidate weighted toward the cursor
+    by_cursor = sorted(scored, key=lambda b: (
+        _cursor_dist(b[0], cursor) / (120.0 * scale) + 1.0) / (1.0 + b[1]))
+    hovered = by_cursor[0][0]
 
     def overlaps(a, b):
         ax, ay, aw, ah = a
         bx, by, bw, bh = b
         return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
 
-    equipped = next((b for b, _a in scored[1:]
-                     if not overlaps(b, hovered)), None)
+    # equipped: the best-scoring OTHER block
+    others = sorted((s for s in scored if not overlaps(s[0], hovered)),
+                    key=lambda b: -b[1])
+    equipped = others[0][0] if others else None
 
     def crop(box):
         if box is None:
