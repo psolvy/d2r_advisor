@@ -82,6 +82,10 @@ seedfinder:
   target_rarity: unique   # default (set/unique/rare) / unique / set / rare / any
   target_tier: elite # any / normal / exceptional / elite
 
+# Check GitHub releases for a new version on start and offer the
+# update (tray menu -> Check for updates does it on demand)
+auto_update: true
+
 # Path to tesseract.exe. Empty = auto-detect
 # (PATH, then C:\Program Files\Tesseract-OCR\tesseract.exe)
 tesseract_cmd: ""

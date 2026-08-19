@@ -67,10 +67,14 @@ def start_tray(app):
 
     console_label = ("Show / hide console" if _console_hwnd()
                      else "Open log")
+    def on_update(icon, item):
+        app.check_updates(interactive=True)
+
     menu = pystray.Menu(
         pystray.MenuItem("Settings", on_settings, default=True),
         pystray.MenuItem("Seed Finder", on_finder),
         pystray.MenuItem("Health check", on_health),
+        pystray.MenuItem("Check for updates", on_update),
         pystray.MenuItem(console_label, on_console),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit", on_exit),

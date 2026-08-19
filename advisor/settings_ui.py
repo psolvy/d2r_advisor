@@ -37,6 +37,7 @@ GENERAL = [
     ("my_class", "Your class (breakpoint ladders)", "choice", CLASSES),
     ("char_level", "Character level (0 = off)", "int", None),
     ("display_seconds", "Verdict display seconds", "int", None),
+    ("auto_update", "Check for updates on start", "bool", None),
     ("show_ranges", "Show roll ranges", "bool", None),
     ("sounds", "Verdict sounds", "bool", None),
     ("history", "Write history.log", "bool", None),
@@ -213,7 +214,7 @@ class Settings(tk.Toplevel):
                                  state="readonly", style="ST.TCombobox",
                                  width=18, font=self.f_sub)
                 w.bind("<<ComboboxSelected>>",
-                       lambda _e, cb=w: cb.selection_clear(), add=True)
+                       lambda _e=None, cb=w: cb.selection_clear(), add=True)
             else:
                 var = tk.StringVar(value="" if val is None else str(val))
                 w = tk.Entry(f, textvariable=var, width=26, bg=FIELD,
@@ -268,6 +269,64 @@ class Settings(tk.Toplevel):
     def _save_restart(self):
         if self._save() and self.restart_cb:
             self.restart_cb()
+
+
+def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False):
+    """'New version available — Update now?' (or a you're-up-to-date note).
+    Applying runs in a thread; when the updater takes over, the app quits."""
+    import threading
+    from advisor.version import __version__
+    s = max(1.0, float(scale))
+    win = tk.Toplevel(root)
+    win.title("D2R Item Advisor — Update")
+    win.configure(bg=BG)
+    win.resizable(False, False)
+    f_base = ("Segoe UI", int(11 * s))
+    pad = int(14 * s)
+    if up_to_date:
+        tk.Label(win, text=f"✓ You are up to date (v{__version__})",
+                 bg=BG, fg=GREEN, font=f_base
+                 ).pack(padx=pad, pady=(pad, int(6 * s)))
+        tk.Button(win, text="OK", command=win.destroy, bg=GOLD,
+                  fg="#191307", relief="flat", font=f_base,
+                  padx=int(16 * s)).pack(pady=(0, pad))
+    else:
+        tk.Label(win, text=f"Update available: {tag}  (you have "
+                           f"v{__version__})", bg=BG, fg=GOLD_HI,
+                 font=("Segoe UI", int(12 * s), "bold")
+                 ).pack(padx=pad, pady=(pad, int(4 * s)))
+        status = tk.Label(win, text="Downloads from GitHub releases; your "
+                                    "config and calibration are kept.",
+                          bg=BG, fg=DIM, font=("Segoe UI", int(10 * s)),
+                          wraplength=int(420 * s), justify="left")
+        status.pack(padx=pad)
+        btns = tk.Frame(win, bg=BG)
+        btns.pack(pady=(int(10 * s), pad))
+
+        def do_update():
+            upd.configure(state="disabled", text="updating…")
+
+            def work():
+                from advisor import updater
+                ok = updater.apply_update(
+                    asset_url,
+                    on_step=lambda m: root.after(
+                        0, lambda: status.configure(text=str(m)[:200])))
+                if ok:
+                    root.after(500, root.quit)  # the updater takes over
+            threading.Thread(target=work, daemon=True).start()
+
+        upd = tk.Button(btns, text="Update now", command=do_update,
+                        bg=GOLD, fg="#191307", activebackground=GOLD_HI,
+                        relief="flat", font=f_base, padx=int(14 * s))
+        upd.pack(side="left", padx=(0, int(8 * s)))
+        tk.Button(btns, text="Later", command=win.destroy, bg=FIELD,
+                  fg=FG, relief="flat", font=f_base,
+                  padx=int(14 * s)).pack(side="left")
+    win.lift()
+    win.attributes("-topmost", True)
+    win.after(300, lambda: win.attributes("-topmost", False))
+    return win
 
 
 def open_health_report(root, cfg, scale=1.0):

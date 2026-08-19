@@ -506,6 +506,25 @@ class App:
         from advisor.settings_ui import open_health_report
         open_health_report(self.root, self.cfg, scale=self._ui_scale())
 
+    def check_updates(self, interactive=False):
+        """Compare against the newest GitHub release in the background;
+        offer the update dialog when there is one."""
+        from advisor import updater
+
+        def work():
+            newer, tag, asset = updater.check()
+            if newer:
+                self.root.after(0, lambda: self._update_dialog(tag, asset))
+            elif interactive:
+                self.root.after(0, lambda: self._update_dialog(None, None,
+                                                               True))
+        threading.Thread(target=work, daemon=True).start()
+
+    def _update_dialog(self, tag, asset, up_to_date=False):
+        from advisor.settings_ui import open_update_dialog
+        open_update_dialog(self.root, tag, asset, scale=self._ui_scale(),
+                           up_to_date=up_to_date)
+
     def restart(self):
         """Relaunch (exe or source) so new hotkeys/scales apply."""
         import subprocess
@@ -561,6 +580,8 @@ class App:
             # Start Menu discoverable
             tray.ensure_start_menu_shortcut()
         self.root.after(1500, lambda: self._report_health(tray_icon))
+        if self.cfg.get("auto_update", True):
+            self.root.after(5000, self.check_updates)
         self.root.after(100, self.poll)
         try:
             self.root.mainloop()
