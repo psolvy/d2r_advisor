@@ -168,10 +168,39 @@ def cell_centers(calib_pts, total=33, img=None, screen_rect=None):
     return out, px, py
 
 
+def _digit_clusters(bw):
+    """Runs of tightly-spaced glyphs, RIGHTMOST first. The game
+    right-aligns counts to the cell border, so the number is usually the
+    right-anchored cluster; stone-art highlights split off at the gaps
+    and are tried later only if the better clusters fail to OCR."""
+    n, _lbl, stats, _c = cv2.connectedComponentsWithStats(bw)
+    H = bw.shape[0]
+    comps = [tuple(stats[i]) for i in range(1, n)
+             if 0.25 * H <= stats[i][3] <= 0.95 * H and stats[i][4] >= 12]
+    if not comps:
+        return []
+    comps.sort(key=lambda s: s[0])
+    heights = [c[3] for c in comps]
+    gap_max = max(12, int(0.9 * (sum(heights) / len(heights))))
+    groups = [[comps[0]]]
+    for c in comps[1:]:
+        prev = groups[-1][-1]
+        if c[0] - (prev[0] + prev[2]) <= gap_max:
+            groups[-1].append(c)
+        else:
+            groups.append([c])
+    boxes = []
+    for grp in reversed(groups):  # rightmost first
+        boxes.append((min(c[0] for c in grp), min(c[1] for c in grp),
+                      max(c[0] + c[2] for c in grp),
+                      max(c[1] + c[3] for c in grp)))
+    return boxes
+
+
 def _ocr_digits(crop, tesseract_cmd=None):
     """Count digits use the game font — the bundled d2r model reads them
-    where eng failed. Threshold 210 won a grid search on a real 4K frame
-    (14/14); 235 is the fallback for brighter render settings."""
+    where eng failed. Threshold 210 won a grid search on a real 4K
+    frame; 235 is the fallback for brighter render settings."""
     try:
         import os
         import pytesseract
@@ -181,17 +210,30 @@ def _ocr_digits(crop, tesseract_cmd=None):
         os.environ["TESSDATA_PREFIX"] = str(TESSDATA_DIR)
         g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         g = cv2.resize(g, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+        def read(image):
+            txt = pytesseract.image_to_string(
+                image, lang="d2r",
+                config="--psm 7 -c tessedit_char_whitelist=0123456789")
+            m = re.search(r"\d+", txt or "")
+            return m.group(0) if m else None
+
         for thresh in (210, 235):
             _, bw = cv2.threshold(g, thresh, 255, cv2.THRESH_BINARY)
             if cv2.countNonZero(bw) < 8:
                 continue
-            bw = 255 - bw  # tesseract prefers dark text on light
-            txt = pytesseract.image_to_string(
-                bw, lang="d2r",
-                config="--psm 7 -c tessedit_char_whitelist=0123456789")
-            m = re.search(r"\d+", txt or "")
-            if m:
-                return int(m.group(0))
+            # proven primary: the whole (narrow) zone — live-verified;
+            # the glyph-cluster pass only RESCUES cells that read nothing
+            got = read(255 - bw)
+            if got is None:
+                for x0, y0, x1, y1 in _digit_clusters(bw)[:2]:
+                    pad = 14
+                    sub = 255 - bw[max(0, y0 - pad):y1 + pad,
+                                   max(0, x0 - pad):x1 + pad]
+                    got = read(sub)
+                    if got:
+                        break
+            if got:
+                return int(got)
         return None
     except Exception:
         return None
@@ -231,6 +273,11 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
     counts = {}
     h, w = img.shape[:2]
     dbg = img.copy() if debug_out else None
+    if debug_out:
+        # RAW frame too: annotation lines cross the digit zones and make
+        # the annotated image useless for offline OCR tuning
+        raw_path = str(debug_out).replace(".png", "_raw.png")
+        cv2.imwrite(raw_path, img)
     for rune, (cx, cy) in zip(names, centers):
         x, y = int(cx - off_x), int(cy - off_y)
         x0, x1 = max(0, x - half), min(w, x + half)
@@ -239,9 +286,9 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
             counts[rune] = 0
             continue
         crop = img[y0:y1, x0:x1]
-        # counts render at the BOTTOM-RIGHT of the cell — the winning
-        # zone from the real-frame grid search (float center + a small
-        # pad: one truncated pixel cut the last digit stroke off)
+        # counts render at the BOTTOM-RIGHT of the cell — the proven
+        # narrow zone (14/14 live); the in-OCR cluster rescue handles
+        # cells where this zone reads nothing
         dz_x0 = int(max(0, cx - off_x + 0.02 * px))
         dz_x1 = int(round(min(w, cx - off_x + 0.66 * px)))
         dz_y0 = int(max(0, cy - off_y + 0.05 * py))

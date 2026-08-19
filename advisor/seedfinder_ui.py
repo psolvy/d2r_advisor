@@ -1687,8 +1687,14 @@ class SeedFinder(tk.Toplevel):
 
     # ------------------------------------------------------------- clicker
 
-    def _capture_point(self, key, what, then=None):
+    def _capture_point(self, key, what, then=None, _guarded=False):
         """Countdown, then save the hovered cursor position as calib[key]."""
+        from advisor import capture_guard
+        if not _guarded:
+            if not capture_guard.acquire(f"{what} calibration"):
+                self.log(f"! busy: {capture_guard.busy_with()} is running")
+                return
+
         def capture(countdown):
             if countdown > 0:
                 self.status.configure(text=f"{what} — {countdown}…")
@@ -1704,6 +1710,8 @@ class SeedFinder(tk.Toplevel):
                 self._update_calib_lbl()
                 if then:
                     then()
+                else:
+                    capture_guard.release()
 
         capture(4)
 
@@ -1737,8 +1745,10 @@ class SeedFinder(tk.Toplevel):
                     self.log(f"  sell zone saved ({n} cells swept per "
                              "filler buy)", "hot")
                     self._update_calib_lbl()
+                from advisor import capture_guard
+                capture_guard.release()
 
-            self._capture_point("_sz2", "Sell zone BOTTOM-RIGHT", then=finish)
+            self._capture_point("_sz2", "Sell zone BOTTOM-RIGHT", then=finish, _guarded=True)
 
         self._capture_point("_sz1", "Sell zone TOP-LEFT", then=second)
 

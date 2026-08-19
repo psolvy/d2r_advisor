@@ -96,19 +96,30 @@ def _update_frozen(asset_url, on_step):
     if new_dir is None:
         on_step("unexpected archive layout — update aborted")
         return False
-    # the swap runs after we exit; user data and downloaded assets survive
+    # the swap runs after we exit; user data and downloaded assets survive.
+    # NOTE: no `timeout` here — it needs a real console and dies inside a
+    # windowless cmd, which silently broke the whole swap. ping is the
+    # console-free delay; findstr matches the padded pid exactly.
+    pid = os.getpid()
+    log = exe_dir / "update.log"
     bat = tmp / "swap.bat"
     bat.write_text(
         "@echo off\n"
+        f"echo swap started %date% %time% > \"{log}\"\n"
         ":wait\n"
-        f"tasklist /FI \"PID eq {os.getpid()}\" 2>nul | find \"{os.getpid()}\" >nul\n"
-        "if not errorlevel 1 (timeout /t 1 /nobreak >nul & goto wait)\n"
+        "ping -n 2 127.0.0.1 >nul\n"
+        f"tasklist /FI \"PID eq {pid}\" 2>nul | findstr /C:\" {pid} \" >nul\n"
+        "if not errorlevel 1 goto wait\n"
+        f"echo app exited, copying >> \"{log}\"\n"
         f"robocopy \"{new_dir}\" \"{exe_dir}\" /E /NFL /NDL /NJH /NJS "
-        "/XF config.yaml gamble_clicks.json advisor.log rules.yaml >nul\n"
+        "/XF config.yaml gamble_clicks.json advisor.log rules.yaml "
+        f">> \"{log}\" 2>&1\n"
+        f"echo robocopy exit %errorlevel% >> \"{log}\"\n"
         f"start \"\" \"{exe_dir / 'd2r-advisor.exe'}\"\n"
         f"rd /s /q \"{tmp}\"\n",
         encoding="ascii")
     on_step("restarting with the new build …")
     subprocess.Popen(["cmd", "/c", str(bat)],
-                     creationflags=0x08000208)  # detached, no window
+                     creationflags=0x08000000,  # CREATE_NO_WINDOW
+                     close_fds=True)
     return True

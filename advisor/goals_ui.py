@@ -252,6 +252,11 @@ class GoalsWindow(tk.Toplevel):
     def _calibrate(self, key, what):
         """3 hovered points pin a whole tab lattice: first cell, LAST cell
         of the FIRST row, then the LAST cell overall."""
+        from advisor import capture_guard
+        if not capture_guard.acquire(f"{what} grid calibration"):
+            self.status.configure(
+                text=f"busy: {capture_guard.busy_with()} is running", fg=RED)
+            return
         from advisor.autoclicker import get_cursor_pos, load_calib, save_calib
         if what == "rune":
             prompts = ["hover EL (first rune, top-left)…",
@@ -279,14 +284,21 @@ class GoalsWindow(tk.Toplevel):
                 calib[key] = points
                 save_calib(calib)
                 self.status.configure(text=f"✓ {what} grid saved", fg=GREEN)
+                capture_guard.release()
 
         capture(0, 4)
 
     def _scan_counted(self, key, names, apply_fn, what):
+        from advisor import capture_guard
+        if not capture_guard.acquire(f"{what} tab scan"):
+            self.status.configure(
+                text=f"busy: {capture_guard.busy_with()} is running", fg=RED)
+            return
         from advisor.autoclicker import load_calib
         calib = load_calib()
         pts = calib.get(key)
         if not pts or len(pts) != 8:
+            capture_guard.release()
             self.status.configure(
                 text=f"set the {what} grid first (4 points)", fg=RED)
             return
@@ -325,12 +337,15 @@ class GoalsWindow(tk.Toplevel):
                                           tesseract_cmd=tess,
                                           debug_out=dbg)
             except Exception as e:
+                capture_guard.release()
                 self.status.configure(text=f"scan failed: {e}", fg=RED)
                 return
             if not counts:
+                capture_guard.release()
                 self.status.configure(text="scan failed: bad grid points",
                                       fg=RED)
                 return
+            capture_guard.release()
             apply_fn(counts)
             total = sum(counts.values())
             kinds = sum(1 for n in counts.values() if n > 0)
