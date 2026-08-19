@@ -139,10 +139,22 @@ def craftable_runewords(allow_up=False, st=None, limit=40):
         per = {}
         for r in runes:
             per[r] = per.get(r, 0) + 1
+        # exponential probe + binary search — the old flat loop capped
+        # the count at 20 (Tal 30 + Eth 21 showed "Stealth x20")
         n = 0
-        while n < 20 and _feasible(per, n + 1, st["runes"],
-                                   st.get("gems"), allow_up):
-            n += 1
+        step = 1
+        while step and _feasible(per, n + step, st["runes"],
+                                 st.get("gems"), allow_up):
+            n += step
+            step = min(step * 2, 999 - n)
+        lo, hi = n, n + max(step, 1)
+        while lo + 1 < hi:
+            mid = (lo + hi) // 2
+            if _feasible(per, mid, st["runes"], st.get("gems"), allow_up):
+                lo = mid
+            else:
+                hi = mid
+        n = lo
         if n:
             out.append((name, n, " ".join(runes)))
     out.sort(key=lambda t: (-t[1], t[0]))
