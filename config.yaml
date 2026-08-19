@@ -1,0 +1,91 @@
+# Scan hotkey (hover an item with the mouse, then press it).
+# Examples: f8, ctrl+shift+x, alt+q
+hotkey: f9
+
+# Gamble-screen hotkey: hover the middle of the gamble list and press it —
+# reads the whole offer, marks what's worth buying, and copies the list to
+# the clipboard for the DBM seed simulator. Empty = off.
+gamble_hotkey: f10
+
+# Opens the built-in Gamble Seed Finder (full local port of the DBM
+# simulator, validated bit-exact): auto-fills the offer from the last F10
+# scan, brute-forces your store seed, predicts which refresh slots become
+# UNIQUE/SET/rare, plans refresh/buy routes to targets, and can execute a
+# plan in game with the auto-clicker (calibrate once, ESC aborts).
+# Empty = off.
+seed_hotkey: shift+f10
+
+# Rules preset for the current stage of the season:
+#   leveling — ladder start / leveling (generous rules)
+#   midgame  — 75+, first builds and farming
+#   lategame — endgame: only runes/perfects/top items
+#   custom   — your own rules.yaml in the project root
+#   auto     — pick by season age (needs season_start below):
+#              days 0-13 leveling, 14-44 midgame, 45+ lategame
+preset: lategame
+
+# Season start date for preset: auto (YYYY-MM-DD)
+season_start: ""
+
+# Your class ("sorceress", "paladin", ...) — shows FCR/FHR breakpoint
+# ladders when a hovered item has those stats. Empty = off.
+my_class: ""
+
+# How many seconds to show the verdict (clicking the popup closes it earlier)
+display_seconds: 30
+
+# Show stat roll ranges for uniques/sets
+show_ranges: true
+
+# Your character level (0 = off). Used on the gamble screen to mark which
+# uniques / chase affixes are already reachable at your level.
+char_level: 0
+
+# Beep on verdict (high chirp = keep, mid = check, low = trash)
+sounds: false
+
+# Append every scan to history.log (JSON lines) for post-session review
+history: true
+
+# Where advice links open ({query} is URL-encoded). Clickable lines are
+# underlined in the popup; clicking keeps the popup open.
+# Default is DuckDuckGo (no captchas/consent walls). Examples:
+#   "https://www.google.com/search?q={query}"
+#   "https://duckduckgo.com/?q={query}"
+link_template: "https://duckduckgo.com/?q={query}"
+
+# Verdict popup size. 1.5 — good for 1440p/4K, 1.0 — for 1080p
+ui_scale: 1.5
+
+# Seed Finder window size multiplier (empty = use ui_scale). The window is
+# also freely resizable by dragging its edges.
+seedfinder_scale: ""
+
+# Seed Finder defaults (the Shift+F10 window). Every control's start value:
+#   platform: PC / PlayStation / Xbox / Switch
+#   version:  row (RoW latest) / d2r / d2 (classic)
+#   npc:      gheed / elzix / alkor / jamella / anya   (Acts 1-5)
+#   difficulty: Normal / Nightmare / Hell
+seedfinder:
+  level: 85          # character level used for the search
+  platform: PC
+  version: row
+  npc: gheed
+  difficulty: Hell
+  depth: 5000        # planner search depth (refreshes+buys lookahead)
+  shift_buys: 10     # planner junk-buys allowed
+  refreshes: 30      # how many future refreshes to preview
+  max_offset: 2000000  # Find offset scan range after buys
+  click_delay: 0.8   # auto-clicker seconds between clicks
+  execute_delay: 5   # seconds to focus the game before clicking starts
+  target: ""         # planner target item name ("" or (any) = any item)
+  target_rarity: unique   # default (set/unique/rare) / unique / set / rare / any
+  target_tier: elite # any / normal / exceptional / elite
+
+# Path to tesseract.exe. Empty = auto-detect
+# (PATH, then C:\Program Files\Tesseract-OCR\tesseract.exe)
+tesseract_cmd: ""
+
+# true = save screenshots to the debug folder (full screen + tooltip crop
+# + parse dump). Enable when recognition misbehaves and share the files.
+debug: false

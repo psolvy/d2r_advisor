@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests before releasing
+        run: python tests/test_regression.py
+        env:
+          PYTHONIOENCODING: utf-8
+
+      - name: Package source archive
+        # git archive ships ONLY tracked files — no personal state and no
+        # third-party assets (users fetch those with tools/setup_assets.py,
+        # which install.bat runs automatically).
+        run: git archive --format=zip --prefix=d2r-advisor/ -o d2r-advisor-${{ github.ref_name }}-source.zip HEAD
+
+      - name: Build standalone exe (PyInstaller onedir)
+        # Built from the checkout, which contains no third-party assets —
+        # the exe downloads icons + fast-search workers on its first run.
+        run: |
+          pip install pyinstaller
+          python -m PyInstaller --noconfirm --clean --console --name d2r-advisor --icon assets/icon.ico --add-data "config.yaml;." --add-data "rules.yaml;." --add-data "presets;presets" --add-data "assets;assets" --add-data "d2rlootreader/repository;d2rlootreader/repository" --add-data "d2rlootreader/tessdata;d2rlootreader/tessdata" --add-data "advisor/brute_host.js;advisor" --add-data "tools/setup_assets.py;tools" --add-data "tools/get_gamble_icons.py;tools" --add-data "tools/get_dbm_workers.py;tools" main.py
+
+      - name: Zip the exe bundle
+        run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ github.ref_name }}-windows-x64.zip
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            d2r-advisor-${{ github.ref_name }}-source.zip
+            d2r-advisor-${{ github.ref_name }}-windows-x64.zip
+          generate_release_notes: true
+          body: |
+            **d2r-advisor-…-windows-x64.zip** — standalone build: unpack and
+            run `d2r-advisor.exe` (needs Tesseract OCR installed for F8/F9
+            tooltip scans; Node.js is optional and only speeds up seed
+            search). On first run it downloads the gamble icons and
+            fast-search workers.
+
+            **d2r-advisor-…-source.zip** — run from source: unpack, run
+            `install.bat`, then `run.bat`. See README for details.
+
+            Third-party assets (item icons, fast-search workers, game data
+            tables) are fetched at install/first run — they are not part of
+            these archives.

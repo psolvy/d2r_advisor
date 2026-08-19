@@ -1,0 +1,8 @@
+opencv-python>=4.8
+numpy
+mss
+pytesseract
+rapidfuzz
+keyboard
+pyyaml
+Pillow

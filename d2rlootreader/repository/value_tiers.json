@@ -1,0 +1,410 @@
+{
+ "Aldur's Advance": {
+  "note": "Life boots, druid set",
+  "tier": "B"
+ },
+ "Andariel's Visage": {
+  "note": "Top melee helm",
+  "tier": "A"
+ },
+ "Arachnid Mesh": {
+  "note": "Best caster belt",
+  "tier": "A"
+ },
+ "Arioc's Needle": {
+  "note": "+4 skills spear",
+  "tier": "B"
+ },
+ "Arm of King Leoric": {
+  "note": "Summoner wand",
+  "tier": "B"
+ },
+ "Arreat's Face": {
+  "note": "Barb helm staple",
+  "tier": "A"
+ },
+ "Azurewrath": {
+  "note": "Sanctuary-aura sword; niche A for ubers",
+  "tier": "B"
+ },
+ "Bartuc's Cut-throat": {
+  "note": "Trap-sin claw; +2 traps roll matters",
+  "tier": "B"
+ },
+ "Berserker's Headgear": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Blade of Ali Baba": {
+  "note": "MF sword — 2 sockets + gold/MF",
+  "tier": "B"
+ },
+ "Bladebone": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Bloodfist": {
+  "note": "Leveling gloves at best",
+  "tier": "C"
+ },
+ "Boneflame": {
+  "note": "Summoner shield",
+  "tier": "B"
+ },
+ "Bul-Kathos' Wedding Band": {
+  "note": "+1 skills ring",
+  "tier": "A"
+ },
+ "Buriza-Do Kyanon": {
+  "note": "Budget bowazon crossbow",
+  "tier": "B"
+ },
+ "Cathan's Mesh": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Chance Guards": {
+  "note": "40 MF gloves",
+  "tier": "B"
+ },
+ "Chromatic Ire": {
+  "note": "Sorc leveling staff",
+  "tier": "B"
+ },
+ "Cleglaw's Pincers": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Crescent Moon": {
+  "note": "The amulet: mana-leech for javazons",
+  "tier": "B"
+ },
+ "Crown of Ages": {
+  "note": "Chase helm; 2-socket roll = huge",
+  "tier": "S"
+ },
+ "Darkforge Spawn": {
+  "note": "Necro chase shield; check skill rolls",
+  "tier": "A"
+ },
+ "Deathcleaver": {
+  "note": "66% deadly-strike axe",
+  "tier": "B"
+ },
+ "Death's Web": {
+  "note": "Chase poison-necro wand",
+  "tier": "S"
+ },
+ "Deathspade": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Doombringer": {
+  "note": "8% life-roll sword",
+  "tier": "B"
+ },
+ "Dracul's Grasp": {
+  "note": "Life-tap gloves for melee",
+  "tier": "A"
+ },
+ "Dwarf Star": {
+  "note": "Fire absorb ring, niche",
+  "tier": "B"
+ },
+ "Eschuta's Temper": {
+  "note": "Fire/light sorc orb; check +dmg rolls",
+  "tier": "A"
+ },
+ "Executioner's Justice": {
+  "note": "50% CB elite weapon",
+  "tier": "B"
+ },
+ "Fathom": {
+  "note": "Chase cold-sorc orb",
+  "tier": "S"
+ },
+ "Frostburn": {
+  "note": "Vendor unless twinking",
+  "tier": "C"
+ },
+ "Giantskull": {
+  "note": "CB helm; 2-socket roll = A-tier",
+  "tier": "B"
+ },
+ "Goldwrap": {
+  "note": "MF belt",
+  "tier": "B"
+ },
+ "Gorefoot": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Gorerider": {
+  "note": "Best physical-damage boots",
+  "tier": "A"
+ },
+ "Griffon's Eye": {
+  "note": "Chase diadem for lightning casters",
+  "tier": "S"
+ },
+ "Guillaume's Face": {
+  "note": "Crushing-blow helm for melee",
+  "tier": "A"
+ },
+ "Gull": {
+  "note": "100 MF dagger for early MF chars",
+  "tier": "B"
+ },
+ "Halaberd's Reign": {
+  "note": "BO helm for barbs",
+  "tier": "B"
+ },
+ "Harlequin Crest": {
+  "note": "The classic — everyone wants a Shako",
+  "tier": "S"
+ },
+ "Headstriker": {
+  "note": "Deadly-strike sword",
+  "tier": "B"
+ },
+ "Herald of Zakarum": {
+  "note": "Best paladin shield",
+  "tier": "A"
+ },
+ "Homunculus": {
+  "note": "Necro shield",
+  "tier": "A"
+ },
+ "Hotspur": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Immortal King's Soul Cage": {
+  "note": "IK armor",
+  "tier": "B"
+ },
+ "Immortal King's Stone Crusher": {
+  "note": "IK maul — barb staple",
+  "tier": "A"
+ },
+ "Isenhart's Case": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Isenhart's Horns": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Isenhart's Lightbrand": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Isenhart's Parry": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Jalal's Mane": {
+  "note": "Druid pelt staple",
+  "tier": "A"
+ },
+ "Kira's Guardian": {
+  "note": "Cannot-be-frozen circlet with res",
+  "tier": "B"
+ },
+ "Laying of Hands": {
+  "note": "20 IAS + 350% demon dmg gloves",
+  "tier": "A"
+ },
+ "Lightsabre": {
+  "note": "Light-dmg sword",
+  "tier": "B"
+ },
+ "Lycander's Aim": {
+  "note": "Bowazon bow",
+  "tier": "B"
+ },
+ "Magefist": {
+  "note": "Caster gloves, always useful",
+  "tier": "A"
+ },
+ "Mara's Kaleidoscope": {
+  "note": "Best all-around amulet",
+  "tier": "S"
+ },
+ "McAuley's Paragon": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "Nagelring": {
+  "note": "MF ring; 30 MF roll = sellable",
+  "tier": "B"
+ },
+ "Nature's Peace": {
+  "note": "Anti-corpse ring, niche demand",
+  "tier": "B"
+ },
+ "Nightwing's Veil": {
+  "note": "Cold sorc helm; check +cold dmg roll",
+  "tier": "A"
+ },
+ "Ondal's Wisdom": {
+  "note": "Leveling/prebuff staff",
+  "tier": "A"
+ },
+ "Ormus' Robes": {
+  "note": "Caster armor; check +skill-dmg rolls",
+  "tier": "A"
+ },
+ "Que-Hegan's Wisdom": {
+  "note": "FCR/FHR caster armor",
+  "tier": "B"
+ },
+ "Raven Frost": {
+  "note": "Cannot-be-frozen ring, always in demand",
+  "tier": "A"
+ },
+ "Sandstorm Trek": {
+  "note": "Caster/melee boots; check vit/str rolls",
+  "tier": "A"
+ },
+ "Schaefer's Hammer": {
+  "note": "Light-proc hammer",
+  "tier": "B"
+ },
+ "Shaftstop": {
+  "note": "30% DR armor; eth for merc = more",
+  "tier": "A"
+ },
+ "Silkweave": {
+  "note": "Caster boots",
+  "tier": "B"
+ },
+ "Skin of the Vipermagi": {
+  "note": "Early caster armor; 35 res roll = top",
+  "tier": "A"
+ },
+ "Skullder's Ire": {
+  "note": "MF armor",
+  "tier": "A"
+ },
+ "Steelrend": {
+  "note": "60% ED roll gloves = A-tier",
+  "tier": "B"
+ },
+ "Stormlash": {
+  "note": "Static-proc weapon for ubers",
+  "tier": "A"
+ },
+ "Stormshield": {
+  "note": "35% DR shield",
+  "tier": "A"
+ },
+ "String of Ears": {
+  "note": "DR belt for melee",
+  "tier": "A"
+ },
+ "Suicide Branch": {
+  "note": "FCR caster wand",
+  "tier": "B"
+ },
+ "Tal Rasha's Adjudication": {
+  "note": "Tal amulet",
+  "tier": "A"
+ },
+ "Tal Rasha's Fire-Spun Cloth": {
+  "note": "Tal belt",
+  "tier": "B"
+ },
+ "Tal Rasha's Horadric Crest": {
+  "note": "Tal mask",
+  "tier": "B"
+ },
+ "Tal Rasha's Howling Wind": {
+  "note": "Tal armor — core of the set",
+  "tier": "A"
+ },
+ "Tal Rasha's Lidless Eye": {
+  "note": "Tal orb",
+  "tier": "B"
+ },
+ "The Gladiator's Bane": {
+  "note": "Melee armor",
+  "tier": "B"
+ },
+ "The Gnasher": {
+  "note": "Vendor food",
+  "tier": "C"
+ },
+ "The Grandfather": {
+  "note": "Classic sword",
+  "tier": "A"
+ },
+ "The Oculus": {
+  "note": "Sorc orb; also MF stick",
+  "tier": "A"
+ },
+ "The Reaper's Toll": {
+  "note": "Best merc polearm (decrep proc)",
+  "tier": "A"
+ },
+ "The Spirit Shroud": {
+  "note": "Cannot-be-frozen armor",
+  "tier": "B"
+ },
+ "The Stone of Jordan": {
+  "note": "Currency-grade ring",
+  "tier": "S"
+ },
+ "Thundergod's Vigor": {
+  "note": "Light-sorc/javazon belt",
+  "tier": "A"
+ },
+ "Titan's Revenge": {
+  "note": "Javazon staple; eth = more",
+  "tier": "A"
+ },
+ "Tomb Reaver": {
+  "note": "Eth 3-socket roll = chase merc weapon",
+  "tier": "A"
+ },
+ "Trang-Oul's Claws": {
+  "note": "+2 curses gloves — poison necro staple",
+  "tier": "A"
+ },
+ "Tyrael's Might": {
+  "note": "Rarest armor in the game",
+  "tier": "S"
+ },
+ "Vampire Gaze": {
+  "note": "DR helm; check the rolls",
+  "tier": "A"
+ },
+ "Verdugo's Hearty Cord": {
+  "note": "DR/vita belt; high roll = top",
+  "tier": "A"
+ },
+ "War Traveler": {
+  "note": "MF boots; 40%+ MF roll sells high",
+  "tier": "A"
+ },
+ "Waterwalk": {
+  "note": "FRW/life boots",
+  "tier": "B"
+ },
+ "Windforce": {
+  "note": "Chase bow",
+  "tier": "S"
+ },
+ "Wisp Projector": {
+  "note": "Light absorb ring; A-tier for ubers",
+  "tier": "A"
+ },
+ "Wizardspike": {
+  "note": "75 res + FCR dagger",
+  "tier": "A"
+ },
+ "Wraithstep": {
+  "note": "New boots — check current market",
+  "tier": "A"
+ }
+}

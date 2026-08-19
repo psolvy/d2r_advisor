@@ -1,0 +1,4026 @@
+{
+ "Amulet": {
+  "affixes": [
+   {
+    "alvl": 90,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Necromancer Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Sorceress Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Druid Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 39,
+    "name": "Telling of Beads"
+   },
+   {
+    "alvl": 27,
+    "name": "Tancred's Weird"
+   },
+   {
+    "alvl": 26,
+    "name": "Tal Rasha's Adjudication"
+   },
+   {
+    "alvl": 21,
+    "name": "Iratha's Collar"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Metalgrid"
+   },
+   {
+    "alvl": 80,
+    "name": "Mara's Kaleidoscope"
+   },
+   {
+    "alvl": 73,
+    "name": "The Rising Sun"
+   },
+   {
+    "alvl": 73,
+    "name": "Highlord's Wrath"
+   },
+   {
+    "alvl": 73,
+    "name": "Seraph's Hymn"
+   },
+   {
+    "alvl": 60,
+    "name": "Atma's Scarab"
+   }
+  ]
+ },
+ "Ancient Armor": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 44,
+    "name": "Griswold's Heart"
+   },
+   {
+    "alvl": 37,
+    "name": "Immortal King's Soul Cage"
+   },
+   {
+    "alvl": 23,
+    "name": "Milabrega's Robe"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 87,
+    "name": "Tyrael's Might"
+   },
+   {
+    "alvl": 82,
+    "name": "Templar's Might"
+   },
+   {
+    "alvl": 63,
+    "name": "Corpsemourn"
+   },
+   {
+    "alvl": 38,
+    "name": "Victor's Silk"
+   }
+  ]
+ },
+ "Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 47,
+    "name": "Butcher's Pupil"
+   },
+   {
+    "alvl": 12,
+    "name": "Deathspade"
+   }
+  ]
+ },
+ "Balanced Axe": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 76,
+    "name": "Lacerator"
+   }
+  ]
+ },
+ "Balanced Knife": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "Warshrike"
+   }
+  ]
+ },
+ "Bardiche": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 72,
+    "name": "Bonehew"
+   },
+   {
+    "alvl": 49,
+    "name": "The Meat Scraper"
+   },
+   {
+    "alvl": 11,
+    "name": "Dimoak's Hew"
+   }
+  ]
+ },
+ "Bastard Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 75,
+    "name": "Doombringer"
+   },
+   {
+    "alvl": 53,
+    "name": "Cloudcrack"
+   },
+   {
+    "alvl": 35,
+    "name": "Blacktongue"
+   }
+  ]
+ },
+ "Battle Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 71,
+    "name": "Hellslayer"
+   },
+   {
+    "alvl": 49,
+    "name": "Stormrider"
+   },
+   {
+    "alvl": 26,
+    "name": "The Chieftain"
+   }
+  ]
+ },
+ "Belt": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 39,
+    "name": "Credendum"
+   },
+   {
+    "alvl": 28,
+    "name": "Hwanin's Seal"
+   },
+   {
+    "alvl": 26,
+    "name": "Tal Rasha's Fire-Spun Cloth"
+   },
+   {
+    "alvl": 4,
+    "name": "Hsarus' Iron Stay"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 71,
+    "name": "Verdugo's Hearty Cord"
+   },
+   {
+    "alvl": 45,
+    "name": "Gloomstrap"
+   },
+   {
+    "alvl": 27,
+    "name": "Nightsmoke"
+   }
+  ]
+ },
+ "Blade Talons": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 50,
+    "name": "Cutthroat1"
+   }
+  ]
+ },
+ "Bone Helm": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 32,
+    "name": "Trang-Oul's Guise"
+   },
+   {
+    "alvl": 27,
+    "name": "Tancred's Skull"
+   },
+   {
+    "alvl": 22,
+    "name": "Natalya's Totem"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 73,
+    "name": "Giantskull"
+   },
+   {
+    "alvl": 49,
+    "name": "Vampire Gaze"
+   },
+   {
+    "alvl": 28,
+    "name": "Wormskull"
+   }
+  ]
+ },
+ "Bone Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "Headhunter's Glory"
+   },
+   {
+    "alvl": 49,
+    "name": "Lidless Wall"
+   },
+   {
+    "alvl": 27,
+    "name": "Wall of the Eyeless"
+   }
+  ]
+ },
+ "Boots": {
+  "affixes": [
+   {
+    "alvl": 26,
+    "label": "26-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "20-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 39,
+    "name": "Rite of Passage"
+   },
+   {
+    "alvl": 27,
+    "name": "Tancred's Hobnails"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 37,
+    "name": "Infernostride"
+   },
+   {
+    "alvl": 7,
+    "name": "Hotspur"
+   }
+  ]
+ },
+ "Brandistock": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 79,
+    "name": "Viperfork"
+   },
+   {
+    "alvl": 43,
+    "name": "Soulfeast Tine"
+   },
+   {
+    "alvl": 23,
+    "name": "Bloodthief"
+   }
+  ]
+ },
+ "Breast Plate": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 55,
+    "name": "Haemosu's Adament"
+   },
+   {
+    "alvl": 11,
+    "name": "Isenhart's Case"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 49,
+    "name": "Duriel's Shell"
+   },
+   {
+    "alvl": 27,
+    "name": "Venomsward"
+   }
+  ]
+ },
+ "Broad Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 82,
+    "name": "Ethereal Edge"
+   },
+   {
+    "alvl": 47,
+    "name": "Spellsteel"
+   },
+   {
+    "alvl": 19,
+    "name": "Goreshovel"
+   }
+  ]
+ },
+ "Broad Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 11,
+    "name": "Isenhart's Lightbrand"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 47,
+    "name": "Headstriker"
+   },
+   {
+    "alvl": 23,
+    "name": "Griswold's Edge"
+   }
+  ]
+ },
+ "Buckler": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 4,
+    "name": "Hsarus' Iron Fist"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 36,
+    "name": "Visceratuant"
+   },
+   {
+    "alvl": 3,
+    "name": "Pelta Lunata"
+   }
+  ]
+ },
+ "Cap": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 20,
+    "name": "McAuley's Paragon"
+   },
+   {
+    "alvl": 20,
+    "name": "Cow King's Horns"
+   },
+   {
+    "alvl": 7,
+    "name": "Infernal Cranium"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 69,
+    "name": "Harlequin Crest"
+   },
+   {
+    "alvl": 36,
+    "name": "Peasant Crown"
+   },
+   {
+    "alvl": 4,
+    "name": "War Bonnet"
+   }
+  ]
+ },
+ "Cestus": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Shadowkiller"
+   }
+  ]
+ },
+ "Chain Boots": {
+  "affixes": [
+   {
+    "alvl": 26,
+    "label": "26-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "20-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 22,
+    "name": "Natalya's Soul"
+   },
+   {
+    "alvl": 4,
+    "name": "Hsarus' Iron Heel"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 74,
+    "name": "Marrowwalk"
+   },
+   {
+    "alvl": 44,
+    "name": "Silkweave"
+   },
+   {
+    "alvl": 20,
+    "name": "Treads of Cthon"
+   }
+  ]
+ },
+ "Chain Gloves": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Passive and Magic Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Passive and Magic Skills (Amazon only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 32,
+    "name": "Trang-Oul's Claws"
+   },
+   {
+    "alvl": 6,
+    "name": "Cleglaw's Pincers"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 82,
+    "name": "Souldrain"
+   },
+   {
+    "alvl": 44,
+    "name": "Ghoulhide"
+   },
+   {
+    "alvl": 20,
+    "name": "Chance Guards"
+   }
+  ]
+ },
+ "Chain Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 15,
+    "name": "Cathan's Mesh"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 46,
+    "name": "Shaftstop"
+   },
+   {
+    "alvl": 23,
+    "name": "Sparking Mail"
+   }
+  ]
+ },
+ "Circlet": {
+  "affixes": [
+   {
+    "alvl": 90,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Necromancer Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Sorceress Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Druid Skill Levels"
+   }
+  ],
+  "maglvl": 3,
+  "sets": [
+   {
+    "alvl": 43,
+    "name": "Naj's Circlet"
+   },
+   {
+    "alvl": 21,
+    "name": "M'avina's True Sight"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Kira's Guardian"
+   },
+   {
+    "alvl": 84,
+    "name": "Griffon's Eye"
+   }
+  ]
+ },
+ "Claws": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 75,
+    "name": "Firelizard's Talons"
+   }
+  ]
+ },
+ "Claymore": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 51,
+    "name": "Bing Sz Wang"
+   },
+   {
+    "alvl": 26,
+    "name": "Soulflay"
+   }
+  ]
+ },
+ "Club": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Summoning Skills (Druid only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shapeshifting Skills (Druid only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Elemental Skills (Druid only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Druid Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Summoning Skills (Druid only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 76,
+    "name": "Nord's Tenderizer"
+   },
+   {
+    "alvl": 42,
+    "name": "Dark Clan Crusher"
+   },
+   {
+    "alvl": 4,
+    "name": "Felloak"
+   }
+  ]
+ },
+ "Composite Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 44,
+    "name": "Endlesshail"
+   },
+   {
+    "alvl": 27,
+    "name": "Piercerib"
+   }
+  ]
+ },
+ "Coronet": {
+  "affixes": [
+   {
+    "alvl": 90,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Necromancer Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Sorceress Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 90,
+    "label": "+2 to Druid Skill Levels"
+   }
+  ],
+  "maglvl": 8,
+  "sets": [
+   {
+    "alvl": 21,
+    "name": "M'avina's True Sight"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Kira's Guardian"
+   },
+   {
+    "alvl": 84,
+    "name": "Griffon's Eye"
+   }
+  ]
+ },
+ "Crossbow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 44,
+    "name": "Pus Spitter"
+   },
+   {
+    "alvl": 24,
+    "name": "Ichorsting"
+   }
+  ]
+ },
+ "Crown": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 44,
+    "name": "Griswold's Valor"
+   },
+   {
+    "alvl": 28,
+    "name": "Hwanin's Splendor"
+   },
+   {
+    "alvl": 23,
+    "name": "Milabrega's Diadem"
+   },
+   {
+    "alvl": 21,
+    "name": "Iratha's Coil"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 86,
+    "name": "Crown of Ages"
+   },
+   {
+    "alvl": 57,
+    "name": "Crown of Thieves"
+   },
+   {
+    "alvl": 39,
+    "name": "Undead Crown"
+   }
+  ]
+ },
+ "Crystal Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 87,
+    "name": "Azurewrath"
+   },
+   {
+    "alvl": 66,
+    "name": "Lightsabre"
+   },
+   {
+    "alvl": 45,
+    "name": "Ginther's Rift"
+   }
+  ]
+ },
+ "Double Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 5,
+    "name": "Berserker's Hatchet"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 80,
+    "name": "Runemaster"
+   },
+   {
+    "alvl": 51,
+    "name": "Islestrike"
+   },
+   {
+    "alvl": 20,
+    "name": "Bladebone"
+   }
+  ]
+ },
+ "Falchion": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 43,
+    "name": "Blade of Ali Baba"
+   },
+   {
+    "alvl": 18,
+    "name": "Gleamscythe"
+   }
+  ]
+ },
+ "Field Plate": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 21,
+    "name": "M'avina's Embrace"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 73,
+    "name": "Leviathan"
+   },
+   {
+    "alvl": 56,
+    "name": "Toothrow"
+   },
+   {
+    "alvl": 38,
+    "name": "Rockfleece"
+   }
+  ]
+ },
+ "Flail": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 86,
+    "name": "Stormlash"
+   },
+   {
+    "alvl": 72,
+    "name": "Horizon's Tornado"
+   },
+   {
+    "alvl": 53,
+    "name": "Baezil's Vortex"
+   },
+   {
+    "alvl": 28,
+    "name": "The General's Tan Do Li Ga"
+   }
+  ]
+ },
+ "Flamberge": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 54,
+    "name": "Todesfaelle Flamme"
+   },
+   {
+    "alvl": 35,
+    "name": "Ripsaw"
+   }
+  ]
+ },
+ "Full Helm": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 34,
+    "name": "Sazabi's Mental Sheath"
+   },
+   {
+    "alvl": 11,
+    "name": "Isenhart's Horns"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 46,
+    "name": "Darksight Helm"
+   },
+   {
+    "alvl": 23,
+    "name": "Duskdeep"
+   }
+  ]
+ },
+ "Full Plate Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 100,
+    "name": "Warlord's Mantle"
+   },
+   {
+    "alvl": 32,
+    "name": "Trang-Oul's Scales"
+   },
+   {
+    "alvl": 29,
+    "name": "Aldur's Deception"
+   },
+   {
+    "alvl": 27,
+    "name": "Tancred's Spine"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 74,
+    "name": "Steel Carapace"
+   },
+   {
+    "alvl": 61,
+    "name": "Black Hades"
+   },
+   {
+    "alvl": 38,
+    "name": "Goldskin"
+   }
+  ]
+ },
+ "Gauntlets": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Passive and Magic Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Passive and Magic Skills (Amazon only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 100,
+    "name": "Warlord's Conquest"
+   },
+   {
+    "alvl": 37,
+    "name": "Immortal King's Forge"
+   },
+   {
+    "alvl": 9,
+    "name": "Sigon's Gage"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Steelrend"
+   },
+   {
+    "alvl": 55,
+    "name": "Hellmouth"
+   },
+   {
+    "alvl": 39,
+    "name": "Frostburn"
+   }
+  ]
+ },
+ "Giant Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "Executioner's Justice"
+   },
+   {
+    "alvl": 53,
+    "name": "The Minataur"
+   },
+   {
+    "alvl": 39,
+    "name": "The Humongous"
+   }
+  ]
+ },
+ "Giant Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 79,
+    "name": "Flamebellow"
+   },
+   {
+    "alvl": 52,
+    "name": "The Vile Husk"
+   },
+   {
+    "alvl": 31,
+    "name": "Kinemil's Awl"
+   }
+  ]
+ },
+ "Glaive": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 84,
+    "name": "Wraithflight"
+   }
+  ]
+ },
+ "Gothic Plate": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 26,
+    "name": "Tal Rasha's Howling Wind"
+   },
+   {
+    "alvl": 9,
+    "name": "Sigon's Shelter"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 59,
+    "name": "Atma's Wail"
+   },
+   {
+    "alvl": 39,
+    "name": "Rattlecage"
+   }
+  ]
+ },
+ "Gothic Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 55,
+    "name": "Heaven's Taebaek"
+   },
+   {
+    "alvl": 11,
+    "name": "Isenhart's Parry"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 76,
+    "name": "Spirit Ward"
+   },
+   {
+    "alvl": 58,
+    "name": "Radament's Sphere"
+   },
+   {
+    "alvl": 35,
+    "name": "The Ward"
+   }
+  ]
+ },
+ "Great Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 75,
+    "name": "Messerschmidt's Reaver"
+   },
+   {
+    "alvl": 50,
+    "name": "Boneslayer Blade"
+   },
+   {
+    "alvl": 34,
+    "name": "Brainhew"
+   }
+  ]
+ },
+ "Great Helm": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 100,
+    "name": "Warlord's Lust"
+   },
+   {
+    "alvl": 55,
+    "name": "Ondal's Almighty"
+   },
+   {
+    "alvl": 41,
+    "name": "Guillaume's Face"
+   },
+   {
+    "alvl": 9,
+    "name": "Sigon's Visor"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 77,
+    "name": "Veil of Steel"
+   },
+   {
+    "alvl": 75,
+    "name": "Nightwing's Veil"
+   },
+   {
+    "alvl": 52,
+    "name": "Valkyrie Wing"
+   },
+   {
+    "alvl": 34,
+    "name": "Howltusk"
+   }
+  ]
+ },
+ "Great Maul": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 35,
+    "label": "+1 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "The Cranium Basher"
+   },
+   {
+    "alvl": 77,
+    "name": "Earthshifter"
+   },
+   {
+    "alvl": 53,
+    "name": "The Gavel of Pain"
+   },
+   {
+    "alvl": 39,
+    "name": "Steeldriver"
+   }
+  ]
+ },
+ "Great Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 50,
+    "name": "Bul-Kathos' Sacred Charge"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "The Grandfather"
+   },
+   {
+    "alvl": 55,
+    "name": "Swordguard"
+   },
+   {
+    "alvl": 39,
+    "name": "The Patriarch"
+   }
+  ]
+ },
+ "Greaves": {
+  "affixes": [
+   {
+    "alvl": 26,
+    "label": "26-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "20-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 100,
+    "name": "Warlord's Crushers"
+   },
+   {
+    "alvl": 37,
+    "name": "Immortal King's Pillar"
+   },
+   {
+    "alvl": 9,
+    "name": "Sigon's Sabot"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 79,
+    "name": "Shadowdancer"
+   },
+   {
+    "alvl": 55,
+    "name": "Gorerider"
+   },
+   {
+    "alvl": 39,
+    "name": "Tearhaunch"
+   }
+  ]
+ },
+ "Halberd": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 52,
+    "name": "Husoldal Evo"
+   },
+   {
+    "alvl": 38,
+    "name": "Woestave"
+   }
+  ]
+ },
+ "Hand Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 75,
+    "name": "Razoredge"
+   },
+   {
+    "alvl": 44,
+    "name": "Coldkill"
+   },
+   {
+    "alvl": 7,
+    "name": "The Gnasher"
+   }
+  ]
+ },
+ "Hard Leather Armor": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 7,
+    "name": "Bane's Wraithskin"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 39,
+    "name": "Skin of the Flayed One"
+   },
+   {
+    "alvl": 19,
+    "name": "The Centurion"
+   }
+  ]
+ },
+ "Hatchet Hands": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": []
+ },
+ "Heavy Belt": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 41,
+    "name": "Wilhelm's Pride"
+   },
+   {
+    "alvl": 32,
+    "name": "Trang-Oul's Girth"
+   },
+   {
+    "alvl": 21,
+    "name": "Iratha's Cord"
+   },
+   {
+    "alvl": 7,
+    "name": "Infernal Sign"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 79,
+    "name": "Gheed's Wager"
+   },
+   {
+    "alvl": 49,
+    "name": "Snowclash"
+   },
+   {
+    "alvl": 36,
+    "name": "Goldwrap"
+   }
+  ]
+ },
+ "Heavy Boots": {
+  "affixes": [
+   {
+    "alvl": 26,
+    "label": "26-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "20-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 20,
+    "name": "Cow King's Hoofs"
+   },
+   {
+    "alvl": 20,
+    "name": "McAuley's Riprap"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 72,
+    "name": "Sandstorm Trek"
+   },
+   {
+    "alvl": 40,
+    "name": "Waterwalk"
+   },
+   {
+    "alvl": 12,
+    "name": "Gorefoot"
+   }
+  ]
+ },
+ "Heavy Crossbow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 84,
+    "name": "Hellrack"
+   },
+   {
+    "alvl": 59,
+    "name": "Buriza-Do Kyanon"
+   },
+   {
+    "alvl": 36,
+    "name": "Hellcast"
+   }
+  ]
+ },
+ "Heavy Gloves": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Passive and Magic Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Passive and Magic Skills (Amazon only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 41,
+    "name": "Magnus' Skin"
+   },
+   {
+    "alvl": 20,
+    "name": "McAuley's Taboo"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 84,
+    "name": "Dracul's Grasp"
+   },
+   {
+    "alvl": 39,
+    "name": "Gravepalm"
+   },
+   {
+    "alvl": 12,
+    "name": "Bloodfist"
+   }
+  ]
+ },
+ "Helm": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 5,
+    "name": "Berserker's Headgear"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 70,
+    "name": "Steelshade"
+   },
+   {
+    "alvl": 43,
+    "name": "Stealskull"
+   },
+   {
+    "alvl": 19,
+    "name": "Coif of Glory"
+   }
+  ]
+ },
+ "Hunter's Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 39,
+    "name": "Riphook"
+   },
+   {
+    "alvl": 18,
+    "name": "Witherstring"
+   }
+  ]
+ },
+ "Javelin": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": []
+ },
+ "Katar": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": []
+ },
+ "Kite Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 23,
+    "name": "Milabrega's Orb"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 77,
+    "name": "Stormshield"
+   },
+   {
+    "alvl": 46,
+    "name": "Tiamat's Rebuke"
+   },
+   {
+    "alvl": 23,
+    "name": "Steelclash"
+   }
+  ]
+ },
+ "Large Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 43,
+    "name": "Warlord's Trust"
+   },
+   {
+    "alvl": 11,
+    "name": "Fechmar's Axe"
+   }
+  ]
+ },
+ "Large Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 13,
+    "name": "Civerb's Ward"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 43,
+    "name": "Stormchaser"
+   },
+   {
+    "alvl": 18,
+    "name": "Stormguild"
+   }
+  ]
+ },
+ "Leather Armor": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 19,
+    "name": "Vidala's Ambush"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 37,
+    "name": "Skin of the Vipermagi"
+   },
+   {
+    "alvl": 16,
+    "name": "Blinkbat's Form"
+   }
+  ]
+ },
+ "Leather Gloves": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Passive and Magic Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Passive and Magic Skills (Amazon only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 40,
+    "name": "Horazon's Hold"
+   },
+   {
+    "alvl": 39,
+    "name": "Laying of Hands"
+   },
+   {
+    "alvl": 8,
+    "name": "Death's Hand"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 37,
+    "name": "Venom Grip"
+   },
+   {
+    "alvl": 7,
+    "name": "The Hand of Broc"
+   }
+  ]
+ },
+ "Light Belt": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 21,
+    "name": "M'avina's Tenet"
+   },
+   {
+    "alvl": 7,
+    "name": "Bane's Authority"
+   },
+   {
+    "alvl": 3,
+    "name": "Arctic Binding"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 68,
+    "name": "Nosferatu's Coil"
+   },
+   {
+    "alvl": 39,
+    "name": "Razortail"
+   },
+   {
+    "alvl": 16,
+    "name": "Snakecord"
+   }
+  ]
+ },
+ "Light Crossbow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 40,
+    "name": "Langer Briser"
+   },
+   {
+    "alvl": 12,
+    "name": "Leadcrow"
+   }
+  ]
+ },
+ "Light Gauntlets": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Passive and Magic Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Bow and Crossbow Skills (Amazon only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Passive and Magic Skills (Amazon only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 21,
+    "name": "Iratha's Cuff"
+   },
+   {
+    "alvl": 21,
+    "name": "M'avina's Icy Clutch"
+   },
+   {
+    "alvl": 3,
+    "name": "Arctic Mitts"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 50,
+    "name": "Lavagout"
+   },
+   {
+    "alvl": 31,
+    "name": "Magefist"
+   }
+  ]
+ },
+ "Light Plate": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 20,
+    "name": "Arcanna's Flesh"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 59,
+    "name": "Que-Hegan's Wisdom"
+   },
+   {
+    "alvl": 39,
+    "name": "Heavenly Garb"
+   }
+  ]
+ },
+ "Light Plated Boots": {
+  "affixes": [
+   {
+    "alvl": 26,
+    "label": "26-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "20-35% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 16,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 40,
+    "name": "Horazon's Legacy"
+   },
+   {
+    "alvl": 29,
+    "name": "Aldur's Advance"
+   },
+   {
+    "alvl": 19,
+    "name": "Vidala's Fetlock"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 73,
+    "name": "Wraithstep"
+   },
+   {
+    "alvl": 50,
+    "name": "War Traveler"
+   },
+   {
+    "alvl": 30,
+    "name": "Goblin Toe"
+   }
+  ]
+ },
+ "Long Battle Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 19,
+    "name": "Vidala's Barb"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 77,
+    "name": "Eaglehorn"
+   },
+   {
+    "alvl": 49,
+    "name": "Cliffkiller"
+   },
+   {
+    "alvl": 35,
+    "name": "Wizendraw"
+   }
+  ]
+ },
+ "Long Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 41,
+    "name": "Kuko Shakaku"
+   },
+   {
+    "alvl": 20,
+    "name": "Rimeraven"
+   }
+  ]
+ },
+ "Long Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 34,
+    "name": "Sazabi's Cobalt Redeemer"
+   },
+   {
+    "alvl": 6,
+    "name": "Cleglaw's Tooth"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Frostwind"
+   },
+   {
+    "alvl": 49,
+    "name": "Plague Bearer"
+   },
+   {
+    "alvl": 30,
+    "name": "Hellplague"
+   }
+  ]
+ },
+ "Long War Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 80,
+    "name": "Windforce"
+   },
+   {
+    "alvl": 54,
+    "name": "Godstrike Arch"
+   },
+   {
+    "alvl": 38,
+    "name": "Blastbark"
+   }
+  ]
+ },
+ "Mace": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 55,
+    "name": "Dangoon's Teaching"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 47,
+    "name": "Sureshrill Frost"
+   },
+   {
+    "alvl": 12,
+    "name": "Crushflange"
+   }
+  ]
+ },
+ "Mask": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 40,
+    "name": "Horazon's Countenance"
+   },
+   {
+    "alvl": 26,
+    "name": "Tal Rasha's Horadric Crest"
+   },
+   {
+    "alvl": 15,
+    "name": "Cathan's Visage"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Andariel's Visage"
+   },
+   {
+    "alvl": 49,
+    "name": "Blackhorn's Face"
+   },
+   {
+    "alvl": 27,
+    "name": "The Face of Horror"
+   }
+  ]
+ },
+ "Maul": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 35,
+    "label": "+1 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 37,
+    "name": "Immortal King's Stone Crusher"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 76,
+    "name": "Windhammer"
+   },
+   {
+    "alvl": 56,
+    "name": "Bloodtree Stump"
+   },
+   {
+    "alvl": 32,
+    "name": "Bonesnap"
+   }
+  ]
+ },
+ "Military Pick": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 27,
+    "name": "Tancred's Crowbill"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 71,
+    "name": "Cranebeak"
+   },
+   {
+    "alvl": 53,
+    "name": "Pompe's Wrath"
+   },
+   {
+    "alvl": 28,
+    "name": "Mindrend"
+   }
+  ]
+ },
+ "Morning Star": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 29,
+    "name": "Aldur's Gauntlet"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 70,
+    "name": "Baranar's Star"
+   },
+   {
+    "alvl": 50,
+    "name": "Moonfall"
+   },
+   {
+    "alvl": 20,
+    "name": "Bloodrise"
+   }
+  ]
+ },
+ "Pike": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 77,
+    "name": "Steelpillar"
+   },
+   {
+    "alvl": 47,
+    "name": "Spire of Honor"
+   },
+   {
+    "alvl": 36,
+    "name": "The Tannr Gorerod"
+   }
+  ]
+ },
+ "Pilum": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": []
+ },
+ "Plate Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 43,
+    "name": "Naj's Light Plate"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 53,
+    "name": "Guardian Angel"
+   },
+   {
+    "alvl": 35,
+    "name": "Boneflesh"
+   }
+  ]
+ },
+ "Plated Belt": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 100,
+    "name": "Warlord's Authority"
+   },
+   {
+    "alvl": 37,
+    "name": "Immortal King's Detail"
+   },
+   {
+    "alvl": 9,
+    "name": "Sigon's Wrap"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 55,
+    "name": "Thundergod's Vigor"
+   },
+   {
+    "alvl": 39,
+    "name": "Bladebuckle"
+   }
+  ]
+ },
+ "Poleaxe": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 86,
+    "name": "Tomb Reaver"
+   },
+   {
+    "alvl": 51,
+    "name": "Pierre Tombale Couant"
+   },
+   {
+    "alvl": 34,
+    "name": "The Battlebranch"
+   }
+  ]
+ },
+ "Quilted Armor": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 39,
+    "name": "Spiritual Custodian"
+   },
+   {
+    "alvl": 3,
+    "name": "Arctic Furs"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "Ormus' Robes"
+   },
+   {
+    "alvl": 36,
+    "name": "The Spirit Shroud"
+   },
+   {
+    "alvl": 10,
+    "name": "Greyform"
+   }
+  ]
+ },
+ "Repeating Crossbow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 79,
+    "name": "Gutsiphon"
+   },
+   {
+    "alvl": 57,
+    "name": "Demon Machine"
+   },
+   {
+    "alvl": 38,
+    "name": "Doomspittle"
+   }
+  ]
+ },
+ "Ring": {
+  "affixes": [
+   {
+    "alvl": 42,
+    "label": "16-25% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "11-15% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "10-19% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 12,
+    "label": "5-15% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 5,
+    "label": "10-15% Better Chance of Getting Magic Items"
+   },
+   {
+    "alvl": 5,
+    "label": "5-10% Better Chance of Getting Magic Items"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 17,
+    "name": "Angelic Halo"
+   },
+   {
+    "alvl": 15,
+    "name": "Cathan's Seal"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 84,
+    "name": "Wisp Projector"
+   },
+   {
+    "alvl": 77,
+    "name": "Nature's Peace"
+   },
+   {
+    "alvl": 68,
+    "name": "Carrion Wind"
+   },
+   {
+    "alvl": 66,
+    "name": "Bul-Kathos' Wedding Band"
+   },
+   {
+    "alvl": 58,
+    "name": "Sling"
+   },
+   {
+    "alvl": 58,
+    "name": "Opalvein"
+   }
+  ]
+ },
+ "Ring Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 17,
+    "name": "Angelic Mantle"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 43,
+    "name": "Spiritforge"
+   },
+   {
+    "alvl": 19,
+    "name": "Darkglow"
+   }
+  ]
+ },
+ "Saber": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 17,
+    "name": "Angelic Sickle"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 69,
+    "name": "Bloodmoon"
+   },
+   {
+    "alvl": 41,
+    "name": "Hexfire"
+   },
+   {
+    "alvl": 14,
+    "name": "Krintiz's Skewer"
+   }
+  ]
+ },
+ "Sash": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 8,
+    "name": "Death's Guard"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 87,
+    "name": "Arachnid Mesh"
+   },
+   {
+    "alvl": 37,
+    "name": "String of Ears"
+   },
+   {
+    "alvl": 10,
+    "name": "Lenymo"
+   }
+  ]
+ },
+ "Scale Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 28,
+    "name": "Hwanin's Refuge"
+   },
+   {
+    "alvl": 22,
+    "name": "Natalya's Shadow"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 45,
+    "name": "Crow Caw"
+   },
+   {
+    "alvl": 20,
+    "name": "Hawkmail"
+   }
+  ]
+ },
+ "Scimitar": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 73,
+    "name": "Djinnslayer"
+   },
+   {
+    "alvl": 39,
+    "name": "Coldsteel Eye"
+   },
+   {
+    "alvl": 10,
+    "name": "Blood Crescent"
+   }
+  ]
+ },
+ "Scissors Katar": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 22,
+    "name": "Natalya's Mark"
+   }
+  ],
+  "uniques": []
+ },
+ "Scythe": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "The Reaper's Toll"
+   },
+   {
+    "alvl": 50,
+    "name": "Athena's Wrath"
+   },
+   {
+    "alvl": 26,
+    "name": "Soul Harvest"
+   }
+  ]
+ },
+ "Short Battle Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 47,
+    "name": "Witchwild String"
+   },
+   {
+    "alvl": 34,
+    "name": "Pullspite"
+   }
+  ]
+ },
+ "Short Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 36,
+    "name": "Skystrike"
+   },
+   {
+    "alvl": 10,
+    "name": "Pluckeye"
+   }
+  ]
+ },
+ "Short Spear": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 76,
+    "name": "Demon's Arch"
+   }
+  ]
+ },
+ "Short Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 38,
+    "name": "Bloodletter"
+   },
+   {
+    "alvl": 3,
+    "name": "Rixot's Keen"
+   }
+  ]
+ },
+ "Short War Bow": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 3,
+    "name": "Arctic Horn"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 73,
+    "name": "Widowmaker"
+   },
+   {
+    "alvl": 51,
+    "name": "Magewrath"
+   },
+   {
+    "alvl": 36,
+    "name": "Hellclap"
+   }
+  ]
+ },
+ "Skull Cap": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Combat Skills (Barbarian only)"
+   },
+   {
+    "alvl": 20,
+    "label": "+1 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 20,
+    "name": "Arcanna's Head"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 39,
+    "name": "Rockstopper"
+   },
+   {
+    "alvl": 20,
+    "name": "Tarnhelm"
+   }
+  ]
+ },
+ "Small Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 41,
+    "name": "Wihtstan's Guard"
+   },
+   {
+    "alvl": 6,
+    "name": "Cleglaw's Claw"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 67,
+    "name": "Blackoak Shield"
+   },
+   {
+    "alvl": 39,
+    "name": "Moser's Blessed Circle"
+   },
+   {
+    "alvl": 12,
+    "name": "Umbral Disk"
+   }
+  ]
+ },
+ "Spear": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Arioc's Needle"
+   },
+   {
+    "alvl": 39,
+    "name": "The Impaler"
+   },
+   {
+    "alvl": 11,
+    "name": "The Dragon Chang"
+   }
+  ]
+ },
+ "Spetum": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 45,
+    "name": "Hone Sundan"
+   },
+   {
+    "alvl": 30,
+    "name": "Lance of Yaggai"
+   }
+  ]
+ },
+ "Spiked Club": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Summoning Skills (Druid only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shapeshifting Skills (Druid only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Elemental Skills (Druid only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Druid Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Summoning Skills (Druid only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 71,
+    "name": "Demonlimb"
+   },
+   {
+    "alvl": 46,
+    "name": "Fleshrender"
+   },
+   {
+    "alvl": 7,
+    "name": "Stoutnail"
+   }
+  ]
+ },
+ "Spiked Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Spike Thorn"
+   },
+   {
+    "alvl": 43,
+    "name": "Lance Guard"
+   },
+   {
+    "alvl": 20,
+    "name": "Swordback Hold"
+   }
+  ]
+ },
+ "Splint Mail": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 40,
+    "name": "Horazon's Dominion"
+   },
+   {
+    "alvl": 34,
+    "name": "Sazabi's Ghost Liberator"
+   },
+   {
+    "alvl": 5,
+    "name": "Berserker's Hauberk"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "Arkaine's Valor"
+   },
+   {
+    "alvl": 50,
+    "name": "Skullder's Ire"
+   },
+   {
+    "alvl": 30,
+    "name": "Iceblink"
+   }
+  ]
+ },
+ "Studded Leather": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 20,
+    "name": "Cow King's Hide"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 85,
+    "name": "The Gladiator's Bane"
+   },
+   {
+    "alvl": 41,
+    "name": "Iron Pelt"
+   },
+   {
+    "alvl": 22,
+    "name": "Twitchthroe"
+   }
+  ]
+ },
+ "Throwing Axe": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Gimmershred"
+   },
+   {
+    "alvl": 65,
+    "name": "The Scalper"
+   }
+  ]
+ },
+ "Throwing Knife": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 52,
+    "name": "Deathbit"
+   }
+  ]
+ },
+ "Throwing Spear": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Gargoyle's Bite"
+   }
+  ]
+ },
+ "Tower Shield": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 9,
+    "name": "Sigon's Guard"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 84,
+    "name": "Medusa's Gaze"
+   },
+   {
+    "alvl": 52,
+    "name": "Gerke's Sanctuary"
+   },
+   {
+    "alvl": 26,
+    "name": "Bverrit Keep"
+   }
+  ]
+ },
+ "Trident": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Javelin and Spear Skills (Amazon only)"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Amazon Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 41,
+    "name": "Kelpie Snare"
+   },
+   {
+    "alvl": 16,
+    "name": "Razortine"
+   }
+  ]
+ },
+ "Two-Handed Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 69,
+    "name": "Dreadfang"
+   },
+   {
+    "alvl": 50,
+    "name": "Crainte Vomir"
+   },
+   {
+    "alvl": 16,
+    "name": "Shadowfang"
+   }
+  ]
+ },
+ "Voulge": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 28,
+    "name": "Hwanin's Justice"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 50,
+    "name": "Blackleach Blade"
+   },
+   {
+    "alvl": 19,
+    "name": "Steelgoad"
+   }
+  ]
+ },
+ "War Axe": {
+  "affixes": [
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Deathcleaver"
+   },
+   {
+    "alvl": 56,
+    "name": "Guardian Naga"
+   },
+   {
+    "alvl": 36,
+    "name": "Rakescar"
+   }
+  ]
+ },
+ "War Hammer": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 35,
+    "label": "+1 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 30,
+    "label": "+1 to Barbarian Skill Levels"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 83,
+    "name": "Schaefer's Hammer"
+   },
+   {
+    "alvl": 76,
+    "name": "Stone Crusher"
+   },
+   {
+    "alvl": 51,
+    "name": "Earthshaker"
+   },
+   {
+    "alvl": 36,
+    "name": "Ironstone"
+   }
+  ]
+ },
+ "War Scythe": {
+  "affixes": [],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 78,
+    "name": "Stormspire"
+   },
+   {
+    "alvl": 52,
+    "name": "Grim's Burning Dead"
+   },
+   {
+    "alvl": 39,
+    "name": "The Grim Reaper"
+   }
+  ]
+ },
+ "War Sword": {
+  "affixes": [
+   {
+    "alvl": 65,
+    "label": "+2 to Paladin Skill Levels"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Offensive Auras (Paladin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Barbarian Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Combat Skills (Paladin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Offensive Auras (Paladin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [
+   {
+    "alvl": 50,
+    "name": "Bul-Kathos' Tribal Guardian"
+   },
+   {
+    "alvl": 8,
+    "name": "Death's Touch"
+   }
+  ],
+  "uniques": [
+   {
+    "alvl": 50,
+    "name": "The Atlantean"
+   },
+   {
+    "alvl": 39,
+    "name": "Culwen's Point"
+   }
+  ]
+ },
+ "Wrist Blade": {
+  "affixes": [
+   {
+    "alvl": 60,
+    "label": "+3 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Martial Arts (Assassin only)"
+   },
+   {
+    "alvl": 60,
+    "label": "+3 to Shadow Disciplines (Assassin only)"
+   },
+   {
+    "alvl": 50,
+    "label": "+2 to Assassin Skill Levels"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Traps (Assassin only)"
+   },
+   {
+    "alvl": 40,
+    "label": "+2 to Martial Arts (Assassin only)"
+   }
+  ],
+  "maglvl": 0,
+  "sets": [],
+  "uniques": [
+   {
+    "alvl": 74,
+    "name": "Jadetalon"
+   }
+  ]
+ }
+}

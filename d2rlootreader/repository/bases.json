@@ -1,0 +1,2611 @@
+{
+ "Aegis": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Aerin Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Akaran Rondache": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Akaran Targe": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Alpha Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Amulet": {
+  "slot": "Amulet",
+  "tier": "Normal"
+ },
+ "Ancient Armor": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Ancient Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Ancient Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Ancient Sword": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Antlers": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Arbalest": {
+  "maxsock": 3,
+  "slot": "Crossbow",
+  "tier": "Exceptional"
+ },
+ "Archon Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Archon Staff": {
+  "maxsock": 6,
+  "slot": "Staff",
+  "tier": "Elite"
+ },
+ "Armet": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Ashwood Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Assault Helmet": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Ataghan": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Avenger Guard": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Axe": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Balanced Axe": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Balanced Knife": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Ballista": {
+  "maxsock": 6,
+  "slot": "Crossbow",
+  "tier": "Exceptional"
+ },
+ "Balrog Blade": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Balrog Skin": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Balrog Spear": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Barbed Club": {
+  "maxsock": 3,
+  "slot": "Club",
+  "tier": "Exceptional"
+ },
+ "Barbed Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Bardiche": {
+  "maxsock": 3,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "Basinet": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Bastard Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Battle Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Battle Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Exceptional"
+ },
+ "Battle Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Exceptional"
+ },
+ "Battle Cestus": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Battle Dart": {
+  "slot": "Throwing",
+  "tier": "Exceptional"
+ },
+ "Battle Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Exceptional"
+ },
+ "Battle Hammer": {
+  "maxsock": 4,
+  "slot": "Hammer",
+  "tier": "Exceptional"
+ },
+ "Battle Scythe": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Battle Staff": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Battle Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Bearded Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Bec-de-Corbin": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Normal"
+ },
+ "Berserker Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Bill": {
+  "maxsock": 4,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Blade": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Blade Barrier": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Blade Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Blade Talons": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Blasphemous Compendium": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Elite"
+ },
+ "Blasphemous Grimoire": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Elite"
+ },
+ "Blood Spirit": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Bloodlord Skull": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Bone Helm": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Bone Knife": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Elite"
+ },
+ "Bone Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Bone Visage": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Bone Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Normal"
+ },
+ "Boneweave": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Boneweave Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Elite"
+ },
+ "Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Normal"
+ },
+ "Bramble Mitts": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Elite"
+ },
+ "Brandistock": {
+  "maxsock": 5,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Breast Plate": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Broad Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Broad Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Buckler": {
+  "maxsock": 1,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Burnt Text": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Exceptional"
+ },
+ "Burnt Wand": {
+  "maxsock": 1,
+  "slot": "Wand",
+  "tier": "Exceptional"
+ },
+ "Caduceus": {
+  "maxsock": 5,
+  "slot": "Scepter",
+  "tier": "Elite"
+ },
+ "Cantor Trophy": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Cap": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Carnage Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Casque": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Cedar Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Cedar Staff": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Exceptional"
+ },
+ "Ceremonial Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Ceremonial Javelin": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "Ceremonial Pike": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "Ceremonial Spear": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "Cestus": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Chain Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Normal"
+ },
+ "Chain Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Normal"
+ },
+ "Chain Mail": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Champion Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Champion Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Chaos Armor": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Choking Gas Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Chu-Ko-Nu": {
+  "maxsock": 5,
+  "slot": "Crossbow",
+  "tier": "Exceptional"
+ },
+ "Cinquedeas": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Exceptional"
+ },
+ "Circlet": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Clasped Orb": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Normal"
+ },
+ "Claws": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Claymore": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Cleaver": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Cloudy Sphere": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Exceptional"
+ },
+ "Club": {
+  "maxsock": 2,
+  "slot": "Club",
+  "tier": "Normal"
+ },
+ "Codex": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Normal"
+ },
+ "Colossal Sword": {
+  "maxsock": 5,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Colossus Blade": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Colossus Crossbow": {
+  "maxsock": 6,
+  "slot": "Crossbow",
+  "tier": "Elite"
+ },
+ "Colossus Girdle": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Elite"
+ },
+ "Colossus Voulge": {
+  "maxsock": 4,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Compendium": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Normal"
+ },
+ "Composite Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Conqueror Crown": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Conquest Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Corona": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Coronet": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Crossbow": {
+  "maxsock": 4,
+  "slot": "Crossbow",
+  "tier": "Normal"
+ },
+ "Crowbill": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Crown": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Crown Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Crusader Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Crusader Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Elite"
+ },
+ "Cryptic Axe": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Cryptic Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Crystal Sword": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Crystalline Globe": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Exceptional"
+ },
+ "Cudgel": {
+  "maxsock": 2,
+  "slot": "Club",
+  "tier": "Exceptional"
+ },
+ "Cuirass": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Cutlass": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Dacian Falx": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Dagger": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Dark Codex": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Exceptional"
+ },
+ "Dark Tome": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Exceptional"
+ },
+ "Death Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Decapitator": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Decoy Gidbinn": {
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Defender": {
+  "maxsock": 1,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Demon Crossbow": {
+  "maxsock": 5,
+  "slot": "Crossbow",
+  "tier": "Elite"
+ },
+ "Demon Head": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Demon Heart": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Elite"
+ },
+ "Demonhead": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Demonhide Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Demonhide Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Exceptional"
+ },
+ "Demonhide Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Exceptional"
+ },
+ "Demonhide Sash": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Exceptional"
+ },
+ "Destroyer Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Devil Star": {
+  "maxsock": 3,
+  "slot": "Mace",
+  "tier": "Elite"
+ },
+ "Diadem": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Diamond Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Diamond Mail": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Dimensional Blade": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Dimensional Shard": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Elite"
+ },
+ "Dirk": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Divine Scepter": {
+  "maxsock": 5,
+  "slot": "Scepter",
+  "tier": "Exceptional"
+ },
+ "Double Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Double Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Dragon Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Dream Spirit": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Dusk Shroud": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Eagle Orb": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Normal"
+ },
+ "Earth Spirit": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Edge Bow": {
+  "maxsock": 3,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Elder Staff": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Elite"
+ },
+ "Eldritch Orb": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Elite"
+ },
+ "Elegant Blade": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Embossed Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Espandon": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Ettin Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Executioner Sword": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Exploding Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Falcata": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Falchion": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Falcon Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Fanged Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Fanged Knife": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Elite"
+ },
+ "Fascia": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Feral Axe": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Feral Claws": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Fetish Trophy": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Field Plate": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Flail": {
+  "maxsock": 5,
+  "slot": "Mace",
+  "tier": "Normal"
+ },
+ "Flamberge": {
+  "maxsock": 5,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Flanged Mace": {
+  "maxsock": 2,
+  "slot": "Mace",
+  "tier": "Exceptional"
+ },
+ "Flying Axe": {
+  "slot": "Throwing",
+  "tier": "Elite"
+ },
+ "Flying Knife": {
+  "slot": "Throwing",
+  "tier": "Elite"
+ },
+ "Forgotten Volume": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Elite"
+ },
+ "Francisca": {
+  "slot": "Throwing",
+  "tier": "Exceptional"
+ },
+ "Full Helm": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Full Plate Mail": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Fulminating Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Fury Visor": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Fuscina": {
+  "maxsock": 4,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "Gargoyle Head": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Normal"
+ },
+ "Ghost Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Ghost Glaive": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Ghost Spear": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Ghost Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Elite"
+ },
+ "Giant Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Giant Conch": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Giant Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Giant Thresher": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Gilded Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Gladius": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Glaive": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Glorious Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Glowing Orb": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Exceptional"
+ },
+ "Gnarled Staff": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Gorgon Crossbow": {
+  "maxsock": 4,
+  "slot": "Crossbow",
+  "tier": "Elite"
+ },
+ "Gothic Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Gothic Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Gothic Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Gothic Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Gothic Staff": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Exceptional"
+ },
+ "Gothic Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Grand Charm": {
+  "slot": "Inventory",
+  "tier": "Normal"
+ },
+ "Grand Crown": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Grand Matron Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Grand Scepter": {
+  "maxsock": 3,
+  "slot": "Scepter",
+  "tier": "Normal"
+ },
+ "Grave Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Exceptional"
+ },
+ "Great Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Great Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Great Hauberk": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Great Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Great Maul": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Normal"
+ },
+ "Great Pilum": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "Great Poleaxe": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Great Sword": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Greater Claws": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Greater Talons": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Greaves": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Normal"
+ },
+ "Griffon Headress": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Grim Helm": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Grim Scythe": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Grim Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Grim Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Normal"
+ },
+ "Grimoire": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Normal"
+ },
+ "Guardian Crown": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Halberd": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "Hand Axe": {
+  "maxsock": 2,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Hand Scythe": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Hard Leather Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Harpoon": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "Hatchet": {
+  "maxsock": 2,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Hatchet Hands": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Hawk Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Heater": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Heavenly Stone": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Elite"
+ },
+ "Heavy Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Normal"
+ },
+ "Heavy Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Normal"
+ },
+ "Heavy Bracers": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Exceptional"
+ },
+ "Heavy Crossbow": {
+  "maxsock": 6,
+  "slot": "Crossbow",
+  "tier": "Normal"
+ },
+ "Heavy Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Normal"
+ },
+ "Heirophant Trophy": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Hellforge Hammer": {
+  "maxsock": 5,
+  "slot": "Hammer",
+  "tier": "Normal"
+ },
+ "Hellforge Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Hellspawn Skull": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Helm": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Heraldic Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Highland Blade": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Holy Water Sprinkler": {
+  "maxsock": 3,
+  "slot": "Scepter",
+  "tier": "Exceptional"
+ },
+ "Horadric Malus": {
+  "slot": "Hammer",
+  "tier": "Normal"
+ },
+ "Horadric Staff": {
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Horned Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Hunter's Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Hunter's Guise": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Hurlbat": {
+  "slot": "Throwing",
+  "tier": "Exceptional"
+ },
+ "Hydra Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Hydra Edge": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Hydraskull": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Hyperion": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Hyperion Javelin": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Hyperion Spear": {
+  "maxsock": 3,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Jagged Star": {
+  "maxsock": 3,
+  "slot": "Mace",
+  "tier": "Exceptional"
+ },
+ "Jared's Stone": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Normal"
+ },
+ "Javelin": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Jawbone Cap": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Jawbone Visor": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Jewel": {
+  "slot": "Inventory",
+  "tier": "Normal"
+ },
+ "Jo Staff": {
+  "maxsock": 2,
+  "slot": "Staff",
+  "tier": "Exceptional"
+ },
+ "Katar": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Khalim's Flail": {
+  "maxsock": 3,
+  "slot": "Mace",
+  "tier": "Normal"
+ },
+ "Khalim's Will": {
+  "maxsock": 3,
+  "slot": "Mace",
+  "tier": "Normal"
+ },
+ "Kite Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Knout": {
+  "maxsock": 5,
+  "slot": "Mace",
+  "tier": "Exceptional"
+ },
+ "Kraken Shell": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Kris": {
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Kriss": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Kurast Shield": {
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Lacquered Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Lance": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "Large Axe": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Large Charm": {
+  "slot": "Inventory",
+  "tier": "Normal"
+ },
+ "Large Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Leather Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Leather Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Normal"
+ },
+ "Legend Spike": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Elite"
+ },
+ "Legend Sword": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Legendary Mallet": {
+  "maxsock": 4,
+  "slot": "Hammer",
+  "tier": "Elite"
+ },
+ "Lich Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Elite"
+ },
+ "Light Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Normal"
+ },
+ "Light Crossbow": {
+  "maxsock": 3,
+  "slot": "Crossbow",
+  "tier": "Normal"
+ },
+ "Light Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Normal"
+ },
+ "Light Plate": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Light Plated Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Normal"
+ },
+ "Linked Mail": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Lion Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Lochaber Axe": {
+  "maxsock": 3,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Long Battle Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Long Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Long Siege Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Long Staff": {
+  "maxsock": 3,
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Long Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Long War Bow": {
+  "maxsock": 6,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Loricated Mail": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Luna": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Mace": {
+  "maxsock": 2,
+  "slot": "Mace",
+  "tier": "Normal"
+ },
+ "Mage Plate": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Maiden Javelin": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Maiden Pike": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Maiden Spear": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Mancatcher": {
+  "maxsock": 5,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Martel de Fer": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Exceptional"
+ },
+ "Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Matriarchal Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Matriarchal Javelin": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Matriarchal Pike": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Matriarchal Spear": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Maul": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Normal"
+ },
+ "Mesh Armor": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Mesh Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Exceptional"
+ },
+ "Mesh Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Exceptional"
+ },
+ "Mighty Scepter": {
+  "maxsock": 2,
+  "slot": "Scepter",
+  "tier": "Elite"
+ },
+ "Military Axe": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Military Pick": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "Minion Skull": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Mirrored Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Elite"
+ },
+ "Mithral Point": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Elite"
+ },
+ "Mithril Coil": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Elite"
+ },
+ "Monarch": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Morning Star": {
+  "maxsock": 3,
+  "slot": "Mace",
+  "tier": "Normal"
+ },
+ "Mummified Trophy": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Myrmidon Greaves": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Elite"
+ },
+ "Mythical Sword": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Naga": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Occult Codex": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Elite"
+ },
+ "Occult Tome": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Elite"
+ },
+ "Ogre Axe": {
+  "maxsock": 3,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Ogre Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Elite"
+ },
+ "Ogre Maul": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Elite"
+ },
+ "Oil Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Old Book": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Normal"
+ },
+ "Ornate Armor": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Ornate Plate": {
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Overseer Skull": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Partizan": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Exceptional"
+ },
+ "Pavise": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Pellet Bow": {
+  "maxsock": 3,
+  "slot": "Crossbow",
+  "tier": "Elite"
+ },
+ "Petrified Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Exceptional"
+ },
+ "Phase Blade": {
+  "maxsock": 6,
+  "slot": "Sword",
+  "tier": "Elite"
+ },
+ "Pike": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Pilum": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Plate Mail": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Plated Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Normal"
+ },
+ "Poignard": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Exceptional"
+ },
+ "Poleaxe": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "Polished Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Elite"
+ },
+ "Possessed Compendium": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Exceptional"
+ },
+ "Possessed Grimoire": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Exceptional"
+ },
+ "Preserved Head": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Protector Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Quarterstaff": {
+  "maxsock": 3,
+  "slot": "Staff",
+  "tier": "Exceptional"
+ },
+ "Quhab": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Quilted Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Rage Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Rancid Gas Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Razor Bow": {
+  "maxsock": 4,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Reflex Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Reinforced Mace": {
+  "maxsock": 2,
+  "slot": "Mace",
+  "tier": "Elite"
+ },
+ "Repeating Crossbow": {
+  "maxsock": 5,
+  "slot": "Crossbow",
+  "tier": "Normal"
+ },
+ "Ring": {
+  "slot": "Ring",
+  "tier": "Normal"
+ },
+ "Ring Mail": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Rondache": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Rondel": {
+  "maxsock": 1,
+  "slot": "Dagger",
+  "tier": "Exceptional"
+ },
+ "Round Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Royal Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Rune Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Rune Scepter": {
+  "maxsock": 2,
+  "slot": "Scepter",
+  "tier": "Exceptional"
+ },
+ "Rune Staff": {
+  "maxsock": 6,
+  "slot": "Staff",
+  "tier": "Exceptional"
+ },
+ "Rune Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Runic Talons": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Russet Armor": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Saber": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Sabre": {
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Sacred Armor": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Sacred Feathers": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Sacred Globe": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Normal"
+ },
+ "Sacred Rondache": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Sacred Targe": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Sallet": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Sash": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Normal"
+ },
+ "Savage Helmet": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Scale Mail": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Scarab Husk": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Scarabshell Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Elite"
+ },
+ "Scepter": {
+  "maxsock": 2,
+  "slot": "Scepter",
+  "tier": "Normal"
+ },
+ "Scimitar": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Scissors Katar": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Scissors Quhab": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Scissors Suwayyah": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Scourge": {
+  "maxsock": 5,
+  "slot": "Mace",
+  "tier": "Elite"
+ },
+ "Scutum": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Scythe": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "Seraph Rod": {
+  "maxsock": 3,
+  "slot": "Scepter",
+  "tier": "Elite"
+ },
+ "Serpentskin Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Sexton Trophy": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Exceptional"
+ },
+ "Shadow Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Shadow Plate": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Shako": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Shamshir": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Sharkskin Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Exceptional"
+ },
+ "Sharkskin Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Exceptional"
+ },
+ "Sharkskin Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Exceptional"
+ },
+ "Sharktooth Armor": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Shillelagh": {
+  "maxsock": 4,
+  "slot": "Staff",
+  "tier": "Elite"
+ },
+ "Short Battle Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Short Bow": {
+  "maxsock": 3,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Short Siege Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Exceptional"
+ },
+ "Short Spear": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Short Staff": {
+  "maxsock": 2,
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Short Sword": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Short War Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Siege Crossbow": {
+  "maxsock": 4,
+  "slot": "Crossbow",
+  "tier": "Exceptional"
+ },
+ "Silver-edged Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Simbilan": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "Skull Cap": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Sky Spirit": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Slayer Guard": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Small Charm": {
+  "slot": "Inventory",
+  "tier": "Normal"
+ },
+ "Small Crescent": {
+  "maxsock": 4,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Small Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Smoked Sphere": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Normal"
+ },
+ "Sparkling Ball": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Exceptional"
+ },
+ "Spear": {
+  "maxsock": 3,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Spetum": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Spiculum": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "Spider Bow": {
+  "maxsock": 3,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Spiderweb Sash": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Elite"
+ },
+ "Spiked Club": {
+  "maxsock": 2,
+  "slot": "Club",
+  "tier": "Normal"
+ },
+ "Spiked Shield": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Spired Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Spirit Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Splint Mail": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Staff of Kings": {
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "Stag Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Normal"
+ },
+ "Stalagmite": {
+  "maxsock": 3,
+  "slot": "Staff",
+  "tier": "Elite"
+ },
+ "Stilleto": {
+  "maxsock": 3,
+  "slot": "Dagger",
+  "tier": "Exceptional"
+ },
+ "Strangling Gas Potion": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Studded Leather": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Normal"
+ },
+ "Stygian Pike": {
+  "maxsock": 4,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "Stygian Pilum": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Succubus Skull": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Sun Spirit": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Elite"
+ },
+ "Suwayyah": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Swirling Crystal": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Exceptional"
+ },
+ "Tabar": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Targe": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Templar Coat": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "The Gidbinn": {
+  "slot": "Dagger",
+  "tier": "Normal"
+ },
+ "Thresher": {
+  "maxsock": 5,
+  "slot": "Polearm",
+  "tier": "Elite"
+ },
+ "Throwing Axe": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Throwing Knife": {
+  "slot": "Throwing",
+  "tier": "Normal"
+ },
+ "Throwing Spear": {
+  "slot": "Javelin",
+  "tier": "Normal"
+ },
+ "Thunder Maul": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Elite"
+ },
+ "Tiara": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Tigulated Mail": {
+  "maxsock": 3,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Tomahawk": {
+  "maxsock": 2,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "Tomb Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Exceptional"
+ },
+ "Tome": {
+  "maxsock": 2,
+  "slot": "Grimoire",
+  "tier": "Normal"
+ },
+ "Totemic Mask": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Tower Shield": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Trellised Armor": {
+  "maxsock": 2,
+  "slot": "Body",
+  "tier": "Exceptional"
+ },
+ "Trident": {
+  "maxsock": 4,
+  "slot": "Spear",
+  "tier": "Normal"
+ },
+ "Troll Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Elite"
+ },
+ "Troll Nest": {
+  "maxsock": 3,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Truncheon": {
+  "maxsock": 2,
+  "slot": "Club",
+  "tier": "Elite"
+ },
+ "Tulwar": {
+  "maxsock": 2,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Tusk Sword": {
+  "maxsock": 4,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ },
+ "Twin Axe": {
+  "maxsock": 5,
+  "slot": "Axe",
+  "tier": "Exceptional"
+ },
+ "Two-Handed Sword": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Tyrant Club": {
+  "maxsock": 3,
+  "slot": "Club",
+  "tier": "Elite"
+ },
+ "Unearthed Wand": {
+  "maxsock": 2,
+  "slot": "Wand",
+  "tier": "Elite"
+ },
+ "Unraveller Head": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Vambraces": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Elite"
+ },
+ "Vampirebone Gloves": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Elite"
+ },
+ "Vampirefang Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Elite"
+ },
+ "Vortex Orb": {
+  "maxsock": 4,
+  "slot": "Orb",
+  "tier": "Elite"
+ },
+ "Vortex Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Voulge": {
+  "maxsock": 4,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "Walking Stick": {
+  "maxsock": 2,
+  "slot": "Staff",
+  "tier": "Elite"
+ },
+ "Wand": {
+  "maxsock": 1,
+  "slot": "Wand",
+  "tier": "Normal"
+ },
+ "War Axe": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Normal"
+ },
+ "War Belt": {
+  "maxsock": 0,
+  "slot": "Belt",
+  "tier": "Exceptional"
+ },
+ "War Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Exceptional"
+ },
+ "War Club": {
+  "maxsock": 6,
+  "slot": "Hammer",
+  "tier": "Exceptional"
+ },
+ "War Dart": {
+  "slot": "Throwing",
+  "tier": "Exceptional"
+ },
+ "War Fist": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "War Fork": {
+  "maxsock": 5,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "War Gauntlets": {
+  "maxsock": 0,
+  "slot": "Gloves",
+  "tier": "Exceptional"
+ },
+ "War Hammer": {
+  "maxsock": 4,
+  "slot": "Hammer",
+  "tier": "Normal"
+ },
+ "War Hat": {
+  "maxsock": 2,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "War Javelin": {
+  "slot": "Javelin",
+  "tier": "Exceptional"
+ },
+ "War Pike": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Elite"
+ },
+ "War Scepter": {
+  "maxsock": 5,
+  "slot": "Scepter",
+  "tier": "Normal"
+ },
+ "War Scythe": {
+  "maxsock": 6,
+  "slot": "Polearm",
+  "tier": "Normal"
+ },
+ "War Spear": {
+  "maxsock": 3,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "War Spike": {
+  "maxsock": 6,
+  "slot": "Axe",
+  "tier": "Elite"
+ },
+ "War Staff": {
+  "maxsock": 6,
+  "slot": "Staff",
+  "tier": "Normal"
+ },
+ "War Sword": {
+  "maxsock": 3,
+  "slot": "Sword",
+  "tier": "Normal"
+ },
+ "Ward": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Ward Bow": {
+  "maxsock": 5,
+  "slot": "Bow",
+  "tier": "Elite"
+ },
+ "Winged Axe": {
+  "slot": "Throwing",
+  "tier": "Elite"
+ },
+ "Winged Harpoon": {
+  "slot": "Javelin",
+  "tier": "Elite"
+ },
+ "Winged Helm": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Exceptional"
+ },
+ "Winged Knife": {
+  "slot": "Throwing",
+  "tier": "Elite"
+ },
+ "Wire Fleece": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Wirt's Leg": {
+  "maxsock": 3,
+  "slot": "Club",
+  "tier": "Normal"
+ },
+ "Wolf Head": {
+  "maxsock": 3,
+  "slot": "Helm",
+  "tier": "Normal"
+ },
+ "Wrist Blade": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Normal"
+ },
+ "Wrist Spike": {
+  "maxsock": 2,
+  "slot": "Katar",
+  "tier": "Exceptional"
+ },
+ "Wrist Sword": {
+  "maxsock": 3,
+  "slot": "Katar",
+  "tier": "Elite"
+ },
+ "Wyrmhide": {
+  "maxsock": 4,
+  "slot": "Body",
+  "tier": "Elite"
+ },
+ "Wyrmhide Boots": {
+  "maxsock": 0,
+  "slot": "Boots",
+  "tier": "Elite"
+ },
+ "Yari": {
+  "maxsock": 6,
+  "slot": "Spear",
+  "tier": "Exceptional"
+ },
+ "Yew Wand": {
+  "maxsock": 1,
+  "slot": "Wand",
+  "tier": "Normal"
+ },
+ "Zakarum Shield": {
+  "maxsock": 4,
+  "slot": "Shield",
+  "tier": "Elite"
+ },
+ "Zombie Head": {
+  "maxsock": 2,
+  "slot": "Shield",
+  "tier": "Normal"
+ },
+ "Zweihander": {
+  "maxsock": 5,
+  "slot": "Sword",
+  "tier": "Exceptional"
+ }
+}

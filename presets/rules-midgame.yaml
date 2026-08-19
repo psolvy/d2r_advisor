@@ -1,0 +1,316 @@
+﻿# PRESET: MIDGAME (75+, Meph/Pindle/cow farming, building first characters)
+# Selected in config.yaml: preset: midgame
+#
+# Differences from "leveling": low runes and plain gems no longer matter,
+# charm/rare thresholds are higher, bases target specific runewords.
+# Field reference: see presets/rules-leveling.yaml.
+
+rules:
+  # ---- always valuable -----------------------------------------------------
+  - name: "Unique / set / runeword"
+    when: {quality: [Unique, Set, Runeword]}
+    verdict: keep
+    note: "Compare the roll to the range above; bad rolls — sell"
+
+  - name: "High rune (Pul+)"
+    when:
+      line_any: ["Pul Rune", "Um Rune", "Mal Rune", "Ist Rune", "Gul Rune", "Vex Rune", "Ohm Rune", "Lo Rune", "Sur Rune", "Ber Rune", "Jah Rune", "Cham Rune", "Zod Rune"]
+    verdict: keep
+    note: "Expensive!"
+
+  - name: "Mid rune (Shael–Lem)"
+    when:
+      line_any: ["Shael Rune", "Dol Rune", "Hel Rune", "Io Rune", "Lum Rune", "Ko Rune", "Fal Rune", "Lem Rune"]
+    verdict: keep
+    note: "Cube upgrades / unsocketing (Hel) / small runewords"
+
+  - name: "Low rune (El–Sol)"
+    when:
+      line_any: ["El Rune", "Eld Rune", "Tir Rune", "Nef Rune", "Eth Rune", "Ith Rune", "Tal Rune", "Ral Rune", "Ort Rune", "Thul Rune", "Amn Rune", "Sol Rune"]
+    verdict: check
+    note: "3 of the same = next rune in the cube; otherwise trash"
+
+  - name: "Perfect gem"
+    when:
+      text_all: ["Can be Inserted", "Perfect "]
+    verdict: keep
+    note: "P-gems = GC rerolls and crafts"
+
+  - name: "Flawless gem"
+    when:
+      text_all: ["Can be Inserted", "Flawless "]
+    verdict: keep
+    note: "3 flawless = perfect in the cube"
+
+  - name: "Rune? (line didn't read fully)"
+    when:
+      quality: [Base, Unknown]
+      no_base: true
+      text_any: ["Rune"]
+    verdict: check
+    note: "Looks like a rune but the name didn't read — check it yourself"
+
+  - name: "+ to All Skills"
+    when:
+      affix_all: [{affix: "+# to All Skills", min: 1}]
+    verdict: keep
+
+  # ---- charms --------------------------------------------------------------
+  - name: "Skiller (grand charm +1 to a skill tree)"
+    when:
+      base_any: ["Grand Charm"]
+      affix_any:
+        - {affix: "+# to Bow and Crossbow Skills (Amazon only)", min: 1}
+        - {affix: "+# to Passive and Magic Skills (Amazon only)", min: 1}
+        - {affix: "+# to Javelin and Spear Skills (Amazon only)", min: 1}
+        - {affix: "+# to Fire Skills (Sorceress only)", min: 1}
+        - {affix: "+# to Lightning Skills (Sorceress only)", min: 1}
+        - {affix: "+# to Cold Skills (Sorceress only)", min: 1}
+        - {affix: "+# to Curses (Necromancer only)", min: 1}
+        - {affix: "+# to Poison and Bone Skills (Necromancer only)", min: 1}
+        - {affix: "+# to Summoning Skills (Necromancer only)", min: 1}
+        - {affix: "+# to Combat Skills (Paladin only)", min: 1}
+        - {affix: "+# to Offensive Auras (Paladin only)", min: 1}
+        - {affix: "+# to Defensive Auras (Paladin only)", min: 1}
+        - {affix: "+# to Combat Skills (Barbarian only)", min: 1}
+        - {affix: "+# to Combat Masteries (Barbarian only)", min: 1}
+        - {affix: "+# to Warcries (Barbarian only)", min: 1}
+        - {affix: "+# to Summoning Skills (Druid only)", min: 1}
+        - {affix: "+# to Shapeshifting Skills (Druid only)", min: 1}
+        - {affix: "+# to Elemental Skills (Druid only)", min: 1}
+        - {affix: "+# to Traps (Assassin only)", min: 1}
+        - {affix: "+# to Martial Arts (Assassin only)", min: 1}
+        - {affix: "+# to Shadow Disciplines (Assassin only)", min: 1}
+    verdict: keep
+    note: "Skiller! With life — expensive"
+
+  - name: "Grand charm (not a skiller)"
+    when:
+      base_any: ["Grand Charm"]
+    verdict: check
+    note: "Reroll with 3 p-gems if ilvl fits a skiller"
+
+  - name: "Large charm with life/resists"
+    when:
+      base_any: ["Large Charm"]
+      affix_any:
+        - {affix: "+# to Life", min: 25}
+        - {affix: "All Resistances +#", min: 6}
+    verdict: keep
+
+  - name: "Small charm (life/res/MF/FHR)"
+    when:
+      base_any: ["Small Charm"]
+      affix_any:
+        - {affix: "+# to Life", min: 15}
+        - {affix: "All Resistances +#", min: 4}
+        - {affix: "#% Better Chance of Getting Magic Items", min: 6}
+        - {affix: "+#% Faster Hit Recovery", min: 5}
+    verdict: keep
+
+  - name: "Charm (partially recognized)"
+    when:
+      base_any: ["Charm"]
+      quality: [Base, Unknown]
+    verdict: check
+    note: "Couldn't read the stats — check it yourself"
+  - name: "Charm (base unread — safety net)"
+    when:
+      no_base: true
+      text_any: ["Keep in Inventory"]
+    verdict: check
+    note: "It's a charm but the base/name didn't read — check it yourself"
+
+  # ---- jewels (blue and yellow) --------------------------------------------
+  - name: "Jewel with damage/speed/resists"
+    when:
+      quality: [Magic, Rare]
+      text_any: ["Can be Inserted"]
+      affix_any:
+        - {affix: "+#% Enhanced Damage", min: 25}
+        - {affix: "+#% Increased Attack Speed", min: 15}
+        - {affix: "All Resistances +#", min: 8}
+        - {affix: "Requirements -#%", min: 15}
+    verdict: keep
+    note: "ED/IAS jewels — weapons; resists — armor"
+
+  - name: "Jewel (other)"
+    when:
+      quality: [Magic, Rare]
+      text_any: ["Can be Inserted"]
+    verdict: check
+    note: "Look for combos: ED+max, ED+IAS, resist+stat"
+
+  # ---- rings / amulets -----------------------------------------------------
+  - name: "Caster ring (FCR)"
+    when:
+      quality: [Rare, Magic, Crafted]
+      slot: Ring
+      affix_all: [{affix: "+#% Faster Cast Rate", min: 10}]
+    verdict: keep
+    note: "10 FCR + mana/life/resists = sellable"
+
+  - name: "Amulet +2 to skills (class or tree)"
+    when:
+      slot: Amulet
+      affix_any:
+        - {affix: "+# to Amazon Skill Levels", min: 2}
+        - {affix: "+# to Assassin Skill Levels", min: 2}
+        - {affix: "+#  to Barbarian Skill Levels", min: 2}
+        - {affix: "+# to Druid Skill Levels", min: 2}
+        - {affix: "+# to Necromancer Skill Levels", min: 2}
+        - {affix: "+# to Paladin Skill Levels", min: 2}
+        - {affix: "+# to Sorceress Skill Levels", min: 2}
+        - {affix: "+# to Bow and Crossbow Skills (Amazon only)", min: 2}
+        - {affix: "+# to Passive and Magic Skills (Amazon only)", min: 2}
+        - {affix: "+# to Javelin and Spear Skills (Amazon only)", min: 2}
+        - {affix: "+# to Fire Skills (Sorceress only)", min: 2}
+        - {affix: "+# to Lightning Skills (Sorceress only)", min: 2}
+        - {affix: "+# to Cold Skills (Sorceress only)", min: 2}
+        - {affix: "+# to Curses (Necromancer only)", min: 2}
+        - {affix: "+# to Poison and Bone Skills (Necromancer only)", min: 2}
+        - {affix: "+# to Summoning Skills (Necromancer only)", min: 2}
+        - {affix: "+# to Combat Skills (Paladin only)", min: 2}
+        - {affix: "+# to Offensive Auras (Paladin only)", min: 2}
+        - {affix: "+# to Defensive Auras (Paladin only)", min: 2}
+        - {affix: "+# to Combat Skills (Barbarian only)", min: 2}
+        - {affix: "+# to Combat Masteries (Barbarian only)", min: 2}
+        - {affix: "+# to Warcries (Barbarian only)", min: 2}
+        - {affix: "+# to Summoning Skills (Druid only)", min: 2}
+        - {affix: "+# to Shapeshifting Skills (Druid only)", min: 2}
+        - {affix: "+# to Elemental Skills (Druid only)", min: 2}
+        - {affix: "+# to Traps (Assassin only)", min: 2}
+        - {affix: "+# to Martial Arts (Assassin only)", min: 2}
+        - {affix: "+# to Shadow Disciplines (Assassin only)", min: 2}
+    verdict: keep
+    note: "+2 amulet (class or skill tree) is expensive; with life/FCR — very"
+
+  - name: "Rare/crafted ring or amulet"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+    verdict: check
+    note: "FCR/skills/leech/str — otherwise sell"
+
+  - name: "+3 skill stick (staff/wand/orb/claw)"
+    when:
+      quality: [Magic, Rare]
+      slot: [Staff, Wand, Orb, Scepter, Katar, Grimoire]
+      affix_any:
+        - {affix: "+# to [Skill] (Amazon only)", min: 3}
+        - {affix: "+# to [Skill] (Assassin only)", min: 3}
+        - {affix: "+# to [Skill] (Barbarian only)", min: 3}
+        - {affix: "+# to [Skill] (Druid only)", min: 3}
+        - {affix: "+# to [Skill] (Necromancer only)", min: 3}
+        - {affix: "+# to [Skill] (Paladin only)", min: 3}
+        - {affix: "+# to [Skill] (Sorceress only)", min: 3}
+    verdict: check
+    note: "+3 to a wanted skill = sells at season start (like shopped sticks)"
+
+  # ---- rares by slot -------------------------------------------------------
+  - name: "Circlet"
+    when:
+      quality: [Rare]
+      base_any: ["Circlet", "Coronet", "Tiara", "Diadem"]
+    verdict: check
+    note: "+2 class / 20 FCR / sockets = expensive"
+
+  - name: "Rare gloves (IAS / skills)"
+    when:
+      quality: [Rare]
+      slot: Gloves
+      affix_any:
+        - {affix: "+#% Increased Attack Speed", min: 20}
+        - {affix: "+# to Javelin and Spear Skills (Amazon only)", min: 2}
+        - {affix: "+# to Passive and Magic Skills (Amazon only)", min: 2}
+        - {affix: "+# to Bow and Crossbow Skills (Amazon only)", min: 2}
+    verdict: check
+    note: "20 IAS + 2 Amazon skills = very expensive"
+
+  - name: "Rare boots (FRW + resists)"
+    when:
+      quality: [Rare]
+      slot: Boots
+      affix_all:
+        - {affix: "+#% Faster Run/Walk", min: 20}
+    verdict: check
+    note: "Tri-res with 20+ FRW = keep"
+
+  - name: "Rare belt (FHR / life)"
+    when:
+      quality: [Rare]
+      slot: Belt
+      affix_any:
+        - {affix: "+#% Faster Hit Recovery", min: 20}
+        - {affix: "+# to Life", min: 60}
+    verdict: check
+
+  # ---- bases ---------------------------------------------------------------
+  - name: "4 sockets: exceptional/elite polearm (Insight/Obedience)"
+    when:
+      quality: [Base]
+      slot: [Polearm]
+      tier: [Exceptional, Elite]
+      affix_all: [{affix: "Socketed (#)", min: 4}]
+    verdict: keep
+    note: "Insight on a big base; 5 sockets = Obedience"
+
+  - name: "4 sockets: sword for Spirit"
+    when:
+      quality: [Base]
+      base_any: ["Crystal Sword", "Broad Sword", "Long Sword"]
+      affix_all: [{affix: "Socketed (#)", min: 4, max: 4}]
+    verdict: keep
+
+  - name: "Monarch"
+    when:
+      quality: [Base]
+      base_any: ["Monarch"]
+    verdict: keep
+    note: "Spirit shield; already 4 sockets? even better"
+
+  - name: "Light caster armor (socket it yourself)"
+    when:
+      quality: [Base]
+      base_any: ["Mage Plate", "Archon Plate", "Dusk Shroud", "Wyrmhide", "Scarab Husk"]
+    verdict: check
+    note: "Low-str caster armor — Larzuk/cube sockets, see runeword list above"
+
+  - name: "4 sockets: elite armor (CoH/Fortitude)"
+    when:
+      quality: [Base]
+      slot: Body
+      tier: Elite
+      affix_all: [{affix: "Socketed (#)", min: 4, max: 4}]
+    verdict: check
+    note: "Archon Plate / Dusk Shroud with low str req — expensive"
+
+  - name: "Paladin shield with 3-4 sockets"
+    when:
+      quality: [Base]
+      base_any: ["Targe", "Rondache", "Heraldic", "Aerin", "Crown Shield", "Akaran", "Protector", "Gilded", "Royal Shield", "Vortex", "Sacred Targe", "Sacred Rondache", "Kurast Shield", "Zakarum Shield"]
+      affix_all: [{affix: "Socketed (#)", min: 3}]
+    verdict: check
+    note: "With 30+ resists — Spirit/Exile base"
+
+  - name: "Superior ethereal weapon (merc base)"
+    when:
+      quality: [Base]
+      ethereal: true
+      slot: [Polearm, Spear, Sword, Axe, Hammer, Mace]
+      affix_all: [{affix: "+#% Enhanced Damage", min: 1}]
+    verdict: keep
+    note: "Superior eth + ED% = top merc runeword base"
+
+  - name: "Ethereal elite base (merc/runeword)"
+    when:
+      quality: [Base]
+      tier: Elite
+      ethereal: true
+      slot: [Polearm, Spear, Sword, Axe, Hammer, Body, Helm]
+    verdict: keep
+    note: "Eth CV/Thresher — Insight/Infinity base; eth armor — Fortitude"
+
+default:
+  verdict: trash
+  note: "Midgame: nothing valuable — tune this preset for your build"
