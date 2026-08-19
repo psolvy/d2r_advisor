@@ -8,7 +8,7 @@ from tkinter import ttk
 
 from advisor import goals
 from advisor.seedfinder_ui import (BG, DIM, FG, FIELD, GOLD, GOLD_HI, GREEN,
-                                   LINE, PANEL, RED)
+                                   LINE, PANEL, RED, SearchDropdown)
 
 _open_window = None
 
@@ -37,6 +37,7 @@ class GoalsWindow(tk.Toplevel):
         self.title("D2R Item Advisor — Season Goals")
         self.configure(bg=BG)
         self.resizable(False, False)
+        self.attributes("-topmost", True)  # stay above the game
         self.f_base = ("Segoe UI", int(11 * s))
         self.f_sub = ("Segoe UI", int(10 * s))
         pad = int(12 * s)
@@ -86,10 +87,20 @@ class GoalsWindow(tk.Toplevel):
         row = tk.Frame(self, bg=BG)
         row.grid(row=4, column=0, columnspan=3, sticky="ew", padx=pad,
                  pady=(int(8 * s), 0))
-        self.add_cb = ttk.Combobox(row, values=goals.all_runeword_names(),
-                                   width=22, font=self.f_sub,
-                                   style="SG.TCombobox")
-        self.add_cb.pack(side="left")
+        # type-to-search picker (same component as the Seed Finder)
+        self.add_var = tk.StringVar()
+        self.add_entry = tk.Entry(row, textvariable=self.add_var, width=24,
+                                  bg=FIELD, fg=FG, insertbackground=GOLD,
+                                  relief="flat", font=self.f_sub,
+                                  highlightthickness=1,
+                                  highlightbackground=LINE,
+                                  highlightcolor=GOLD)
+        self.add_entry.pack(side="left", ipady=int(3 * s))
+        self._add_dd = SearchDropdown(
+            self, self.add_entry, self.add_var,
+            lambda needle: [(n, None) for n in goals.all_runeword_names()
+                            if needle in n.lower()],
+            self._add_pick, min_width=int(260 * s))
         self._btn(row, "Add goal", self._add).pack(side="left", padx=4)
         self._btn(row, "Remove", self._remove).pack(side="left", padx=4)
         self._btn(row, "✔ I made it", self._made,
@@ -204,14 +215,20 @@ class GoalsWindow(tk.Toplevel):
                               goals.adjust_rune(r, dd), self.refresh())
                           ).pack(side="left", padx=1, pady=2)
 
+    def _add_pick(self, name):
+        self.add_var.set(name)
+        self._add_dd.show(False)
+        self._add()
+
     def _add(self):
-        name = self.add_cb.get().strip()
+        name = self.add_var.get().strip()
         if not name:
             return
         st = goals.load_state()
         if name not in st["goals"] and name in goals.all_runeword_names():
             st["goals"].append(name)
             goals.save_state(st)
+            self.add_var.set("")
         self.refresh()
 
     def _remove(self):
@@ -242,10 +259,10 @@ class GoalsWindow(tk.Toplevel):
                        "hover the rune DIRECTLY BELOW El (row 2 start)…",
                        "hover ZOD (the very last rune)…"]
         else:
-            prompts = ["hover Chipped Amethyst (top-left)…",
-                       "hover the LAST gem of the TOP row…",
-                       "hover the gem DIRECTLY BELOW the first (row 2)…",
-                       "hover Perfect Skull (the very last gem)…"]
+            prompts = ["hover Chipped DIAMOND (top-left gem)…",
+                       "hover Chipped SKULL (top-right gem)…",
+                       "hover Flawed DIAMOND (directly below the first)…",
+                       "hover Perfect SKULL (bottom-right gem)…"]
         points = []
 
         def capture(step, countdown):

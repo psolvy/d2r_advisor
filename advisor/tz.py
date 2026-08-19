@@ -111,8 +111,7 @@ def open_tz_window(root, cfg, scale=1.0):
               ).pack(pady=(int(8 * s), pad))
     _load(win, body, cfg)
     win.lift()
-    win.attributes("-topmost", True)
-    win.after(300, lambda: win.attributes("-topmost", False))
+    win.attributes("-topmost", True)  # stays above the game
     return win
 
 

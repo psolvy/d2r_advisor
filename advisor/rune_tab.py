@@ -169,24 +169,26 @@ def cell_centers(calib_pts, total=33, img=None, screen_rect=None):
 
 
 def _ocr_digits(crop, tesseract_cmd=None):
-    """Count digits are small white glyphs with a dark outline in the
-    cell corner — a plain WHITE threshold beats Otsu (the item art
-    behind them wrecks a global threshold)."""
+    """Count digits use the game font — the bundled d2r model reads them
+    where eng failed. Threshold 210 won a grid search on a real 4K frame
+    (14/14); 235 is the fallback for brighter render settings."""
     try:
+        import os
         import pytesseract
+        from d2rlootreader.cfg import TESSDATA_DIR
         if tesseract_cmd:
             pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+        os.environ["TESSDATA_PREFIX"] = str(TESSDATA_DIR)
         g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         g = cv2.resize(g, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
-        # digits are near-white; the stone art tops out ~190 — thresholds
-        # below that read art blobs as digits
-        for thresh in (200, 175):
+        for thresh in (210, 235):
             _, bw = cv2.threshold(g, thresh, 255, cv2.THRESH_BINARY)
             if cv2.countNonZero(bw) < 8:
                 continue
             bw = 255 - bw  # tesseract prefers dark text on light
             txt = pytesseract.image_to_string(
-                bw, config="--psm 7 -c tessedit_char_whitelist=0123456789")
+                bw, lang="d2r",
+                config="--psm 7 -c tessedit_char_whitelist=0123456789")
             m = re.search(r"\d+", txt or "")
             if m:
                 return int(m.group(0))
@@ -195,11 +197,12 @@ def _ocr_digits(crop, tesseract_cmd=None):
         return None
 
 
-# the mod's GEMS tab: quality columns (Chipped→Perfect) × gem-type rows
+# the mod's GEMS tab (user-verified): QUALITY per row (Chipped→Perfect
+# top to bottom), TYPE per column starting with Diamond
 GEM_QUALITIES = ["Chipped", "Flawed", "", "Flawless", "Perfect"]
-GEM_TYPES = ["Amethyst", "Topaz", "Sapphire", "Emerald", "Ruby", "Diamond",
+GEM_TYPES = ["Diamond", "Emerald", "Ruby", "Topaz", "Amethyst", "Sapphire",
              "Skull"]
-GEM_ORDER = [f"{q} {t}".strip() for t in GEM_TYPES for q in GEM_QUALITIES]
+GEM_ORDER = [f"{q} {t}".strip() for q in GEM_QUALITIES for t in GEM_TYPES]
 
 
 def scan_counted_tab(img, calib_pts, names, screen_rect=None,
@@ -236,10 +239,16 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
             counts[rune] = 0
             continue
         crop = img[y0:y1, x0:x1]
-        # counts render in the BOTTOM-RIGHT corner of the cell
-        ch, cw = crop.shape[:2]
-        digits_zone = crop[int(ch * 0.50):, int(cw * 0.28):]
-        n = _ocr_digits(digits_zone, tesseract_cmd)
+        # counts render at the BOTTOM-RIGHT of the cell — the winning
+        # zone from the real-frame grid search (float center + a small
+        # pad: one truncated pixel cut the last digit stroke off)
+        dz_x0 = int(max(0, cx - off_x + 0.02 * px))
+        dz_x1 = int(round(min(w, cx - off_x + 0.66 * px)))
+        dz_y0 = int(max(0, cy - off_y + 0.05 * py))
+        dz_y1 = int(round(min(h, cy - off_y + 0.60 * py)))
+        digits_zone = img[dz_y0:dz_y1, dz_x0:dz_x1]
+        n = _ocr_digits(digits_zone, tesseract_cmd) \
+            if digits_zone.size else None
         src = "ocr"
         if n is None:
             # no digits read: owned cells are bright, missing ones grayed

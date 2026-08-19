@@ -122,6 +122,7 @@ class Settings(tk.Toplevel):
         self.sf_vars = {}
 
         self.resizable(False, False)  # fixed layout — no dead space
+        self.attributes("-topmost", True)  # stay above the game
         style = ttk.Style(self)
         style.theme_use("clam")
         style.configure("ST.TCombobox", fieldbackground=FIELD,
@@ -330,8 +331,7 @@ def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False):
                   fg=FG, relief="flat", font=f_base,
                   padx=int(14 * s)).pack(side="left")
     win.lift()
-    win.attributes("-topmost", True)
-    win.after(300, lambda: win.attributes("-topmost", False))
+    win.attributes("-topmost", True)  # stays above the game
     return win
 
 
@@ -368,8 +368,7 @@ def open_health_report(root, cfg, scale=1.0):
               activebackground=GOLD_HI, relief="flat", font=f_base,
               padx=int(16 * s)).pack(pady=(int(8 * s), pad))
     win.lift()
-    win.attributes("-topmost", True)
-    win.after(300, lambda: win.attributes("-topmost", False))
+    win.attributes("-topmost", True)  # stays above the game
     return win
 
 
