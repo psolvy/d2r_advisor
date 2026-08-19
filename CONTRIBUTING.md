@@ -50,16 +50,22 @@ python tests/test_vision.py       # icon recognition (skips without icons)
 
 ## Pull requests
 
-1. Fork/branch from `main`.
+Anyone can contribute — **fork the repository**, branch from `main`,
+and open a pull request. Direct pushes to `main` are restricted:
+**only the maintainer merges**, and branch protection requires the CI
+checks (`test (3.12)`, `test (3.13)`) to be green and the branch to be
+up to date with `main` first.
+
+1. Fork the repo and create a branch from `main`.
 2. Make the change; keep the code style of the surrounding file
    (module-level docstrings, comments explain *why*, not *what*).
 3. Run the tests above.
-4. Open a PR — CI must pass before review. A merge to `main` triggers CI
-   again and, when green, the CD pipeline refreshes the rolling
-   `latest` pre-release automatically.
+4. Open a PR — CI runs automatically and must pass before review. After
+   the merge, CI runs on `main` and, when green, the CD pipeline
+   refreshes the rolling `latest` pre-release automatically.
 
 Versioned releases are cut by tagging: `git tag v1.x.y && git push
-origin v1.x.y` (maintainers only).
+origin v1.x.y` (maintainer only).
 
 ## What not to commit
 

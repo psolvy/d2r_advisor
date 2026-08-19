@@ -34,32 +34,41 @@ its roll range — clickable name opens the item's page.*
 - **English game client** (the OCR model is trained on the English D2R font)
 - In game settings: **Options → Interface → Large Font Mode = ON**
   (large tooltip font — greatly improves recognition accuracy)
-- Python 3.9+ — https://www.python.org/downloads/ (check **Add python.exe
-  to PATH** in the installer)
-- Tesseract OCR — https://github.com/UB-Mannheim/tesseract/wiki
-  (`tesseract-ocr-w64-setup-*.exe`, install to the default
-  `C:\Program Files\Tesseract-OCR`)
+- **Tesseract OCR** — needed only for the tooltip verdicts (F8/F9), every
+  other feature works without it:
+  `winget install UB-Mannheim.TesseractOCR` (or the installer from
+  https://github.com/UB-Mannheim/tesseract/wiki)
+- Optional: **Node.js** (https://nodejs.org) — turns the seed search from
+  minutes into seconds
 
-Or skip all of the above and grab the **standalone exe** from
-[Releases](https://github.com/psolvy/d2r_advisor/releases) — it only
-needs Tesseract for tooltip scans (Node.js is optional and merely speeds
-up the seed search).
+## Installation — standalone exe (recommended)
 
-## Installation
+1. Download **d2r-advisor-…-windows-x64.zip** from
+   [Releases](https://github.com/psolvy/d2r_advisor/releases), unpack
+   anywhere, run `d2r-advisor.exe`.
+2. The app lives in the **system tray** (check the `^` overflow area).
+   Double-click the icon → **Settings**, with a health panel that says if
+   anything is missing (e.g. Tesseract) and what that disables.
+3. On first run it downloads the gamble icons and fast-search workers
+   automatically and adds itself to the **Start Menu**.
 
-1. Install Python and Tesseract (links above).
-2. Double-click `install.bat` — installs the Python dependencies and
-   downloads the assets that are not part of the repository (see
+## Installation — from source (only if you prefer to)
+
+1. Install Python 3.9+ — https://www.python.org/downloads/ (check
+   **Add python.exe to PATH** in the installer).
+2. Double-click `install.bat` — installs Tesseract (via winget), the
+   Python dependencies, and the assets that are not part of the
+   repository (see
    [Licensing](#licensing-and-third-party-content)).
-3. Double-click `run.bat` (or the **D2R Item Advisor** shortcut — feel
-   free to pin it to the desktop/taskbar).
+3. Start with `run.bat` (a console window appears — the exe build uses
+   `advisor.log` instead).
 
-Run the game in **Windowed** or **Windowed Fullscreen** mode — in
-exclusive fullscreen the overlay may not show above the game.
+Either way, run the game in **Windowed** or **Windowed Fullscreen**
+mode — in exclusive fullscreen the overlay may not show above the game.
 
 ## Usage
 
-1. Start `run.bat` (a console window appears).
+1. Start the app (`d2r-advisor.exe` or `run.bat`).
 2. In game, open the inventory and hover an item so its tooltip shows.
 3. Press **F8** (keep the mouse on the item). The verdict appears in
    ~1-2 seconds.
