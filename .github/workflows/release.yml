@@ -1,8 +1,17 @@
 name: Release
 
+# Two paths into CD:
+#  - tag v*                       -> versioned release (runs tests itself)
+#  - CI success on a main push    -> rolling "latest" pre-release
+# PRs get CI checks; a merge to main triggers CI, and only a green CI
+# triggers this workflow (workflow_run) — CI then CD, never CD alone.
 on:
   push:
     tags: ["v*"]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
@@ -10,8 +19,24 @@ permissions:
 jobs:
   release:
     runs-on: windows-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
+        with:
+          # for the CI-chained path, build exactly the commit CI validated
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
+
+      - name: Resolve version label
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=latest" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-python@v5
         with:
@@ -24,6 +49,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests before releasing
+        # The workflow_run path already had CI pass on this exact commit.
+        if: github.event_name == 'push'
         run: python tests/test_regression.py
         env:
           PYTHONIOENCODING: utf-8
@@ -32,7 +59,7 @@ jobs:
         # git archive ships ONLY tracked files — no personal state and no
         # third-party assets (users fetch those with tools/setup_assets.py,
         # which install.bat runs automatically).
-        run: git archive --format=zip --prefix=d2r-advisor/ -o d2r-advisor-${{ github.ref_name }}-source.zip HEAD
+        run: git archive --format=zip --prefix=d2r-advisor/ -o d2r-advisor-${{ steps.ver.outputs.version }}-source.zip HEAD
 
       - name: Build standalone exe (PyInstaller onedir)
         # Built from the checkout, which contains no third-party assets —
@@ -42,15 +69,19 @@ jobs:
           python -m PyInstaller --noconfirm --clean --console --name d2r-advisor --icon assets/icon.ico --add-data "config.yaml;." --add-data "rules.yaml;." --add-data "presets;presets" --add-data "assets;assets" --add-data "d2rlootreader/repository;d2rlootreader/repository" --add-data "d2rlootreader/tessdata;d2rlootreader/tessdata" --add-data "advisor/brute_host.js;advisor" --add-data "tools/setup_assets.py;tools" --add-data "tools/get_gamble_icons.py;tools" --add-data "tools/get_dbm_workers.py;tools" main.py
 
       - name: Zip the exe bundle
-        run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ github.ref_name }}-windows-x64.zip
+        run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
 
-      - name: Create GitHub release
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.ver.outputs.version == 'latest' && 'latest' || github.ref_name }}
+          prerelease: ${{ steps.ver.outputs.version == 'latest' }}
+          name: ${{ steps.ver.outputs.version == 'latest' && 'Latest build (main)' || '' }}
+          target_commitish: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
           files: |
-            d2r-advisor-${{ github.ref_name }}-source.zip
-            d2r-advisor-${{ github.ref_name }}-windows-x64.zip
-          generate_release_notes: true
+            d2r-advisor-${{ steps.ver.outputs.version }}-source.zip
+            d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
+          generate_release_notes: ${{ steps.ver.outputs.version != 'latest' }}
           body: |
             **d2r-advisor-…-windows-x64.zip** — standalone build: unpack and
             run `d2r-advisor.exe` (needs Tesseract OCR installed for F8/F9

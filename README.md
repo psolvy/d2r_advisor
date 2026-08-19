@@ -208,13 +208,18 @@ formally a gray area under the game's ToS — use at your own risk.
 
 ## CI / CD
 
-- **CI** (`.github/workflows/ci.yml`): every push/PR — compile all
-  modules + 54 offline engine/parser/planner tests (Windows, Python 3.12
-  and 3.13). Icon tests skip automatically when the icons are not
-  downloaded (they never are in CI — see above).
-- **Release** (`.github/workflows/release.yml`): tag `v*` → tests → a
-  source zip built from tracked files only (no third-party content, no
-  personal data) → a standalone **PyInstaller exe** bundle → GitHub
-  Release with auto-generated notes.
+- **CI** (`.github/workflows/ci.yml`): every PR and every push to `main`
+  — compile all modules + 54 offline engine/parser/planner tests
+  (Windows, Python 3.12 and 3.13). Icon tests skip automatically when
+  the icons are not downloaded (they never are in CI — see above).
+- **CD** (`.github/workflows/release.yml`), two paths:
+  - a merge to `main` triggers CI, and a **green CI** then triggers the
+    release build automatically (CI → CD), refreshing the rolling
+    **`latest` pre-release** with a source zip and a standalone
+    **PyInstaller exe** bundle;
+  - a `v*` tag cuts a **versioned release** with the same two artifacts
+    and auto-generated notes: `git tag v1.0.1 && git push origin v1.0.1`.
 
-Cutting a release: `git tag v1.0.1 && git push origin v1.0.1`.
+Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md); bugs and
+feature requests go through the
+[issue templates](../../issues/new/choose).

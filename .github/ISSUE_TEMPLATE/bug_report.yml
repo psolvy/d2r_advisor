@@ -1,0 +1,54 @@
+name: Bug report
+description: Something is recognized wrong, crashes, or misbehaves
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, what happened instead.
+      placeholder: Pressed F8 on a Lenymo — it was recognized as a plain Sash and marked TRASH.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Hover the item, press F8
+        2. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - F8/F9 tooltip verdict (OCR)
+        - F10 gamble offer scan (icons)
+        - Seed Finder / seed search
+        - Buy planner
+        - Auto-clicker / sell-back
+        - Rules / presets
+        - Install / startup
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Windows version, Python version (or exe build), game graphics mode (resurrected/legacy), Large Font Mode on/off, resolution.
+      placeholder: Win11, exe v1.0.0, resurrected graphics, Large Font ON, 2560x1440
+    validations:
+      required: true
+  - type: textarea
+    id: debug
+    attributes:
+      label: Debug output
+      description: |
+        For recognition bugs: set `debug: true` in config.yaml, reproduce, and attach
+        the `debug/*_full.png` + `*_crop.png` pair plus the console output.
+        Drag & drop images here.
+    validations:
+      required: false
