@@ -48,13 +48,8 @@ def start_tray(app):
         app.root.after(0, app.open_settings)
 
     def on_health(icon, item):
-        from advisor.health import health_report, summary_line
-        issues = health_report(app.cfg)
-        if issues:
-            body = "\n".join(f"[{lv}] {t}" for lv, t, _d in issues[:4])
-        else:
-            body = "Everything is configured."
-        icon.notify(body, f"Health: {summary_line(issues)}")
+        # a real window — Windows swallows tray notifications silently
+        app.root.after(0, app.show_health)
 
     def on_console(icon, item):
         if _console_hwnd():

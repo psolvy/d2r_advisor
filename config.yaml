@@ -54,8 +54,8 @@ history: true
 #   "https://duckduckgo.com/?q={query}"
 link_template: "https://duckduckgo.com/?q={query}"
 
-# Verdict popup size. 1.5 — good for 1440p/4K, 1.0 — for 1080p
-ui_scale: 1.5
+# Verdict popup size. 2.0 — 4K, 1.5 — 1440p, 1.0 — 1080p
+ui_scale: 2.0
 
 # Seed Finder window size multiplier (empty = use ui_scale). The window is
 # also freely resizable by dragging its edges.

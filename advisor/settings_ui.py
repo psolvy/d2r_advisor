@@ -109,9 +109,9 @@ class Settings(tk.Toplevel):
         s = self.s
         self.title("D2R Item Advisor — Settings")
         self.configure(bg=BG)
-        self.f_base = ("Segoe UI", int(10 * s))
-        self.f_sub = ("Segoe UI", int(9 * s))
-        self.f_h = ("Segoe UI", int(12 * s), "bold")
+        self.f_base = ("Segoe UI", int(11 * s))
+        self.f_sub = ("Segoe UI", int(10 * s))
+        self.f_h = ("Segoe UI", int(13 * s), "bold")
         self.vars = {}
         self.sf_vars = {}
 
@@ -200,9 +200,13 @@ class Settings(tk.Toplevel):
             val = getter(key)
             if kind == "bool":
                 var = tk.BooleanVar(value=bool(val))
+                # the check mark draws in fg — default black is invisible
+                # on the dark indicator box
                 w = tk.Checkbutton(f, variable=var, bg=PANEL,
                                    activebackground=PANEL,
-                                   selectcolor=FIELD)
+                                   selectcolor=FIELD, fg=GOLD_HI,
+                                   activeforeground=GOLD_HI,
+                                   highlightthickness=0, bd=0)
             elif kind == "choice":
                 var = tk.StringVar(value="" if val is None else str(val))
                 w = ttk.Combobox(f, values=choices, textvariable=var,
@@ -266,9 +270,62 @@ class Settings(tk.Toplevel):
             self.restart_cb()
 
 
+def open_health_report(root, cfg, scale=1.0):
+    """Small themed report window — tray notifications are unreliable
+    (Windows can swallow them silently), a window always shows."""
+    from advisor.health import health_report, summary_line
+    issues = health_report(cfg)
+    s = max(1.0, float(scale))
+    win = tk.Toplevel(root)
+    win.title("D2R Item Advisor — Health")
+    win.configure(bg=BG)
+    win.resizable(False, False)
+    f_base = ("Segoe UI", int(10 * s))
+    f_sub = ("Segoe UI", int(9 * s))
+    pad = int(12 * s)
+    tk.Label(win, text=f"HEALTH — {summary_line(issues)}", bg=BG,
+             fg=GOLD_HI, font=("Segoe UI", int(12 * s), "bold")
+             ).pack(anchor="w", padx=pad, pady=(pad, int(4 * s)))
+    body = tk.Frame(win, bg=PANEL, highlightthickness=1,
+                    highlightbackground=LINE)
+    body.pack(fill="both", expand=True, padx=pad)
+    colors = {"error": RED, "warn": GOLD_HI, "ok": DIM}
+    if not issues:
+        tk.Label(body, text="✓ everything is configured", bg=PANEL,
+                 fg=GREEN, font=f_base, anchor="w"
+                 ).pack(fill="x", padx=8, pady=6)
+    for lv, title, detail in issues:
+        mark = {"error": "✕", "warn": "⚠", "ok": "·"}[lv]
+        tk.Label(body, text=f"{mark} {title}\n   {detail}", bg=PANEL,
+                 fg=colors[lv], font=f_sub, anchor="w", justify="left",
+                 wraplength=int(560 * s)).pack(fill="x", padx=8, pady=3)
+    tk.Button(win, text="OK", command=win.destroy, bg=GOLD, fg="#191307",
+              activebackground=GOLD_HI, relief="flat", font=f_base,
+              padx=int(16 * s)).pack(pady=(int(8 * s), pad))
+    win.lift()
+    win.attributes("-topmost", True)
+    win.after(300, lambda: win.attributes("-topmost", False))
+    return win
+
+
+_open_window = None  # singleton — repeat opens re-focus the existing one
+
+
 def open_settings(root, cfg, restart_cb=None, scale=1.0):
+    global _open_window
+    if _open_window is not None:
+        try:
+            if _open_window.winfo_exists():
+                _open_window.deiconify()
+                _open_window.lift()
+                _open_window.focus_force()
+                return _open_window
+        except tk.TclError:
+            pass
+        _open_window = None
     win = Settings(root, cfg, restart_cb=restart_cb, scale=scale)
     win.lift()
     win.attributes("-topmost", True)
     win.after(200, lambda: win.attributes("-topmost", False))
+    _open_window = win
     return win

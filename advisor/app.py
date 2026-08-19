@@ -493,13 +493,18 @@ class App:
             print(f"asset download skipped ({e}) — F10 icon scan and the "
                   "fast seed search need them; rerun to retry")
 
+    def _ui_scale(self):
+        return float(self.cfg.get("seedfinder_scale")
+                     or self.cfg.get("ui_scale") or 1.5)
+
     def open_settings(self):
         from advisor.settings_ui import open_settings
-        # same scale source as the Seed Finder window
-        scale = float(self.cfg.get("seedfinder_scale")
-                      or self.cfg.get("ui_scale") or 1.5)
         open_settings(self.root, self.cfg, restart_cb=self.restart,
-                      scale=scale)
+                      scale=self._ui_scale())
+
+    def show_health(self):
+        from advisor.settings_ui import open_health_report
+        open_health_report(self.root, self.cfg, scale=self._ui_scale())
 
     def restart(self):
         """Relaunch (exe or source) so new hotkeys/scales apply."""
