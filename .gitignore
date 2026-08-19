@@ -14,6 +14,8 @@ dist/
 debug/
 history.log
 gamble_clicks.json
+season_goals.json
+advisor.log
 rules.yaml.bak
 
 # --- third-party content that must NOT be redistributed ---

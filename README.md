@@ -133,6 +133,16 @@ destination via `link_template` in config.yaml (web search by default;
 diablo2.io etc. work too). Clicking a link keeps the popup open; clicking
 anywhere else closes it.
 
+## Season goals (runeword tracker)
+
+Tray → **Season goals**: pick the runewords you are building this ladder
+(Stealth, Lore, Insight, Spirit… seeded by default). Every rune you scan
+is **counted automatically**, and the verdict popup on a rune shows live
+progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES READY — make
+it!" when the last rune drops. The window shows a checklist per goal
+with +/− corrections and an "I made it" button that spends the runes.
+State lives in `season_goals.json` (local, never committed).
+
 Cube and crafts:
 - **magic item on a craftable base** → craft recipes (Blood / Caster /
   Hit Power / Safety) with the required rune and gem;

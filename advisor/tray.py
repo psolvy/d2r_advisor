@@ -70,8 +70,12 @@ def start_tray(app):
     def on_update(icon, item):
         app.check_updates(interactive=True)
 
+    def on_goals(icon, item):
+        app.root.after(0, app.open_goals)
+
     menu = pystray.Menu(
         pystray.MenuItem("Settings", on_settings, default=True),
+        pystray.MenuItem("Season goals", on_goals),
         pystray.MenuItem("Seed Finder", on_finder),
         pystray.MenuItem("Health check", on_health),
         pystray.MenuItem("Check for updates", on_update),

@@ -22,10 +22,10 @@ seed_hotkey: shift+f10
 #   custom   — your own rules.yaml in the project root
 #   auto     — pick by season age (needs season_start below):
 #              days 0-13 leveling, 14-44 midgame, 45+ lategame
-preset: lategame
+preset: auto
 
 # Season start date for preset: auto (YYYY-MM-DD)
-season_start: ""
+season_start: "2026-08-21"
 
 # Your class ("sorceress", "paladin", ...) — shows FCR/FHR breakpoint
 # ladders when a hovered item has those stats. Empty = off.

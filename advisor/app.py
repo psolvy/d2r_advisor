@@ -506,6 +506,10 @@ class App:
         from advisor.settings_ui import open_health_report
         open_health_report(self.root, self.cfg, scale=self._ui_scale())
 
+    def open_goals(self):
+        from advisor.goals_ui import open_goals
+        open_goals(self.root, scale=self._ui_scale())
+
     def check_updates(self, interactive=False):
         """Compare against the newest GitHub release in the background;
         offer the update dialog when there is one."""
