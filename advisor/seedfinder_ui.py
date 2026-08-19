@@ -1862,6 +1862,8 @@ class SeedFinder(tk.Toplevel):
                     self.log(m[1], "dim")
                 elif m[0] == "exec_countdown":
                     self.exec_btn.configure(text=f"⏳ focus game! {m[1]}s")
+                    self.log(f"  starting in {m[1]}s — focus the game "
+                             "window!", "dim")
                 elif m[0] == "exec_step":
                     k, total, txt = m[1], m[2], m[3]
                     self.exec_btn.configure(text=f"■ Stop ({k}/{total})")
