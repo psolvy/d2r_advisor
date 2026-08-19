@@ -136,12 +136,12 @@ anywhere else closes it.
 ## Season goals (runeword tracker)
 
 Tray → **Season goals**: pick the runewords you are building this ladder
-(Stealth, Lore, Insight, Spirit… seeded by default). Every rune you scan
-is **counted automatically**, and the verdict popup on a rune shows live
-progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES READY — make
-it!" when the last rune drops. The window shows a checklist per goal
-with +/− corrections and an "I made it" button that spends the runes.
-State lives in `season_goals.json` (local, never committed).
+(Stealth, Lore, Insight, Spirit… seeded by default) and tick off the
+runes you own with the +/− counters. The verdict popup on a scanned rune
+shows live progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES
+READY — make it!" when the last one is in place. The "I made it" button
+spends the runes from the pool. State lives in `season_goals.json`
+(local, never committed).
 
 Cube and crafts:
 - **magic item on a craftable base** → craft recipes (Blood / Caster /

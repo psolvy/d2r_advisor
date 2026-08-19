@@ -95,10 +95,10 @@ def rune_advice(item):
         shown = ", ".join(used_in[:8]) + ("…" if len(used_in) > 8 else "")
         lines.append((f"Used in: {shown}", dim, recipe_url(f"runewords with {rune} rune")))
 
-    # season goals: count the drop and show live progress
+    # season goals: show live progress (counts are managed ONLY in the
+    # Season Goals window — a scan must not touch the counter)
     try:
         from advisor import goals
-        goals.add_scanned_rune(rune)
         for text, ready in goals.rune_popup_lines(rune):
             lines.append((text, "#4dff64" if ready else accent))
     except Exception:
