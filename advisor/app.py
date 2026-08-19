@@ -183,6 +183,15 @@ class App:
 
             item = parse_best(variants, quality_hint=quality_hint)
             if not item.get("tooltip"):
+                # always dump the RAW frame on failure — cursor in the name,
+                # no annotations (they poison offline tuning)
+                dbg = ROOT / "debug"
+                dbg.mkdir(exist_ok=True)
+                cx, cy = local_cursor
+                cv2.imwrite(str(dbg / f"{stamp}_scanfail_{cx}x{cy}_full.png"),
+                            img)
+                if crop is not None and crop.size:
+                    cv2.imwrite(str(dbg / f"{stamp}_scanfail_crop.png"), crop)
                 self.results.put({"verdict": "error",
                                   "note": "No text recognized — hover an item tooltip",
                                   "cursor": cursor, "screen_rect": screen_rect})
