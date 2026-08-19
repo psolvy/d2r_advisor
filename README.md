@@ -94,6 +94,29 @@ missing) and what that disables. "Save & Restart" applies everything.
 The standalone exe also hides its console into the tray and adds itself
 to the Start Menu on first run.
 
+<p align="center">
+  <img src="docs/img/settings.png" width="760"
+       alt="Settings window with the health panel on top">
+</p>
+
+**Health check** in the tray opens the same what-is-missing report as a
+standalone window:
+
+<p align="center">
+  <img src="docs/img/health.png" width="420"
+       alt="Health report window">
+</p>
+
+The tray also has **Check for updates** (plus an automatic check on
+start, `auto_update` in the config): when a new GitHub release exists,
+one click downloads it and swaps the build in place — your config,
+calibration and downloaded assets survive.
+
+<p align="center">
+  <img src="docs/img/update.png" width="560"
+       alt="Update dialog offering the new release">
+</p>
+
 Everything the UI edits is plain `config.yaml`, editable by hand too:
 
 - `config.yaml` — hotkeys, **rules preset**, display time, roll ranges
@@ -135,10 +158,18 @@ anywhere else closes it.
 
 ## Season goals (runeword tracker)
 
+<p align="center">
+  <img src="docs/img/goals.png" width="620"
+       alt="Season Goals window: runeword checklists with rune counters">
+</p>
+
 Tray → **Season goals**: pick the runewords you are building this ladder
-(Stealth, Lore, Insight, Spirit… seeded by default) and tick off the
-runes you own with the +/− counters. The verdict popup on a scanned rune
-shows live progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES
+(Stealth, Lore, Insight, Spirit… seeded by default). Fill the rune
+counters either with the **📷 Scan runes tab** button — open the stash
+RUNES tab in game, and one screenshot sets every counter (a one-time
+3-point grid calibration: hover El, the last cell of the first row, and
+Zod) — or by hand with the +/− chips. The verdict popup on a scanned
+rune shows live progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES
 READY — make it!" when the last one is in place. The "I made it" button
 spends the runes from the pool. State lives in `season_goals.json`
 (local, never committed).
@@ -163,10 +194,12 @@ servers and no simulator can predict it)*
        alt="Gamble Seed Finder: offer grid, found seed, refresh forecast, buy plan">
 </p>
 
-*A live session: the offer filled itself from the F10 icon scan, "Find
-seed" swept all 2³² seeds and found it, the forecast lists upcoming
-refreshes, and the planner routed to a UNIQUE — the glowing slot on the
-grid is where it will sit when you buy it.*
+*A live session: the offer is on the grid (the 🎲 button rolls a random
+seed to explore without scanning anything), the forecast lists upcoming
+refreshes, and the planner routed to UNIQUEs — each plan names the exact
+item it produces ("= Sandstorm Trek", or "1 of N" for jewelry where the
+game rolls among candidates); the glowing slot is where it will sit when
+you buy it.*
 
 - **F10** on the gamble screen: reads the whole offer and copies the list
   to the clipboard. In **resurrected graphics** the gamble window shows
