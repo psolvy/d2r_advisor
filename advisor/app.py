@@ -457,8 +457,8 @@ class App:
             time.sleep(0.15)
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
-            from advisor.tooltip import find_two_tooltips
-            hov, eq = find_two_tooltips(img, local_cursor)
+            from advisor.tooltip import find_compare_tooltips
+            hov, others = find_compare_tooltips(img, local_cursor)
 
             def dump(reason):
                 dbg = ROOT / "debug"
@@ -467,11 +467,11 @@ class App:
                 cv2.imwrite(str(dbg / f"{stamp}_cmp_full.png"), img)
                 if hov is not None:
                     cv2.imwrite(str(dbg / f"{stamp}_cmp_hovered.png"), hov)
-                if eq is not None:
-                    cv2.imwrite(str(dbg / f"{stamp}_cmp_equipped.png"), eq)
+                for i, o in enumerate(others or [], 1):
+                    cv2.imwrite(str(dbg / f"{stamp}_cmp_equipped{i}.png"), o)
                 print(f"compare debug saved ({reason}) -> debug/{stamp}_cmp_*")
 
-            if hov is None or eq is None:
+            if hov is None or not others:
                 dump("missing tooltip")
                 self.results.put({
                     "verdict": "error",
@@ -480,13 +480,16 @@ class App:
                             "press the compare hotkey",
                     "cursor": cursor, "screen_rect": screen_rect})
                 return
-            items = []
-            for crop in (hov, eq):
+
+            def read(crop):
                 variants, hint, _fl = scan_tooltip(
                     crop, tesseract_cmd=self.tesseract)
-                items.append(parse_best(variants, quality_hint=hint))
-            new_item, old_item = items
-            if not new_item.get("tooltip") or not old_item.get("tooltip"):
+                return parse_best(variants, quality_hint=hint)
+
+            new_item = read(hov)
+            old_items = [it for it in (read(o) for o in others)
+                         if it.get("tooltip")]
+            if not new_item.get("tooltip") or not old_items:
                 dump("unreadable "
                      + ("hovered" if not new_item.get("tooltip")
                         else "equipped"))
@@ -499,10 +502,15 @@ class App:
             if self.cfg.get("debug"):
                 dump("ok")
             from advisor.compare import diff_items
+            extra = []
+            for k, old in enumerate(old_items):
+                if k:
+                    extra.append((" ", "#9a9a9a"))  # section spacer
+                extra += diff_items(new_item, old)
             self.results.put({
                 "verdict": "compare",
                 "item": new_item,
-                "extra": diff_items(new_item, old_item),
+                "extra": extra,
                 "cursor": cursor, "screen_rect": screen_rect})
         except Exception as e:
             self.results.put({"verdict": "error",

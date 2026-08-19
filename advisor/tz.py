@@ -82,6 +82,29 @@ def open_tz_window(root, cfg, scale=1.0):
                     padx=10, pady=8, highlightthickness=1,
                     highlightbackground=LINE)
     body.pack(fill="x", padx=pad)
+
+    # clickable provider links: left click opens, right click copies
+    links = tk.Frame(win, bg=BG)
+    links.pack(fill="x", padx=pad, pady=(int(6 * s), 0))
+    for label, url in (("d2runewizard.com/integration",
+                        "https://d2runewizard.com/integration"),
+                       ("d2emu.com/terms", "https://www.d2emu.com/terms")):
+        lbl = tk.Label(links, text=label, bg=BG, fg=GOLD_HI,
+                       font=(f_base[0], f_base[1], "underline"),
+                       cursor="hand2")
+        lbl.pack(anchor="w")
+
+        def _open(_e, u=url):
+            import webbrowser
+            webbrowser.open(u)
+
+        def _copy(_e, u=url):
+            win.clipboard_clear()
+            win.clipboard_append(u)
+            body.configure(text=f"copied: {u}")
+
+        lbl.bind("<Button-1>", _open)
+        lbl.bind("<Button-3>", _copy)
     tk.Button(win, text="Refresh", bg=GOLD, fg="#191307", relief="flat",
               font=f_base, padx=int(12 * s),
               command=lambda: _load(win, body, cfg)

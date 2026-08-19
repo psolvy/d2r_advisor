@@ -38,6 +38,7 @@ GENERAL = [
     ("char_level", "Character level (0 = off)", "int", None),
     ("display_seconds", "Verdict display seconds", "int", None),
     ("auto_update", "Check for updates on start", "bool", None),
+    ("count_upcube", "Goals: count cube-upgrading runes/gems", "bool", None),
     ("show_ranges", "Show roll ranges", "bool", None),
     ("sounds", "Verdict sounds", "bool", None),
     ("history", "Write history.log", "bool", None),

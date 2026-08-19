@@ -57,6 +57,19 @@ class GoalsWindow(tk.Toplevel):
                      rowheight=int(30 * s))
         st.map("SG.Treeview", background=[("selected", GOLD)],
                foreground=[("selected", BG)])
+        # themed combobox — the raw white system one looked alien here
+        st.configure("SG.TCombobox", fieldbackground=FIELD, background=PANEL,
+                     foreground=FG, arrowcolor=GOLD, bordercolor=LINE,
+                     lightcolor=FIELD, darkcolor=FIELD)
+        st.map("SG.TCombobox",
+               fieldbackground=[("readonly", FIELD)],
+               selectbackground=[("!disabled", FIELD)],
+               selectforeground=[("!disabled", FG)],
+               foreground=[("readonly", FG)])
+        self.option_add("*TCombobox*Listbox.background", FIELD)
+        self.option_add("*TCombobox*Listbox.foreground", FG)
+        self.option_add("*TCombobox*Listbox.selectBackground", GOLD)
+        self.option_add("*TCombobox*Listbox.selectForeground", BG)
         self.tv = ttk.Treeview(self, show="tree", style="SG.Treeview",
                                selectmode="browse", height=8)
         self.tv.grid(row=2, column=0, columnspan=3, sticky="ew",
@@ -74,11 +87,12 @@ class GoalsWindow(tk.Toplevel):
         row.grid(row=4, column=0, columnspan=3, sticky="ew", padx=pad,
                  pady=(int(8 * s), 0))
         self.add_cb = ttk.Combobox(row, values=goals.all_runeword_names(),
-                                   width=22, font=self.f_sub)
+                                   width=22, font=self.f_sub,
+                                   style="SG.TCombobox")
         self.add_cb.pack(side="left")
         self._btn(row, "Add goal", self._add).pack(side="left", padx=4)
         self._btn(row, "Remove", self._remove).pack(side="left", padx=4)
-        self._btn(row, "🏁 I made it", self._made,
+        self._btn(row, "✔ I made it", self._made,
                   hot=True).pack(side="right")
 
         # one-shot stash scans: open the tab in game, hit the button
@@ -104,7 +118,15 @@ class GoalsWindow(tk.Toplevel):
         self.craft_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
                                   highlightbackground=LINE)
         self.craft_box.grid(row=7, column=0, columnspan=3, sticky="ew",
-                            padx=pad, pady=(int(6 * s), pad))
+                            padx=pad, pady=(int(6 * s), 0))
+
+        # everything makeable RIGHT NOW from the pools
+        self.make_tv = ttk.Treeview(self, show="tree", style="SG.Treeview",
+                                    selectmode="browse", height=6)
+        self.make_tv.grid(row=8, column=0, columnspan=3, sticky="ew",
+                          padx=pad, pady=(int(6 * s), pad))
+        self.make_tv.tag_configure("hot", foreground=GREEN)
+        self.make_tv.tag_configure("dim", foreground=DIM)
         self.refresh()
 
     def _btn(self, parent, text, cmd, hot=False):
@@ -123,24 +145,41 @@ class GoalsWindow(tk.Toplevel):
             for r, n, h in rows:
                 mark = "✓" if h >= n else "✗"
                 bits.append(f"{r}{'×%d' % n if n > 1 else ''}{mark}")
-            head = "🏁 " if complete else ""
+            head = "★ " if complete else ""
             self.tv.insert("", "end", iid=goal,
                            text=f" {head}{goal}   ·  {'  '.join(bits)}",
                            tags=("done" if complete else "todo",))
         if keep and self.tv.exists(keep):
             self.tv.selection_set(keep)
         self._pick()
+        allow_up = bool(self.cfg.get("count_upcube"))
         if hasattr(self, "craft_box"):
             for w in self.craft_box.winfo_children():
                 w.destroy()
-            tk.Label(self.craft_box, text="CRAFT STOCK (from the gems tab)",
+            tk.Label(self.craft_box, text="CRAFT STOCK (from the gems tab)"
+                     + (" — counting cube-ups" if allow_up else ""),
                      bg=PANEL, fg=GOLD, font=self.f_sub
                      ).pack(anchor="w", padx=8, pady=(4, 0))
-            for text, ok in goals.craft_lines():
+            for text, ok in goals.craft_lines(allow_up):
                 tk.Label(self.craft_box, text=("✓ " if ok else "· ") + text,
                          bg=PANEL, fg=GREEN if ok else DIM,
                          font=self.f_sub, anchor="w"
                          ).pack(fill="x", padx=8, pady=1)
+        if hasattr(self, "make_tv"):
+            tv = self.make_tv
+            tv.delete(*tv.get_children())
+            rows = goals.craftable_runewords(allow_up)
+            head = ("RUNEWORDS YOU CAN MAKE NOW"
+                    + (" (incl. cube-upgrading)" if allow_up else "")
+                    + " — enable cube-ups in Settings" * (not allow_up))
+            tv.insert("", "end", iid="_head", text=f" {head}", tags=("dim",))
+            if not rows:
+                tv.insert("", "end", text="   nothing yet — scan the "
+                          "runes/gems tabs or farm on!", tags=("dim",))
+            for name, n, runes in rows:
+                tv.insert("", "end",
+                          text=f"   {name} ×{n}   ·  {runes}",
+                          tags=("hot",))
 
     def _pick(self, _ev=None):
         for w in self.rune_row.winfo_children():
@@ -251,9 +290,16 @@ class GoalsWindow(tk.Toplevel):
                     rect = (mon["left"], mon["top"],
                             mon["width"], mon["height"])
                 tess = resolve_tesseract(self.cfg or load_config())
+                from datetime import datetime
+                from pathlib import Path
+                dbg_dir = Path(__file__).resolve().parents[1] / "debug"
+                dbg_dir.mkdir(exist_ok=True)
+                dbg = dbg_dir / (datetime.now().strftime("%H%M%S")
+                                 + f"_tabscan_{what}.png")
                 counts = scan_counted_tab(img, pts, names,
                                           screen_rect=rect,
-                                          tesseract_cmd=tess)
+                                          tesseract_cmd=tess,
+                                          debug_out=dbg)
             except Exception as e:
                 self.status.configure(text=f"scan failed: {e}", fg=RED)
                 return

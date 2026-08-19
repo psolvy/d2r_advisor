@@ -140,10 +140,10 @@ def _split_fused(bright, box, scale):
     return parts if len(parts) > 1 else [box]
 
 
-def find_two_tooltips(img_bgr, cursor=None):
+def find_compare_tooltips(img_bgr, cursor=None):
     """The game's Shift-compare shows TWO tooltips: the hovered item near
     the cursor and the equipped one elsewhere. Returns
-    (hovered_crop, equipped_crop) — either may be None.
+    (hovered_crop, [other_crops]) — up to two others (both rings).
 
     Unlike the single-tooltip path this must not hard-reject bright
     backgrounds (a tooltip over the stash grid still counts) — the dark
@@ -185,10 +185,16 @@ def find_two_tooltips(img_bgr, cursor=None):
         bx, by, bw, bh = b
         return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
 
-    # equipped: the best-scoring OTHER block
-    others = sorted((s for s in scored if not overlaps(s[0], hovered)),
-                    key=lambda b: -b[1])
-    equipped = others[0][0] if others else None
+    # equipped: the best-scoring OTHER blocks (two for rings!),
+    # non-overlapping with the hovered one and with each other
+    others = []
+    for box, _sc in sorted((s for s in scored
+                            if not overlaps(s[0], hovered)),
+                           key=lambda b: -b[1]):
+        if all(not overlaps(box, o) for o in others):
+            others.append(box)
+        if len(others) == 2:
+            break
 
     def crop(box):
         if box is None:
@@ -199,7 +205,13 @@ def find_two_tooltips(img_bgr, cursor=None):
         x1, y1 = min(W, x + w + pad_x), min(H, y + h + pad_b)
         return img_bgr[y0:y1, x0:x1]
 
-    return crop(hovered), crop(equipped)
+    return crop(hovered), [crop(b) for b in others]
+
+
+def find_two_tooltips(img_bgr, cursor=None):
+    """Back-compat wrapper: (hovered, first_other)."""
+    hov, others = find_compare_tooltips(img_bgr, cursor)
+    return hov, (others[0] if others else None)
 
 
 def fallback_region(img_bgr, cursor, width=760, height=640):

@@ -75,21 +75,110 @@ def set_gem_counts(counts):
     return st
 
 
+# --------------------------------------------------------- cube upgrades
+
+# 2 lower runes per upgrade from Pul upward, 3 below; the gem consumed
+# when upgrading FROM that rune (None = no gem needed)
+_TWO_PER_UP = {"Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur",
+               "Ber", "Jah", "Cham"}
+
+
+def _up_gems():
+    from advisor.knowledge import _UP_GEMS
+    return _UP_GEMS
+
+
+def _rune_order():
+    from advisor.knowledge import RUNE_ORDER
+    return RUNE_ORDER
+
+
+def _feasible(per_copy, copies, runes_pool, gems_pool, allow_up):
+    """Can `copies` copies be made from the pools, optionally cubing
+    lower runes (and their gems) up?"""
+    order = _rune_order()
+    idx = {r: i for i, r in enumerate(order)}
+    pool = dict(runes_pool)
+    gems = dict(gems_pool or {})
+    demand = {}
+    for r, n in per_copy.items():
+        demand[r] = demand.get(r, 0) + n * copies
+    for i in range(len(order) - 1, -1, -1):
+        r = order[i]
+        d = demand.get(r, 0)
+        if not d:
+            continue
+        take = min(pool.get(r, 0), d)
+        d -= take
+        if not d:
+            continue
+        if not allow_up or i == 0:
+            return False
+        lower = order[i - 1]
+        per = 2 if lower in _TWO_PER_UP else 3
+        gem = _up_gems().get(lower)
+        if gem:
+            gem = gem.title()  # knowledge stores 'chipped amethyst'
+            if gems.get(gem, 0) < d:
+                return False
+            gems[gem] = gems.get(gem, 0) - d
+        demand[lower] = demand.get(lower, 0) + per * d
+    return True
+
+
+def craftable_runewords(allow_up=False, st=None, limit=40):
+    """[(name, count, runes_str)] — every runeword makeable RIGHT NOW,
+    best counts first. allow_up counts cube-upgrading lower runes/gems."""
+    st = st or load_state()
+    rw = _runewords()
+    out = []
+    for name, spec in rw.items():
+        runes = spec.get("runes") or []
+        if not runes:
+            continue
+        per = {}
+        for r in runes:
+            per[r] = per.get(r, 0) + 1
+        n = 0
+        while n < 20 and _feasible(per, n + 1, st["runes"],
+                                   st.get("gems"), allow_up):
+            n += 1
+        if n:
+            out.append((name, n, " ".join(runes)))
+    out.sort(key=lambda t: (-t[1], t[0]))
+    return out[:limit]
+
+
+def _perfect_equivalents(gems, gtype):
+    """Perfect gems of a type makeable by cubing 3 lower -> 1 higher."""
+    q = ["Chipped", "Flawed", "", "Flawless", "Perfect"]
+    have = [gems.get(f"{lvl} {gtype}".strip(), 0) for lvl in q]
+    carry = 0
+    for lvl in range(4):
+        carry = (have[lvl] + carry) // 3
+    return have[4] + carry
+
+
 # craft families: the perfect gem is fixed; the rune varies by slot
 CRAFT_GEMS = {"Caster": "Perfect Amethyst", "Blood": "Perfect Ruby",
               "Hit Power": "Perfect Sapphire", "Safety": "Perfect Emerald"}
 
 
-def craft_lines():
-    """[(text, ok)] — perfect-gem stock per craft family + reroll info."""
+def craft_lines(allow_up=False):
+    """[(text, ok)] — perfect-gem stock per craft family + reroll info.
+    allow_up also counts perfects cubeable from lower qualities."""
     st = load_state()
     gems = st.get("gems") or {}
     out = []
     for family, gem in CRAFT_GEMS.items():
-        n = gems.get(gem, 0)
-        out.append((f"{family} crafts: {gem} ×{n} (+ jewel + slot rune)",
-                    n > 0))
-    skulls = gems.get("Perfect Skull", 0)
+        gtype = gem.split()[-1]
+        n = (_perfect_equivalents(gems, gtype) if allow_up
+             else gems.get(gem, 0))
+        tag = " incl. cube-ups" if allow_up else ""
+        out.append((f"{family} crafts: {gem} ×{n}{tag} "
+                    "(+ jewel + slot rune)", n > 0))
+    skulls = (_perfect_equivalents(gems, "Skull") if allow_up
+              else gems.get("Perfect Skull", 0))
     if skulls:
         out.append((f"Perfect Skull ×{skulls} — rare rerolls / socket "
                     "quests", True))

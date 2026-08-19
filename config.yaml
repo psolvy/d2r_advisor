@@ -95,6 +95,10 @@ seedfinder:
 # update (tray menu -> Check for updates does it on demand)
 auto_update: true
 
+# Season goals: when counting craftable runewords/crafts, also
+# count cube-upgrading lower runes and gems (3 lower -> 1 higher)
+count_upcube: false
+
 # Terror Zone widget (tray -> Terror Zone). Needs a FREE community
 # API token: d2runewizard.com/integration or d2emu.com/terms.
 tz_api_url: ""

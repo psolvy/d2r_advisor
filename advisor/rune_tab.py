@@ -58,19 +58,26 @@ def cell_centers(calib_pts, total=33):
 
 
 def _ocr_digits(crop, tesseract_cmd=None):
+    """Count digits are small white glyphs with a dark outline in the
+    cell corner — a plain WHITE threshold beats Otsu (the item art
+    behind them wrecks a global threshold)."""
     try:
         import pytesseract
         if tesseract_cmd:
             pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
         g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        g = cv2.resize(g, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-        _, bw = cv2.threshold(g, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        if bw.mean() < 127:
-            bw = 255 - bw
-        txt = pytesseract.image_to_string(
-            bw, config="--psm 7 -c tessedit_char_whitelist=0123456789")
-        m = re.search(r"\d+", txt or "")
-        return int(m.group(0)) if m else None
+        g = cv2.resize(g, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+        for thresh in (185, 150):
+            _, bw = cv2.threshold(g, thresh, 255, cv2.THRESH_BINARY)
+            if cv2.countNonZero(bw) < 8:
+                continue
+            bw = 255 - bw  # tesseract prefers dark text on light
+            txt = pytesseract.image_to_string(
+                bw, config="--psm 7 -c tessedit_char_whitelist=0123456789")
+            m = re.search(r"\d+", txt or "")
+            if m:
+                return int(m.group(0))
+        return None
     except Exception:
         return None
 
@@ -83,9 +90,10 @@ GEM_ORDER = [f"{q} {t}".strip() for t in GEM_TYPES for q in GEM_QUALITIES]
 
 
 def scan_counted_tab(img, calib_pts, names, screen_rect=None,
-                     tesseract_cmd=None):
+                     tesseract_cmd=None, debug_out=None):
     """Generic fixed-layout counted tab (runes, gems): {name: count}."""
-    return _scan(img, calib_pts, names, screen_rect, tesseract_cmd)
+    return _scan(img, calib_pts, names, screen_rect, tesseract_cmd,
+                 debug_out=debug_out)
 
 
 def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
@@ -93,7 +101,8 @@ def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
     return _scan(img, calib_pts, RUNE_ORDER, screen_rect, tesseract_cmd)
 
 
-def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None):
+def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
+          debug_out=None):
     got = cell_centers(calib_pts, total=len(names))
     if got is None:
         return None
@@ -104,6 +113,7 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None):
     half = max(8, int(cell * 0.48))
     counts = {}
     h, w = img.shape[:2]
+    dbg = img.copy() if debug_out else None
     for rune, (cx, cy) in zip(names, centers):
         x, y = int(cx - off_x), int(cy - off_y)
         x0, x1 = max(0, x - half), min(w, x + half)
@@ -112,14 +122,23 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None):
             counts[rune] = 0
             continue
         crop = img[y0:y1, x0:x1]
-        # the count digits sit in the lower part of the cell
-        digits_zone = crop[int(crop.shape[0] * 0.45):, :]
+        # counts render in the BOTTOM-RIGHT corner of the cell
+        ch, cw = crop.shape[:2]
+        digits_zone = crop[int(ch * 0.55):, int(cw * 0.35):]
         n = _ocr_digits(digits_zone, tesseract_cmd)
-        if n is not None:
-            counts[rune] = n
-            continue
-        # no digits read: owned cells are bright, missing ones grayed
-        g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        counts[rune] = 1 if float(g.mean()) > 55 and float(g.std()) > 28 \
-            else 0
+        src = "ocr"
+        if n is None:
+            # no digits read: owned cells are bright, missing ones grayed
+            g = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            n = 1 if float(g.mean()) > 55 and float(g.std()) > 28 else 0
+            src = "fb"
+        counts[rune] = n
+        if dbg is not None:
+            color = (60, 220, 60) if src == "ocr" else (60, 160, 255)
+            cv2.rectangle(dbg, (x0, y0), (x1, y1), color, 2)
+            cv2.putText(dbg, f"{rune}:{n}", (x0 + 2, y0 + 16),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 1,
+                        cv2.LINE_AA)
+    if dbg is not None:
+        cv2.imwrite(str(debug_out), dbg)
     return counts

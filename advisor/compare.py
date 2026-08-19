@@ -10,26 +10,36 @@ RED = "#ff6a4d"
 DIM = "#9a9a9a"
 
 
-def _render(tmpl, value):
-    return tmpl.replace("#", str(value), 1) if "#" in tmpl else tmpl
+def _num(v):
+    """Real number, never a bool (isinstance(True, int) is True!)."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _render(tmpl, params):
+    """Fill EVERY # with successive params ('Adds #-# ...' -> 'Adds 1-3')."""
+    if not isinstance(params, (list, tuple)):
+        params = [params]
+    out = tmpl
+    for p in params:
+        if "#" not in out:
+            break
+        out = out.replace("#", str(p), 1)
+    return out
 
 
 def _affix_map(item):
-    """template -> numeric value (first param) or True for flat affixes."""
+    """template -> (numeric_params_tuple, all_params). The numeric tuple
+    is what gets compared; the full list is what gets rendered."""
     out = {}
     for entry in item.get("affixes") or []:
         tmpl, params = entry[0], entry[1]
-        val = True
-        for p in params or []:
-            if isinstance(p, (int, float)):
-                val = p
-                break
-        # duplicated templates (e.g. two resist lines) — keep the sum
-        if tmpl in out and isinstance(out[tmpl], (int, float)) \
-                and isinstance(val, (int, float)):
-            out[tmpl] += val
+        nums = tuple(p for p in params or [] if _num(p))
+        if tmpl in out:
+            prev_n, prev_p = out[tmpl]
+            if len(prev_n) == 1 and len(nums) == 1:
+                out[tmpl] = ((prev_n[0] + nums[0],), prev_p)  # summed dupes
         else:
-            out[tmpl] = val
+            out[tmpl] = (nums, list(params or []))
     return out
 
 
@@ -41,21 +51,29 @@ def diff_items(new_item, old_item, max_lines=16):
         text = text.replace("  ", " ").strip()
         return text if text.startswith(sign) else f"{sign} {text}"
 
-    for tmpl, nv in new_a.items():
+    for tmpl, (nn, nparams) in new_a.items():
         if tmpl not in old_a:
-            gains.append((mark("+", _render(tmpl, nv if nv is not True
-                                            else "")), GREEN))
+            gains.append((mark("+", _render(tmpl, nparams)), GREEN))
             continue
-        ov = old_a[tmpl]
-        if isinstance(nv, (int, float)) and isinstance(ov, (int, float)) \
-                and nv != ov:
-            arrow = "▲" if nv > ov else "▼"
-            color = GREEN if nv > ov else RED
-            changes.append((f"{arrow} {_render(tmpl, f'{ov}→{nv}')}", color))
-    for tmpl, ov in old_a.items():
+        on = old_a[tmpl][0]
+        if nn == on:
+            continue
+        if nn and on and len(nn) == len(on):
+            up = sum(nn) > sum(on)
+            arrow, color = ("▲", GREEN) if up else ("▼", RED)
+            if len(nn) == 1:
+                text = _render(tmpl, [f"{on[0]}→{nn[0]}"])
+            else:  # ranges: full new value + the old one in brackets
+                text = (_render(tmpl, list(nn))
+                        + f"  (was {'-'.join(str(v) for v in on)})")
+            changes.append((f"{arrow} {text}", color))
+        else:
+            # one side didn't read as numbers — show the new line neutrally
+            changes.append((f"◈ {_render(tmpl, nparams)} — equipped value "
+                            "unreadable", "#ffd94d"))
+    for tmpl, (_on, oparams) in old_a.items():
         if tmpl not in new_a:
-            losses.append((mark("−", _render(tmpl, ov if ov is not True
-                                             else "")), RED))
+            losses.append((mark("−", _render(tmpl, oparams)), RED))
 
     lines = gains + changes + losses
     if not lines:
