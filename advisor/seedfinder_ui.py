@@ -321,7 +321,11 @@ class SeedFinder(tk.Toplevel):
         req_w = self.winfo_reqwidth() + 8
         req_h = self.winfo_reqheight() + 8
         max_w = int(self.winfo_screenwidth() * 0.94)
-        max_h = int(self.winfo_screenheight() * 0.92)
+        max_h = int(self.winfo_screenheight() * 0.90)
+        # how much the WHOLE window must shrink to fit this screen —
+        # open_seed_finder reopens at a smaller scale when < 1 (clamping
+        # alone just clipped the bottom on short/wide monitors)
+        self.fit_factor = min(1.0, max_w / req_w, max_h / req_h)
         w, h = min(req_w, max_w), min(req_h, max_h)
         self.geometry(f"{w}x{h}")
         self.minsize(min(w, 900), min(h, 640))
@@ -365,6 +369,7 @@ class SeedFinder(tk.Toplevel):
                      darkcolor=GOLD)
         st.configure("SF.Treeview", background=FIELD, fieldbackground=FIELD,
                      foreground=FG, borderwidth=0,
+                     font=self.f_base,  # default system font ignores scale
                      rowheight=int(30 * self.s))
         st.map("SF.Treeview", background=[("selected", GOLD)],
                foreground=[("selected", BG)])
@@ -2274,5 +2279,12 @@ def open_seed_finder(root, char_level=85, get_last_offer=None,
     _open_window = None
     w = SeedFinder(root, char_level, get_last_offer, get_last_entries,
                    ui_scale=ui_scale, cfg=cfg)
+    # content taller/wider than the screen: reopen at a scale that FITS
+    # (a widescreen 1080p monitor clipped the auto-clicker row entirely)
+    if w.fit_factor < 0.97:
+        smaller = max(0.8, float(ui_scale or 1.0) * w.fit_factor)
+        w.destroy()
+        w = SeedFinder(root, char_level, get_last_offer, get_last_entries,
+                       ui_scale=smaller, cfg=cfg)
     _open_window = w
     return w
