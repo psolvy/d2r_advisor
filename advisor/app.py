@@ -168,7 +168,8 @@ class App:
         self.cfg = load_config()
         rules_path = resolve_rules_file(self.cfg)
         try:
-            self.rules, self.default = load_rules(rules_path)
+            self.rules, self.default = load_rules(
+                rules_path, my_class=self.cfg.get("my_class"))
             print(f"Rules: {rules_path.name}")
         except Exception as e:
             print(f"ERROR: cannot load {rules_path.name} ({type(e).__name__}: {e})")

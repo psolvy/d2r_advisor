@@ -20,12 +20,21 @@ def _load_defs():
         return {}
 
 
-def expand_refs(rules, defs=None):
+def expand_refs(rules, defs=None, my_class=None):
     """Resolve affix_any_ref / affix_all_ref against presets/_common.yaml:
     {list: skill_trees, min: 1} becomes one {affix: name, min: 1}
     condition per name. The 21-entry skiller list and the 28-entry
-    +2-skills list used to be copy-pasted across all four rule files."""
+    +2-skills list used to be copy-pasted across all four rule files.
+
+    An optional class filter makes rules class-aware:
+      {list: skill_trees, min: 1, class: mine}  -> only templates that
+        mention my_class ("(Sorceress only)"); with NO my_class
+        configured the filter is ignored (full list — old behavior);
+      {list: skill_trees, min: 1, class: other} -> only templates of
+        OTHER classes; with no my_class it expands to nothing (the rule
+        never fires)."""
     defs = _load_defs() if defs is None else defs
+    mc = (my_class or "").strip().lower()
     for rule in rules:
         when = rule.get("when") or {}
         for key in ("affix_any", "affix_all"):
@@ -33,17 +42,30 @@ def expand_refs(rules, defs=None):
             if not ref:
                 continue
             names = defs.get(ref.get("list")) or []
-            extra = {k: v for k, v in ref.items() if k != "list"}
+            cls = ref.get("class")
+            if cls == "mine" and mc:
+                names = [n for n in names if mc in n.lower()]
+            elif cls == "other":
+                names = [n for n in names if mc not in n.lower()] if mc \
+                    else []
+            extra = {k: v for k, v in ref.items()
+                     if k not in ("list", "class")}
             when[key] = (when.get(key) or []) + [
                 {"affix": n, **extra} for n in names]
     return rules
 
 
-def load_rules(path):
+def load_rules(path, my_class=None):
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
-    rules = expand_refs(data.get("rules", []))
-    return rules, data.get("default", {"verdict": "trash", "note": ""})
+    rules = expand_refs(data.get("rules", []), my_class=my_class)
+    default = data.get("default", {"verdict": "trash", "note": ""})
+    # score-rule thresholds ride along inside default (signature stays
+    # (rules, default) for every existing caller)
+    if isinstance(data.get("scoring"), dict):
+        default = dict(default)
+        default["_scoring"] = data["scoring"]
+    return rules, default
 
 
 def _as_list(v):
@@ -164,27 +186,96 @@ def _matches(item, when):
             else:
                 return False
 
+    # "at least N of these" — what rare ring/amulet evaluation needs
+    # ("any 2 of: FCR, dual leech, +life, +res"). A zero-read value can
+    # neither count nor be dismissed: when reads-as-0 conds could tip the
+    # count over the bar, the rule goes indeterminate.
+    n_of = when.get("affix_n_of")
+    if n_of:
+        need = int(n_of.get("min", 1))
+        results = [_affix_cond_ok(item, c) for c in n_of.get("any", [])]
+        hits = sum(1 for r in results if r is True)
+        maybe = sum(1 for r in results if r is None)
+        if hits < need:
+            if hits + maybe >= need:
+                indeterminate = True
+            else:
+                return False
+
+    # sum of numeric params across several templates (every occurrence
+    # counts) — e.g. total resistances over the four single-res affixes
+    asum = when.get("affix_sum")
+    if asum:
+        wanted = set(_as_list(asum.get("affixes")) or [])
+        total, zero_seen = 0, False
+        for entry in item.get("affixes") or []:
+            if entry[0] not in wanted:
+                continue
+            val = next((p for p in entry[1] or []
+                        if isinstance(p, (int, float))
+                        and not isinstance(p, bool)), None)
+            if val == 0:
+                zero_seen = True
+            elif val is not None:
+                total += val
+        if "min" in asum and total < asum["min"]:
+            if zero_seen:
+                indeterminate = True
+            else:
+                return False
+        if "max" in asum and total > asum["max"]:
+            return False
+
     # A rule that would need a value that read as 0 can neither match nor
     # reject — the caller skips it and flags the item for eye-checking.
     return None if indeterminate else True
 
 
+_RANK = {"keep": 2, "check": 1, "trash": 0}
+
+
 def evaluate(item, rules, default):
-    """Return (verdict, rule_name, note)."""
+    """Return (verdict, rule_name, note).
+
+    Rules with a `score: N` field (no verdict) accumulate points instead
+    of deciding; a top-level `scoring: {keep: X, check: Y}` block in the
+    rules file converts the total. The score verdict wins over a normal
+    first-match verdict only when it is BETTER (keep > check > trash) —
+    precise scored rules can no longer be shadowed by an earlier broad
+    rule, and broad safety nets still catch everything else."""
     unreadable = None
+    score = 0
     for rule in rules:
         got = _matches(item, rule.get("when", {}))
         if got is None and unreadable is None:
             unreadable = rule.get("name", "unnamed rule")
             continue
-        if got:
-            return (
-                rule.get("verdict", "check"),
-                rule.get("name", "unnamed rule"),
-                rule.get("note", ""),
-            )
+        if not got:
+            continue
+        if "score" in rule and "verdict" not in rule:
+            score += rule["score"]
+            continue
+        verdict = rule.get("verdict", "check")
+        sv = _score_verdict(score, default)
+        if sv and _RANK[sv] > _RANK.get(verdict, 1):
+            return (sv, "score", f"{score} points")
+        return verdict, rule.get("name", "unnamed rule"), rule.get("note", "")
+    sv = _score_verdict(score, default)
+    if sv:
+        return (sv, "score", f"{score} points")
     if unreadable and default.get("verdict", "trash") == "trash":
         # Don't trash an item a rule couldn't judge because of a misread.
         return ("check", unreadable,
                 "a value read as 0 — check by eye")
     return default.get("verdict", "trash"), "default", default.get("note", "")
+
+
+def _score_verdict(score, default):
+    thresholds = default.get("_scoring")
+    if not thresholds or score <= 0:
+        return None
+    if score >= thresholds.get("keep", 1 << 30):
+        return "keep"
+    if score >= thresholds.get("check", 1 << 30):
+        return "check"
+    return None

@@ -57,12 +57,19 @@ rules:
     note: "Compare the roll to the range: top/needed — keep, the rest — sell"
 
   # ---- charms --------------------------------------------------------------
-  - name: "Skiller (grand charm +1 to a skill tree)"
+  - name: "Skiller (my class)"
     when:
       base_any: ["Grand Charm"]
-      affix_any_ref: {list: skill_trees, min: 1}
+      affix_any_ref: {list: skill_trees, min: 1, class: mine}
     verdict: keep
-    note: "Skiller; with 30+ life — very expensive"
+    note: "Skiller for YOUR class"
+
+  - name: "Skiller (other class)"
+    when:
+      base_any: ["Grand Charm"]
+      affix_any_ref: {list: skill_trees, min: 1, class: other}
+    verdict: check
+    note: "skiller for another class — trade fodder"
 
   - name: "Grand charm (not a skiller)"
     when:
@@ -132,6 +139,51 @@ rules:
       affix_any_ref: {list: class_and_tree_skills, min: 2}
     verdict: check
     note: "+2 + FCR/resists/stats = expensive"
+
+  - name: "Rare/craft jewelry (3+ good mods)"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+      affix_n_of:
+        min: 3
+        any:
+          - {affix: "+#% Faster Cast Rate", min: 10}
+          - {affix: "+# to Life", min: 30}
+          - {affix: "+# to Mana", min: 40}
+          - {affix: "All Resistances +#", min: 8}
+          - {affix: "#% Life stolen per hit", min: 3}
+          - {affix: "#% Mana stolen per hit", min: 3}
+          - {affix: "+# to Strength", min: 12}
+          - {affix: "+# to Dexterity", min: 12}
+          - {affix: "#% Better Chance of Getting Magic Items", min: 15}
+    verdict: keep
+    note: "3+ strong mods — trade material"
+
+  - name: "Resist jewelry (summed single resists)"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+      affix_sum:
+        affixes: ["Fire Resist +#%", "Cold Resist +#%",
+                  "Lightning Resist +#%", "Poison Resist +#%"]
+        min: 50
+    verdict: keep
+    note: "50+ total resists across single-res rolls"
+
+  - name: "Rare jewelry (1 good mod)"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+      affix_n_of:
+        min: 1
+        any:
+          - {affix: "+#% Faster Cast Rate", min: 10}
+          - {affix: "+# to Life", min: 30}
+          - {affix: "All Resistances +#", min: 8}
+          - {affix: "#% Life stolen per hit", min: 3}
+          - {affix: "#% Mana stolen per hit", min: 3}
+    verdict: check
+    note: "one useful mod — judge the rest by eye"
 
   - name: "Crafted ring or amulet"
     when:
