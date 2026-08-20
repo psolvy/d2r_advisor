@@ -120,6 +120,11 @@ Settings). d2emu.com is supported too and needs a token + your account
 name (`tz_api_user`).
 
 <p align="center">
+  <img src="docs/img/tz.png" width="380"
+       alt="Terror Zone widget: current and next zone with a rotation countdown">
+</p>
+
+<p align="center">
   <img src="docs/img/update.png" width="560"
        alt="Update dialog offering the new release">
 </p>
