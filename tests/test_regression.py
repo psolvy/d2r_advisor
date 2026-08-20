@@ -362,6 +362,46 @@ check("finder: only a new search wipes the seed field",
       _sf_src.count("candidates=True, seed=True") == 1
       and "if seed and self.seed_var.get().strip():" in _sf_src)
 
+# ------------------------------------------------------- compare detection
+
+from advisor.compare import diff_items
+from advisor.tooltip import overlap_frac, pick_equipped
+
+# these numbers are the real geometry/brightness measured on the user's
+# 4K failure frames (debug/20260821_02*_cmp_full.png)
+_HOVERED = (1168, 744, 1287, 1416)          # Tal Rasha's, bg 14
+_ADJACENT = (195, 673, 1049, 1287)          # Angelic Mantle, bg 15
+_BIG = (146, 183, 1246, 1215)               # Nokozan frame: hovered, bg 27
+_SMALL = (1270, 494, 1113, 436)             # ...its Chaos Torc, 4 lines
+_PANEL = (2571, 183, 1031, 528)             # inventory panel, bg 47
+
+check("compare: side-by-side tooltips are not duplicates",
+      overlap_frac(_HOVERED, _ADJACENT) < 0.3,
+      f"{overlap_frac(_HOVERED, _ADJACENT):.3f}")
+check("compare: a contained box IS a duplicate",
+      overlap_frac(_HOVERED, (1200, 800, 400, 400)) > 0.9)
+
+# the old code demanded ZERO overlap -> "Need BOTH tooltips" on a frame
+# that plainly had both
+check("compare: adjacent equipped tooltip is kept",
+      pick_equipped([(_HOVERED, 35099, 14.3), (_ADJACENT, 22076, 14.9)],
+                    _HOVERED) == [_ADJACENT])
+# a 4-line amulet next to a 20-line runeword: the old 35%-of-hovered
+# score floor deleted it
+check("compare: small equipped tooltip survives a huge hovered one",
+      pick_equipped([(_BIG, 35414, 26.5), (_SMALL, 5572, 11.7)],
+                    _BIG) == [_SMALL])
+# ...but panel/chat text (bright background) must NOT become an equipped
+check("compare: bright panel text is not an equipped tooltip",
+      pick_equipped([(_HOVERED, 35414, 14.3), (_PANEL, 7792, 46.7)],
+                    _HOVERED) == [])
+
+_hdr = diff_items({"affixes": [], "tooltip": ["Defense: 10"]},
+                  {"affixes": [], "tooltip": ["Defense: 20"],
+                   "name": "Spirit"}, label="#2")[0][0]
+check("compare: header names the item, not the last stat line",
+      _hdr == "vs equipped #2: Spirit", _hdr)
+
 # ---------------------------------------------------------------- auto-clicker
 
 from advisor.autoclicker import calib_ok, cell_to_screen

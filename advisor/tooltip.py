@@ -10,6 +10,11 @@ import numpy as np
 
 from advisor.colors import text_mask
 
+# Mean brightness of the non-text pixels inside a block. The game draws
+# every tooltip on its own dark translucent box (measured 11-16 on real
+# 4K frames), while inventory/stash panels and chat sit at 40-50.
+TOOLTIP_BG_MAX = 32.0
+
 
 def _text_bright(img_bgr):
     """Denoised mask of tooltip-text-colored pixels."""
@@ -143,6 +148,44 @@ def _split_fused(bright, box, scale):
     return parts if len(parts) > 1 else [box]
 
 
+def overlap_frac(a, b):
+    """Intersection over the SMALLER box. Side-by-side game tooltips share
+    a few pixels of margin — demanding zero overlap threw the equipped one
+    away ("Need BOTH tooltips" on a frame that plainly had both); only a
+    near-containment is a duplicate."""
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    iw = min(ax + aw, bx + bw) - max(ax, bx)
+    ih = min(ay + ah, by + bh) - max(ay, by)
+    if iw <= 0 or ih <= 0:
+        return 0.0
+    return (iw * ih) / float(min(aw * ah, bw * bh))
+
+
+def pick_equipped(scored, hovered, max_others=2, dup=0.3, floor_frac=0.08):
+    """The equipped tooltips among scored [(box, score, bg)] candidates.
+
+    A candidate must LOOK like a tooltip: the game paints its own dark
+    translucent box, so panel/chat text (bg ~40-50) is rejected by
+    BRIGHTNESS, not by a score ratio — an amulet's 4-line tooltip
+    legitimately scores a fraction of a runeword's 20-line one."""
+    hovered_score = next((sc for b, sc, _bg in scored if b == hovered), 0.0)
+    floor = floor_frac * hovered_score
+    others = []
+    for box, sc, bg in sorted((s for s in scored
+                               if overlap_frac(s[0], hovered) < dup),
+                              key=lambda b: -b[1]):
+        if sc < floor:
+            break
+        if bg > TOOLTIP_BG_MAX:
+            continue
+        if all(overlap_frac(box, o) < dup for o in others):
+            others.append(box)
+        if len(others) == max_others:
+            break
+    return others
+
+
 def find_compare_tooltips(img_bgr, cursor=None):
     """The game's Shift-compare shows TWO tooltips: the hovered item near
     the cursor and the equipped one elsewhere. Returns
@@ -175,7 +218,7 @@ def find_compare_tooltips(img_bgr, cursor=None):
         bg = float(non_text.mean()) if non_text.size else 255.0
         score = ((float(w * h) ** 0.5) * row_groups
                  / (1.0 + max(0.0, bg - 25.0) / 20.0))
-        scored.append(((x, y, w, h), score))
+        scored.append(((x, y, w, h), score, bg))
     if not scored:
         return None, None
     # hovered: best candidate weighted toward the cursor
@@ -183,38 +226,29 @@ def find_compare_tooltips(img_bgr, cursor=None):
         _cursor_dist(b[0], cursor) / (120.0 * scale) + 1.0) / (1.0 + b[1]))
     hovered = by_cursor[0][0]
 
-    def overlaps(a, b):
-        ax, ay, aw, ah = a
-        bx, by, bw, bh = b
-        return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
+    others = pick_equipped(scored, hovered)
 
-    # equipped: the best-scoring OTHER blocks (two for rings!),
-    # non-overlapping with the hovered one and with each other. The score
-    # floor keeps chat/character-panel text from becoming a bogus second
-    # "equipped" when only one real tooltip is on screen.
-    hovered_score = next(sc for b, sc in scored if b == hovered)
-    floor = 0.35 * hovered_score
-    others = []
-    for box, sc in sorted((s for s in scored
-                           if not overlaps(s[0], hovered)),
-                          key=lambda b: -b[1]):
-        if sc < floor:
-            break
-        if all(not overlaps(box, o) for o in others):
-            others.append(box)
-        if len(others) == 2:
-            break
-
-    def crop(box):
+    def crop(box, neighbours=()):
+        """Pad the block out to the tooltip's own border — but never past
+        a neighbouring tooltip, or its text lands in this OCR."""
         if box is None:
             return None
         x, y, w, h = box
         pad_x, pad_t, pad_b = int(50 * scale), int(45 * scale), int(18 * scale)
         x0, y0 = max(0, x - pad_x), max(0, y - pad_t)
         x1, y1 = min(W, x + w + pad_x), min(H, y + h + pad_b)
-        return img_bgr[y0:y1, x0:x1]
+        for nx, ny, nw, nh in neighbours:
+            if ny >= y + h or ny + nh <= y:   # no vertical overlap
+                continue
+            if nx + nw <= x:                  # neighbour on the left
+                x0 = max(x0, nx + nw)
+            elif nx >= x + w:                 # neighbour on the right
+                x1 = min(x1, nx)
+        return img_bgr[y0:y1, max(x0, 0):x1]
 
-    return crop(hovered), [crop(b) for b in others]
+    return (crop(hovered, others),
+            [crop(b, [hovered] + [o for o in others if o != b])
+             for b in others])
 
 
 def fallback_region(img_bgr, cursor, width=760, height=640):

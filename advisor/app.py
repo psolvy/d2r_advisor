@@ -646,9 +646,9 @@ class App:
             if self.cfg.get("debug"):
                 dump("ok")
             from advisor.compare import diff_items
-            # cap per section: two rings x 17 lines could run the popup
-            # off the bottom of the screen
-            per = 12 if len(old_items) > 1 else 16
+            # sections render as COLUMNS, so a second equipped item costs
+            # width, not height — no need to trim its lines any more
+            per = 16
             extra = []
             for k, old in enumerate(old_items):
                 if k:

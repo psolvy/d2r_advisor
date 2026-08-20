@@ -690,6 +690,17 @@ class SeedFinder(tk.Toplevel):
                                  str(self.sf["budget"]), 8,
                                  increment=100_000)
         self.budget.pack(side="left", padx=(2, 0))
+        # nothing said what these three do or what raising them costs
+        rhelp = tk.Frame(sec3, bg=PANEL)
+        rhelp.pack(fill="x", padx=int(8 * s), pady=(0, int(4 * s)))
+        tk.Label(rhelp,
+                 text="depth = refreshes to look ahead · shift-buys = junk "
+                      "buys that shift the RNG (costs gold, auto-sold back) "
+                      "· search states = search size: 200k ≈ 10 s, 2M ≈ 1.5 "
+                      "min. No route? depth/buys deepen by themselves — "
+                      "raise states only if the log says to.",
+                 bg=PANEL, fg=DIM, font=self.f_sub, justify="left",
+                 wraplength=int(760 * s)).pack(side="left", anchor="w")
         rq = tk.Frame(sec3, bg=PANEL)
         rq.pack(fill="x", padx=int(8 * s), pady=(0, int(4 * s)))
         tk.Label(rq, text="click a plan: its steps show below, the plan # "

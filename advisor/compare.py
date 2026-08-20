@@ -103,13 +103,15 @@ def diff_items(new_item, old_item, max_lines=16, label=""):
     # important armour number was previously not diffed at all
     ns, os_ = _tooltip_stats(new_item), _tooltip_stats(old_item)
     stats = []
-    for label, lower_better in _STAT_LINES:
-        a, b = os_.get(label), ns.get(label)
+    for stat, lower_better in _STAT_LINES:
+        # NB: not `label` — that is this function's parameter, and the
+        # shadow made every header read "vs equipped Required Level: X"
+        a, b = os_.get(stat), ns.get(stat)
         if a is None or b is None or a == b:
             continue
         better = (b < a) if lower_better else (b > a)
         arrow, color = ("▲", GREEN) if better else ("▼", RED)
-        stats.append((f"{arrow} {label}: {a}→{b}", color))
+        stats.append((f"{arrow} {stat}: {a}→{b}", color))
 
     lines = stats + gains + changes + losses
     if not lines:

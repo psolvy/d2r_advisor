@@ -143,6 +143,33 @@ class Overlay:
         "C": ("#9a9a9a", "C-tier — low value"),
     }
 
+    def _extra_block(self, win, bg, extra):
+        """Render the advice lines. Sections (separated by a blank entry —
+        compare emits one per equipped item) go SIDE BY SIDE: stacked, two
+        20-line diffs ran the popup off the bottom of the screen."""
+        sections, cur = [], []
+        for entry in extra:
+            if not str(entry[0]).strip():
+                if cur:
+                    sections.append(cur)
+                cur = []
+                continue
+            cur.append(entry)
+        if cur:
+            sections.append(cur)
+        if not sections:
+            return
+        holder = tk.Frame(win, bg=bg)
+        holder.pack(fill="x")
+        for col, section in enumerate(sections):
+            frame = tk.Frame(holder, bg=bg)
+            frame.grid(row=0, column=col, sticky="nw",
+                       padx=(0, self._fs(10) if col < len(sections) - 1 else 0))
+            for entry in section:
+                text, color = entry[0], entry[1]
+                link = entry[2] if len(entry) > 2 else None
+                self._label(frame, bg, text, size=10, fg=color, link=link)
+
     def show(self, verdict, item=None, rule="", note="", pos=None, seconds=8, ranges=None,
              screen_rect=None, extra=None, tier=None):
         self.hide()
@@ -206,10 +233,7 @@ class Overlay:
         # (text, color) or (text, color, url) — the latter renders as a link.
         if item and extra:
             tk.Frame(win, bg=accent, height=1).pack(fill="x", padx=self._fs(14), pady=self._fs(4))
-            for entry in extra:
-                text, color = entry[0], entry[1]
-                link = entry[2] if len(entry) > 2 else None
-                self._label(win, bg, text, size=10, fg=color, link=link)
+            self._extra_block(win, bg, extra)
 
         if rule:
             self._label(win, bg, f"Rule: {rule}", size=9, fg="#999999", pady=(4, 0))
