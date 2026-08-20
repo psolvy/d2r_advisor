@@ -112,9 +112,11 @@ start, `auto_update` in the config): when a new GitHub release exists,
 one click downloads it and swaps the build in place — your config,
 calibration and downloaded assets survive.
 
-**Terror Zone** in the tray shows the current and next zone (needs a
-free community API token — d2runewizard.com/integration or
-d2emu.com/terms; put the url + token in Settings).
+**Terror Zone** in the tray shows the current and next zone with a
+countdown to the hourly rotation (auto-refreshes right after the flip).
+Needs a free community API token — d2runewizard.com/integration or
+d2emu.com/terms; put the url + token (for d2emu also your account name,
+`tz_api_user`) in Settings.
 
 <p align="center">
   <img src="docs/img/update.png" width="560"
@@ -135,7 +137,12 @@ Everything the UI edits is plain `config.yaml`, editable by hand too:
   - `custom` — your own `rules.yaml` in the project root (a copy of
     leveling by default).
   The rule format is documented at the top of every preset
-  (`presets/*.yaml`).
+  (`presets/*.yaml`); long shared affix lists (skiller trees, +2 class
+  skills) live once in `presets/_common.yaml` and rules reference them
+  with `affix_any_ref: {list: skill_trees, min: 1}`. A stat that OCR
+  read as `0` never satisfies a min/max rule — the rule is skipped and
+  the item escalates to CHECK with a "value read as 0" note instead of
+  being trashed.
 
 Exact affix templates for rules live in
 `d2rlootreader/repository/affixes.json` (numbers are replaced with `#`,
@@ -158,18 +165,22 @@ Additionally:
 browser with details (runeword, craft recipe, unique page). Configure the
 destination via `link_template` in config.yaml (web search by default;
 diablo2.io etc. work too). Clicking a link keeps the popup open; clicking
-anywhere else closes it.
+anywhere else closes it. **Right-click copies** a trade-chat-ready
+line ("Harlequin Crest (Unique Shako) | +2 To All Skills; …").
 
 ## Gear compare (Shift+F9)
 
 Hover an item and **hold Shift** — the game shows the equipped piece
 next to it. Press **Shift+F9** (configurable) and the popup lists what
 the hovered item **gains and loses** vs what you wear: green `+` lines,
-red `−` lines, `▲/▼` for changed values. Pure screen reading — works
-online while leveling, exactly when "is this better?" matters most.
+red `−` lines, `▲/▼` for changed values — including **Defense and
+requirement** changes pulled straight from the tooltip. With two
+equipped rings the popup shows both diffs, labeled "vs equipped #1/#2".
+Pure screen reading — works online while leveling, exactly when "is
+this better?" matters most.
 
-Tradeable finds (unique/set/runeword/rare/craft) also get a clickable
-**💰 Price check** line — the destination is `price_link_template` in
+Tradeable finds (unique/set/runeword/rare/craft — **runes and gems**
+too) get a clickable **💰 Price check** line — the destination is `price_link_template` in
 the config (Traderie search by default).
 
 ## Season goals (runeword tracker)
@@ -183,15 +194,30 @@ Tray → **Season goals**: pick the runewords you are building this ladder
 (Stealth, Lore, Insight, Spirit… seeded by default). Fill the rune
 counters either with the **📷 Scan runes tab** button — open the stash
 RUNES tab in game, and one screenshot sets every counter (a one-time
-3-point grid calibration: hover El, the last cell of the first row, and
-Zod) — or by hand with the +/− chips. The **gems tab scans the same
-way** (its own 3-point grid) and feeds the **Craft stock** panel:
-perfect gems per craft family (Caster / Blood / Hit Power / Safety) and
-Grand-Charm reroll readiness. The verdict popup on a scanned
-rune shows live progress — "goal Stealth: missing Eth", or "🏁 ALL RUNES
-READY — make it!" when the last one is in place. The "I made it" button
-spends the runes from the pool. State lives in `season_goals.json`
-(local, never committed).
+4-point grid calibration: first cell, end of the top row, the cell
+below the first, and the last cell; the exact pitch is then measured
+from the image itself) — or by hand with the +/− chips. Before
+replacing a non-empty pool the scan shows a **diff preview**
+("Tal 21→30 … apply?"). The **gems tab scans the same way** (its own
+4-point grid) and feeds the **Craft stock** panel.
+
+The window also shows:
+- **STILL MISSING** — the farming shopping list aggregated across every
+  tracked goal, most-blocking rune first;
+- the selected goal's **base requirement** ("4os sword/shield") and an
+  **executable cube chain** for the gaps ("3× Amn + chipped amethyst →
+  Sol");
+- **READY CRAFTS** — the real cube.json recipes whose rune *and*
+  perfect gem are both in stock ("Blood Gloves — Nef + P.Ruby + magic
+  Heavy Gloves…"), next to the per-family perfect-gem stock;
+- the **made log** with an **Undo last** button ("I made it" refuses an
+  incomplete goal and records the spent runes so undo can restore
+  them).
+
+The verdict popup on a scanned rune shows live progress — "goal
+Stealth: missing Eth", or "🏁 ALL RUNES READY — make it!" when the last
+one is in place. State lives in `season_goals.json` (local, never
+committed).
 
 Cube and crafts:
 - **magic item on a craftable base** → craft recipes (Blood / Caster /
@@ -264,7 +290,10 @@ you buy it.*
     **automatically on the F10 scan**; you only set the Refresh button
     ("Set Refresh button") and the "**Set sell zone**" — the empty
     inventory area where purchases land: filler buys are **auto-sold
-    back** (Ctrl+click, consumes no RNG). ESC is the emergency stop.
+    back** (Ctrl+click, consumes no RNG). **Keep that zone empty** —
+    the sweep sells whatever sits in it. Every click checks that
+    Diablo II is still the foreground window (alt-tab aborts the run),
+    and ESC is the emergency stop at any point, including mid-sweep.
     After a run (or a stop) the RNG state is **applied automatically** —
     the grid, forecasts and planner continue from the current moment;
   - "Find offset (after buys)" — manual purchases shift the RNG stream;
@@ -284,9 +313,14 @@ After a game patch, refresh the knowledge bases:
 ## If recognition is poor
 
 1. Enable Large Font Mode (mandatory).
-2. Set `debug: true` in `config.yaml` (for the standalone exe, `config.yaml` and `debug/` live in the `_internal` folder next to `d2r-advisor.exe`), press F9 on the problematic item —
-   `debug/` gets `*_full.png` and `*_crop.png`. If `_crop.png` is not the
-   tooltip, the detector missed — share the images so it can be tuned.
+2. Set `debug: true` in `config.yaml` (for the standalone exe all
+   mutable files — `config.yaml`, `rules.yaml`, calibration, season
+   goals, `history.log`, `advisor.log` and `debug/` — live in
+   `%LOCALAPPDATA%\d2r-advisor`), press F9 on the problematic item —
+   `debug/` gets `*_full.png` and `*_crop.png`. Failed scans dump a raw
+   frame there automatically even with debug off (60 newest files are
+   kept). If `_crop.png` is not the tooltip, the detector missed — share
+   the images so it can be tuned.
 3. Tooltips over dark textures (equipped gear on the left) read worse —
    keep the item in the right-side inventory bag.
 
@@ -331,8 +365,10 @@ formally a gray area under the game's ToS — use at your own risk.
 ## CI / CD
 
 - **CI** (`.github/workflows/ci.yml`): every PR and every push to `main`
-  — compile all modules + 54 offline engine/parser/planner tests
-  (Windows, Python 3.12 and 3.13). Icon tests skip automatically when
+  — compile all modules + 80 offline engine/parser/planner/goals/
+  settings tests (Windows, Python 3.12 and 3.13, plus a 3.9 syntax-floor
+  compile job). The release build also **smoke-tests the packaged exe**
+  before publishing. Icon tests skip automatically when
   the icons are not downloaded (they never are in CI — see above).
 - **CD** (`.github/workflows/release.yml`), two paths:
   - a merge to `main` triggers CI, and a **green CI** then triggers the
