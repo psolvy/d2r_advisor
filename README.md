@@ -144,9 +144,39 @@ Everything the UI edits is plain `config.yaml`, editable by hand too:
   the item escalates to CHECK with a "value read as 0" note instead of
   being trashed.
 
+  The engine also understands:
+  - `affix_n_of: {min: 2, any: [...]}` — "at least N of these mods";
+    this is how **rare rings/amulets are actually evaluated** now (2+
+    good mods = keep, 1 = check; lategame wants 3+);
+  - `affix_sum: {affixes: [...], min: 40}` — summed values, e.g. total
+    resistances across the four single-res affixes;
+  - **score rules** — `score: N` instead of a verdict accumulates
+    points, a top-level `scoring: {keep: X, check: Y}` block converts
+    the total, and a better score verdict cannot be shadowed by an
+    earlier broad rule;
+  - **class-aware lists** — set `my_class` in Settings and
+    `{list: skill_trees, class: mine}` / `class: other` split skillers
+    into "yours = keep, other classes = check/trade".
+
 Exact affix templates for rules live in
 `d2rlootreader/repository/affixes.json` (numbers are replaced with `#`,
 e.g. `"+#% Faster Cast Rate"`).
+
+**Playing a mod?** Drop JSON files into
+`d2rlootreader/repository/overlay/` (same names as the vanilla tables:
+`uniques.json`, `set.json`, `bases.json`…) — they merge over the
+shipped data and survive updates. Unrecognized gold/green items say
+"name not in the database (mod item?)" in the popup instead of silently
+fuzzy-matching a look-alike vanilla item.
+
+Every verdict popup carries a small "**⚑ verdict wrong?**" link — one
+click appends the OCR lines, the verdict and the fired rule to
+`tuning.jsonl`, the raw material for tuning your rules (or filing a
+good bug report).
+
+On a fresh install a **30-second welcome wizard** opens once: popup
+scale suggested from your monitor, hotkeys with a duplicate check, and
+one-click Tesseract install.
 
 For white bases the verdict lists **runewords that fit the base and its
 socket count** (respecting the base's maximum sockets); for unsocketed
