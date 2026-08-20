@@ -79,8 +79,10 @@ jobs:
         # the exe downloads icons + fast-search workers on its first run.
         run: |
           # pinned: PyInstaller majors move the onedir layout (_MEIPASS vs
-          # _internal), which silently relocates every state file
-          pip install pyinstaller==6.11.1
+          # _internal), which silently relocates every state file. Keep the
+          # pin CURRENT: 6.11.1 predated numpy 2.5 and its hooks missed
+          # numpy._core._exceptions — the packaged exe died on launch.
+          pip install pyinstaller==6.22.2
           python -m PyInstaller --noconfirm --clean --windowed --name d2r-advisor --icon assets/icon.ico --hidden-import pystray._win32 --add-data "config.yaml;." --add-data "rules.yaml;." --add-data "presets;presets" --add-data "assets;assets" --add-data "d2rlootreader/repository;d2rlootreader/repository" --add-data "d2rlootreader/tessdata;d2rlootreader/tessdata" --add-data "advisor/brute_host.js;advisor" --add-data "tools/setup_assets.py;tools" --add-data "tools/get_gamble_icons.py;tools" --add-data "tools/get_dbm_workers.py;tools" main.py
 
       - name: Smoke-test the built exe
@@ -96,7 +98,13 @@ jobs:
           if (-not $alive) { Get-Content $log -ErrorAction SilentlyContinue; throw "exe died within 20s" }
           if (-not (Test-Path $log)) { throw "advisor.log was not created" }
           Stop-Process -Id $p.Id -Force
-          Get-Content $log
+          $text = Get-Content $log -Raw
+          Write-Host $text
+          # PyInstaller's crash dialog keeps the process ALIVE — being
+          # alive is not enough. The log must show a real startup and no
+          # bundling failure (this exact hole shipped a broken v1.5.0).
+          if ($text -notmatch "=== D2R Item Advisor ===") { throw "no startup banner in the log" }
+          if ($text -match "Traceback|ImportError|Failed to execute") { throw "startup error in the log" }
 
       - name: Zip the exe bundle
         run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
