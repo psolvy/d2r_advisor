@@ -317,9 +317,11 @@ you buy it.*
   - the forecast shows **purchase quality**: which slot of which refresh
     becomes **UNIQUE / SET / rare** (the whole point of the simulator);
   - "Plan buys" — the **buy planner** (a port of the site's
-    search.worker): finds the shortest route of refreshes and
-    pool-shifting buys to a target item (any unique/set/rare, or a
-    specific base + quality + tier);
+    search.worker, same 2M-state search budget): finds the shortest
+    route of refreshes and pool-shifting buys to a target item (any
+    unique/set/rare, or a specific base + quality + tier). Narrow
+    targets (e.g. Unique + elite) are genuinely rare — a run can take
+    a minute and still report only a handful of routes;
   - "Execute plan" — the **auto-clicker**: clicks the chosen plan through
     in game (refresh = button click, buy = right-click on the cell) with
     a focus countdown and live progress. Grid cells calibrate
@@ -401,7 +403,7 @@ formally a gray area under the game's ToS — use at your own risk.
 ## CI / CD
 
 - **CI** (`.github/workflows/ci.yml`): every PR and every push to `main`
-  — compile all modules + 80 offline engine/parser/planner/goals/
+  — compile all modules + 96 offline engine/parser/planner/goals/
   settings tests (Windows, Python 3.12 and 3.13, plus a 3.9 syntax-floor
   compile job). The release build also **smoke-tests the packaged exe**
   before publishing. Icon tests skip automatically when

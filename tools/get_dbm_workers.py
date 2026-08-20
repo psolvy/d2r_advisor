@@ -13,6 +13,7 @@ The workers live at content-hashed URLs (/assets/brute.worker-<hash>.js)
 that change when the site redeploys, so they are discovered from the
 site's bundles on every run.
 """
+import os
 import re
 import sys
 import urllib.request
@@ -75,7 +76,12 @@ def main():
             fail += 1
             continue
         try:
-            dest.write_bytes(_get(BASE + path))
+            data = _get(BASE + path)
+            # atomic: two racing processes (update-restart overlap) must
+            # never leave a half-written worker on disk
+            tmp = dest.with_suffix(f".{os.getpid()}.tmp")
+            tmp.write_bytes(data)
+            os.replace(tmp, dest)
             print(f"downloaded {stem}.js  ({path})")
         except Exception as e:
             print(f"FAIL {stem}.js: {e}")

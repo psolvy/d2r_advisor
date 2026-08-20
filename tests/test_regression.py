@@ -277,6 +277,17 @@ uni = plan_buys(lo, hi, abs_pos, slots, ctx,
 check("planner unique-only filter",
       all(p["quality"] == 7 for p in uni["plans"]))
 
+# UI wiring (source-level: the finder window needs tk + a live screen).
+# The 400k UI throttle made Unique+elite return 0 routes where the DBM
+# site (2M budget) finds some; and a settings change must not wipe the
+# seed — a seed stays a valid RNG state under any level/version.
+_sf_src = (ROOT / "advisor" / "seedfinder_ui.py").read_text(encoding="utf-8")
+check("finder: planner runs at the site's node budget",
+      "node_cap=NODE_CAP" in _sf_src and "node_cap=400_000" not in _sf_src)
+check("finder: only a new search wipes the seed field",
+      _sf_src.count("candidates=True, seed=True") == 1
+      and "if seed and self.seed_var.get().strip():" in _sf_src)
+
 # ---------------------------------------------------------------- auto-clicker
 
 from advisor.autoclicker import calib_ok, cell_to_screen

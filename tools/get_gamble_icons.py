@@ -7,6 +7,7 @@ to OCR, only icons. Re-run after tools/update_repository.py if the item
 pool ever changes.
 """
 import json
+import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -32,7 +33,13 @@ def main():
             skip += 1
             continue
         try:
-            urllib.request.urlretrieve(BASE_URL.format(code), dest)
+            data = urllib.request.urlopen(
+                BASE_URL.format(code), timeout=30).read()
+            # atomic: two racing processes (update-restart overlap) must
+            # never leave a half-written template on disk
+            tmp = dest.with_suffix(f".{os.getpid()}.tmp")
+            tmp.write_bytes(data)
+            os.replace(tmp, dest)
             ok += 1
         except Exception as e:
             print(f"FAIL {code}: {e}")

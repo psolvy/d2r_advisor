@@ -1407,7 +1407,7 @@ class SeedFinder(tk.Toplevel):
         if not self._busy("starting…"):
             return
         # a new search invalidates everything the old seed produced
-        self._invalidate(plans=True, preview=True, candidates=True)
+        self._invalidate(plans=True, preview=True, candidates=True, seed=True)
         self._clear_session("new search")
         self._match_count = 0
         self._engine_tag = ""
@@ -1565,11 +1565,15 @@ class SeedFinder(tk.Toplevel):
             try:
                 lo, hi, abs_pos, slots = state
                 self._plan_input_win = slots
+                # NODE_CAP = the DBM site's own budget (2M). The old
+                # 400k UI throttle made narrow targets (Unique + elite)
+                # return 0 routes where the site finds some.
+                from advisor.gamble_plan import NODE_CAP
                 result = plan_buys(
                     lo, hi, abs_pos, slots, ctx, specs=specs,
-                    max_depth=depth, max_buys=buys, node_cap=400_000,
+                    max_depth=depth, max_buys=buys, node_cap=NODE_CAP,
                     progress=lambda e, n: self.msgs.put(
-                        ("plan_prog", min(1.0, n / 400_000))),
+                        ("plan_prog", min(1.0, n / NODE_CAP))),
                     stop=stop)
                 self.msgs.put(("plans", result, ctx))
             except Exception as e:
@@ -2187,9 +2191,11 @@ class SeedFinder(tk.Toplevel):
             text=f"● tracked state · {n_buys} buy(s)" if st else "")
 
     def _invalidate(self, plans=False, preview=False, candidates=False,
-                    why=""):
+                    seed=False, why=""):
         """Stale-state hygiene: whatever changed the underlying RNG state
-        or its inputs must clear every result computed from the OLD one."""
+        or its inputs must clear every result computed from the OLD one.
+        seed=True only for a NEW SEARCH — a seed stays a valid RNG state
+        under any level/version, so settings changes must NOT wipe it."""
         cleared = False
         if plans and (self.plans or self.plans_tv.get_children()):
             self.plans = []
@@ -2205,7 +2211,7 @@ class SeedFinder(tk.Toplevel):
         if candidates and self.cand_list.size():
             self.cand_list.delete(0, "end")
             cleared = True
-        if candidates and self.seed_var.get().strip():
+        if seed and self.seed_var.get().strip():
             # the old seed silently fed Preview/Plan during a new search
             self.seed_var.set("")
             self.offset_var.set("0")
