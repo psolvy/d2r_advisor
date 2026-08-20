@@ -114,9 +114,10 @@ calibration and downloaded assets survive.
 
 **Terror Zone** in the tray shows the current and next zone with a
 countdown to the hourly rotation (auto-refreshes right after the flip).
-Needs a free community API token — d2runewizard.com/integration or
-d2emu.com/terms; put the url + token (for d2emu also your account name,
-`tz_api_user`) in Settings.
+Works out of the box (d2runewizard.com — no token needed for now,
+confirmed by its maintainer; a token is still sent when set in
+Settings). d2emu.com is supported too and needs a token + your account
+name (`tz_api_user`).
 
 <p align="center">
   <img src="docs/img/update.png" width="560"

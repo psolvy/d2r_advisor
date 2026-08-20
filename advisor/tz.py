@@ -1,12 +1,14 @@
 """Terror Zone widget: current + next zone from a community API.
 
-Both known providers require a free token (put it in Settings):
+Works OUT OF THE BOX against d2runewizard.com (its maintainer confirmed
+no token is required for now); a token can still be set in Settings and
+is sent when present. d2emu.com stays supported too but needs an
+account name + token:
 - d2runewizard.com  -> tz_api_url https://d2runewizard.com/api/terror-zone
 - d2emu.com         -> tz_api_url https://www.d2emu.com/api/v1/tz
-
-The parser is defensive: it walks whatever JSON comes back and pulls the
-current/next zone names, so minor API format changes don't break it.
 """
+
+DEFAULT_URL = "https://d2runewizard.com/api/terror-zone"
 import json
 import urllib.error
 import urllib.request
@@ -18,10 +20,8 @@ _open_window = None
 
 def fetch(cfg, timeout=15):
     """(current, next, error) — zone name strings or None."""
-    url = (cfg.get("tz_api_url") or "").strip()
+    url = (cfg.get("tz_api_url") or "").strip() or DEFAULT_URL
     token = (cfg.get("tz_api_token") or "").strip()
-    if not url:
-        return None, None, "not configured"
     headers = {"User-Agent": "d2r-advisor",
                "D2R-Contact": "github.com/psolvy/d2r_advisor",
                "D2R-Platform": "GitHub", "D2R-Repo": "psolvy/d2r_advisor"}

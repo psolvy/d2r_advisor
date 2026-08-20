@@ -29,11 +29,11 @@ def health_report(cfg, calib=None, extra=None):
             "in Settings."))
 
     tz_url = (cfg.get("tz_api_url") or "").strip()
-    if tz_url and not (cfg.get("tz_api_token") or "").strip():
+    if "d2emu" in tz_url and not (cfg.get("tz_api_token") or "").strip():
         issues.append((
-            "warn", "Terror Zone URL set but no token",
-            "The TZ widget will get HTTP 401 — set tz_api_token in "
-            "Settings."))
+            "warn", "d2emu Terror Zone URL needs a token",
+            "Set tz_api_token and tz_api_user in Settings (the default "
+            "d2runewizard provider works without any of that)."))
 
     from advisor.gamble_vision import ICON_DIR
     if not (ICON_DIR / "rin.png").exists():

@@ -99,8 +99,10 @@ auto_update: true
 # count cube-upgrading lower runes and gems (3 lower -> 1 higher)
 count_upcube: false
 
-# Terror Zone widget (tray -> Terror Zone). Needs a FREE community
-# API token: d2runewizard.com/integration or d2emu.com/terms.
+# Terror Zone widget (tray -> Terror Zone). Works out of the box via
+# d2runewizard.com (no token needed for now — confirmed by its
+# maintainer); a token is still sent when set. d2emu.com needs
+# tz_api_token + tz_api_user.
 # Seconds to wait after hiding our own popup before capturing (raise on
 # slow machines if the old popup leaks into scans)
 scan_settle: 0.15

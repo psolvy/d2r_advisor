@@ -132,20 +132,27 @@ class GoalsWindow(tk.Toplevel):
         # aggregated shopping list + made log across the tracked goals
         self.shop_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
                                  highlightbackground=LINE)
-        self.shop_box.grid(row=7, column=0, columnspan=3, sticky="ew",
-                           padx=pad, pady=(int(6 * s), 0))
+        self.shop_box.grid(row=7, column=0, columnspan=3, sticky="new",
+                           padx=pad, pady=(int(6 * s), pad))
+
+        # RIGHT COLUMN — craft stock and the makeable-runewords list used
+        # to stack UNDER everything else; one tall column overflowed the
+        # screen at larger scales
+        right = tk.Frame(self, bg=BG)
+        right.grid(row=2, column=3, rowspan=6, sticky="nsew",
+                   padx=(0, pad), pady=(int(6 * s), pad))
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_rowconfigure(7, weight=1)
 
         # craft stock from the scanned gems
-        self.craft_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
+        self.craft_box = tk.Frame(right, bg=PANEL, highlightthickness=1,
                                   highlightbackground=LINE)
-        self.craft_box.grid(row=8, column=0, columnspan=3, sticky="ew",
-                            padx=pad, pady=(int(6 * s), 0))
+        self.craft_box.pack(fill="x")
 
         # everything makeable RIGHT NOW from the pools
-        self.make_tv = ttk.Treeview(self, show="tree", style="SG.Treeview",
-                                    selectmode="browse", height=6)
-        self.make_tv.grid(row=9, column=0, columnspan=3, sticky="ew",
-                          padx=pad, pady=(int(6 * s), pad))
+        self.make_tv = ttk.Treeview(right, show="tree", style="SG.Treeview",
+                                    selectmode="browse", height=9)
+        self.make_tv.pack(fill="both", expand=True, pady=(int(6 * s), 0))
         self.make_tv.tag_configure("hot", foreground=GREEN)
         self.make_tv.tag_configure("dim", foreground=DIM)
         self.refresh()
