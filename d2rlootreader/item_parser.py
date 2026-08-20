@@ -63,6 +63,13 @@ class ItemParser:
         }
     )
 
+    # only the files the parser actually reads — ranges.json (676 KB) and
+    # gamble*.json used to be parsed too, on EVERY instantiation
+    _REPO_FILES = ("affixes", "bases", "classes", "magic", "rares",
+                   "requirements", "runewords", "set", "skills", "stats",
+                   "uniques")
+    _REPO_CACHE: Dict[str, Any] = None
+
     def __init__(self, lines: List[str], quality_hint: str = None):
         self.R = self.repository_data = self.load_repository_data()
         self.lines = lines
@@ -71,12 +78,19 @@ class ItemParser:
         # matcher when the name is not in the repository (new/renamed items).
         self.quality_hint = quality_hint
 
-    def load_repository_data(self) -> Dict[str, Any]:
-        data = {}
-        for fname in REPOSITORY_DIR.glob("*.json"):
-            with open(fname, encoding="utf-8") as f:
-                data[fname.stem] = json.load(f)
-        return data
+    @classmethod
+    def load_repository_data(cls) -> Dict[str, Any]:
+        # parse_best builds up to ~9 parsers per scan; re-reading ~1 MB of
+        # JSON each time cost ~100 ms of pure churn per scan
+        if cls._REPO_CACHE is None:
+            data = {}
+            for stem in cls._REPO_FILES:
+                fname = REPOSITORY_DIR / f"{stem}.json"
+                if fname.exists():
+                    with open(fname, encoding="utf-8") as f:
+                        data[stem] = json.load(f)
+            cls._REPO_CACHE = data
+        return cls._REPO_CACHE
 
     def parse_item_lines_to_json(self) -> Dict[str, Any]:
         result = {

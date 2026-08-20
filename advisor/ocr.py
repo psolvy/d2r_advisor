@@ -5,7 +5,7 @@ import re
 import cv2
 import pytesseract
 
-from advisor.colors import classify_line_quality, text_mask
+from advisor.colors import classify_line_quality, line_is_unmet, text_mask
 from d2rlootreader.cfg import TESSDATA_DIR, TESSERACT_BLACKLIST
 from d2rlootreader.screen import preprocess
 
@@ -121,6 +121,8 @@ def scan_tooltip(crop_bgr, tesseract_cmd=None):
     # Point tesseract at the bundled d2r.traineddata via env var — avoids any
     # quoting problems with --tessdata-dir on Windows paths.
     os.environ["TESSDATA_PREFIX"] = str(TESSDATA_DIR)
+    # NOTE: psm 6 was tried and REJECTED on a real 4K frame: same
+    # speed, extra noise glyphs glued to line ends (":", "/", "i")
     config = f"-c tessedit_char_blacklist={TESSERACT_BLACKLIST}"
 
     # Primary pass: binarize by tooltip text colors (kills icons/scenery behind
@@ -129,11 +131,19 @@ def scan_tooltip(crop_bgr, tesseract_cmd=None):
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2)))
     binarized = cv2.bitwise_not(mask)  # black text on white
     rgb = cv2.cvtColor(binarized, cv2.COLOR_GRAY2RGB)
-    lines1, boxes1, raw1 = _ocr_data(rgb, config)
+    lines1, boxes1, confs1, raw1 = _ocr_data(rgb, config)
 
     # Context flags from the unfiltered text: vendor/gamble tooltips carry
     # "Cost:" / "Right Click to Buy" lines that the junk filter strips.
     flags = {"shop": bool(re.search(r"to buy|cost\s*[:;]", raw1, re.I))}
+    # word-level confidence was previously thrown away — digit-bearing
+    # lines tesseract itself doubts get flagged for eye-checking
+    flags["low_conf"] = [ln for ln, c in zip(lines1, confs1)
+                         if c < 40 and any(ch.isdigit() for ch in ln)]
+    # the game paints requirement lines RED when the character fails them
+    flags["unmet"] = [ln for ln, box in zip(lines1, boxes1)
+                      if line_is_unmet(img, box)
+                      and re.match(r"\s*required", ln, re.I)]
 
     # Classify the item-name color. If the first line doesn't classify
     # (residual noise above the title), try the next one.

@@ -75,6 +75,32 @@ def classify_line_quality(img_bgr, box, pad=3):
     return quality
 
 
+def line_is_unmet(img_bgr, box, pad=3):
+    """True when the text line renders RED — the game paints requirement
+    lines red when the character does not meet them."""
+    if img_bgr is None or img_bgr.size == 0 or not box:
+        return False
+    H, W = img_bgr.shape[:2]
+    x, y, w, h = box
+    x0, y0 = max(0, int(x) - pad), max(0, int(y) - pad)
+    x1, y1 = min(W, int(x + w) + pad), min(H, int(y + h) + pad)
+    if x1 <= x0 or y1 <= y0:
+        return False
+    region = img_bgr[y0:y1, x0:x1].astype(np.int16)
+    bright = img_bgr[y0:y1, x0:x1].max(axis=2) > 90
+    red = ((np.abs(region[:, :, 0] - 77) < 70)
+           & (np.abs(region[:, :, 1] - 77) < 70)
+           & (np.abs(region[:, :, 2] - 255) < 70) & bright)
+    text = np.zeros(region.shape[:2], dtype=bool)
+    for (b, g, r), tol in _PALETTE:
+        text |= ((np.abs(region[:, :, 0] - b) < tol)
+                 & (np.abs(region[:, :, 1] - g) < tol)
+                 & (np.abs(region[:, :, 2] - r) < tol))
+    text &= bright
+    n_red, n_text = int(red.sum()), int(text.sum())
+    return n_red >= 20 and n_red > 0.5 * max(1, n_text)
+
+
 # Item-name colors -> quality. Gold is Unique *or* Runeword (the parser
 # disambiguates by name). Order matters only for readability.
 _QUALITY_PALETTE = [

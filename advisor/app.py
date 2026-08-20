@@ -184,7 +184,7 @@ class App:
         try:
             # Give the just-hidden verdict popup time to leave the screen so
             # it isn't captured and OCR'd as part of the tooltip.
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             # Capture only the monitor under the cursor: multi-monitor virtual
             # desktops have a different origin than cursor coordinates, and
@@ -294,6 +294,13 @@ class App:
                 note = (note + " · tooltip detection was fuzzy").strip(" ·")
             if any("#" in t and p and p[0] == 0 for t, p in item.get("affixes") or []):
                 note = (note + " · ⚠ a value read as 0 — check the real number by eye").strip(" ·")
+            elif flags.get("low_conf"):
+                # tesseract's own word confidence on a digit-bearing line
+                note = (note + " · ⚠ low OCR confidence on: "
+                        + flags["low_conf"][0][:40]).strip(" ·")
+            if flags.get("unmet"):
+                note = (note + " · red requirement line — you can't equip "
+                               "this yet").strip(" ·")
 
             if self.cfg.get("debug"):
                 dump = {k: v for k, v in item.items() if k != "tooltip"}
@@ -372,7 +379,7 @@ class App:
                                       "is running"})
             return
         try:
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             # instant feedback AFTER the capture (so it isn't in the shot) —
@@ -522,7 +529,7 @@ class App:
                                       "is running"})
             return
         try:
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             from advisor.tooltip import find_compare_tooltips
