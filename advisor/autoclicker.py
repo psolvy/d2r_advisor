@@ -2,8 +2,9 @@
 
 A plan (from advisor.gamble_plan) is a list of steps: R = click the
 Refresh button, B/C = right-click (buy) the item at grid cell (x, y).
-Screen positions come from a 3-point calibration stored in config.yaml:
-the Refresh button, the CENTER of grid cell (0,0) and of cell (9,9).
+Screen positions come from a 3-point calibration stored in
+gamble_clicks.json: the Refresh button, the CENTER of grid cell (0,0)
+and of cell (9,9).
 
 Safety: ESC aborts between clicks; each step waits `delay` seconds so the
 game UI can settle. The game window must stay focused and the gamble
@@ -11,6 +12,7 @@ screen open for the whole run.
 """
 import ctypes
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -25,13 +27,21 @@ def load_calib():
     try:
         with open(CALIB_FILE, encoding="utf-8") as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        try:  # keep the evidence instead of silently dropping calibration
+            os.replace(CALIB_FILE, str(CALIB_FILE) + ".corrupt")
+        except OSError:
+            pass
         return {}
 
 
 def save_calib(calib):
-    with open(CALIB_FILE, "w", encoding="utf-8") as f:
+    tmp = str(CALIB_FILE) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(calib, f)
+    os.replace(tmp, CALIB_FILE)
 
 
 def get_cursor_pos():

@@ -7,6 +7,7 @@ Goals window. Rune counts are a SHARED pool — each goal shows what is
 missing against that pool.
 """
 import json
+import os
 import time
 from pathlib import Path
 
@@ -30,7 +31,16 @@ def load_state():
     try:
         with open(STATE_FILE, encoding="utf-8") as f:
             st = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        st = {}
+    except json.JSONDecodeError:
+        # never silently discard the pool — keep the corrupt file around
+        try:
+            os.replace(STATE_FILE, str(STATE_FILE) + ".corrupt")
+            print(f"WARNING: {STATE_FILE.name} was corrupt — saved as "
+                  f"{STATE_FILE.name}.corrupt, starting fresh")
+        except OSError:
+            pass
         st = {}
     st.setdefault("runes", {})
     st.setdefault("goals", list(DEFAULT_GOALS))
@@ -40,8 +50,11 @@ def load_state():
 
 
 def save_state(st):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
+    # atomic: a crash mid-write must not truncate the season pool
+    tmp = str(STATE_FILE) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(st, f, indent=1)
+    os.replace(tmp, STATE_FILE)
 
 
 def add_scanned_rune(rune):

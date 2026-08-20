@@ -6,6 +6,7 @@ Hotkeys and scales are read once at startup — Save & Restart relaunches
 the app so everything applies immediately.
 """
 import json
+import os
 import re
 import sys
 import tkinter as tk
@@ -84,9 +85,12 @@ def _fmt(v):
 
 
 def write_config(updates, sf_updates, path=None):
-    """Rewrite values in place; comments and layout survive."""
+    """Rewrite values in place; comments and layout survive. Keys the file
+    does not have yet are APPENDED — configs frozen by the updater's
+    keep-list used to silently drop every new setting saved from the UI."""
     path = path or ROOT / "config.yaml"
     lines = path.read_text(encoding="utf-8").splitlines()
+    seen, sf_seen = set(), set()
     out, in_sf = [], False
     for line in lines:
         body = line
@@ -94,16 +98,44 @@ def write_config(updates, sf_updates, path=None):
         if stripped and not stripped.startswith("#"):
             indented = line[0].isspace()
             key = stripped.split(":", 1)[0].strip()
-            m = re.search(r"\s+#.*$", line)
+            # a comment is "  # like this" — '#' glued to a value (URL
+            # fragment) is part of the value
+            m = re.search(r"\s+#(?:\s.*)?$", line)
             comment = m.group(0) if m else ""
             if not indented:
                 in_sf = key == "seedfinder"
                 if key in updates:
                     body = f"{key}: {_fmt(updates[key])}{comment}"
+                    seen.add(key)
             elif in_sf and key in sf_updates:
                 body = f"  {key}: {_fmt(sf_updates[key])}{comment}"
+                sf_seen.add(key)
         out.append(body)
-    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+    missing = [k for k in updates if k not in seen]
+    if missing:
+        out.append("")
+        out.append("# added by Settings (key was not in the file yet)")
+        for k in missing:
+            out.append(f"{k}: {_fmt(updates[k])}")
+    sf_missing = [k for k in sf_updates if k not in sf_seen]
+    if sf_missing:
+        add = [f"  {k}: {_fmt(sf_updates[k])}" for k in sf_missing]
+        block = next((i for i, ln in enumerate(out)
+                      if ln.split(":", 1)[0].strip() == "seedfinder"
+                      and not ln[:1].isspace()), None)
+        if block is None:
+            out += ["", "seedfinder:"] + add
+        else:
+            end = block + 1
+            while end < len(out) and (not out[end].strip()
+                                      or out[end][:1].isspace()
+                                      or out[end].lstrip().startswith("#")):
+                end += 1
+            out[end:end] = add
+    # atomic: a crash mid-write must not truncate the user's config
+    tmp = path.with_suffix(".yaml.tmp")
+    tmp.write_text("\n".join(out) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
 
 
 class Settings(tk.Toplevel):
@@ -268,7 +300,14 @@ class Settings(tk.Toplevel):
         except ValueError as e:
             self.status.configure(text=f"✕ {e}", fg=RED)
             return False
-        write_config(updates, sf_updates)
+        try:
+            write_config(updates, sf_updates)
+        except Exception as e:
+            # PermissionError/FileNotFoundError used to vanish into the log
+            # while the button looked like it worked
+            self.status.configure(
+                text=f"✕ save failed: {type(e).__name__}: {e}", fg=RED)
+            return False
         self.status.configure(
             text="✓ saved — hotkeys/scales apply after restart", fg=GREEN)
         return True
