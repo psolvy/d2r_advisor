@@ -767,6 +767,15 @@ def _search_worker(args):
 
 
 _POOL = None  # (executor, workers) — kept alive between searches
+_POOL_LOCK = None  # created lazily (threading import kept out of workers)
+
+
+def _pool_lock():
+    global _POOL_LOCK
+    if _POOL_LOCK is None:
+        import threading
+        _POOL_LOCK = threading.Lock()
+    return _POOL_LOCK
 
 
 def _norm_workers(workers):
@@ -777,8 +786,16 @@ def _norm_workers(workers):
 
 
 def _get_pool(workers):
+    # locked: the UI prewarm thread and a starting search used to race
+    # here and one ProcessPoolExecutor leaked with all its processes
     global _POOL
     import concurrent.futures as cf
+    with _pool_lock():
+        return _get_pool_locked(workers, cf)
+
+
+def _get_pool_locked(workers, cf):
+    global _POOL
     if _POOL is not None:
         ex, w = _POOL
         if w == workers and not getattr(ex, "_broken", False):
@@ -795,12 +812,13 @@ def _get_pool(workers):
 
 def _drop_pool():
     global _POOL
-    if _POOL is not None:
-        try:
-            _POOL[0].shutdown(wait=False, cancel_futures=True)
-        except Exception:
-            pass
-        _POOL = None
+    with _pool_lock():
+        if _POOL is not None:
+            try:
+                _POOL[0].shutdown(wait=False, cancel_futures=True)
+            except Exception:
+                pass
+            _POOL = None
 
 
 def node_available():
@@ -845,6 +863,11 @@ def _search_full_node(level, platform, entries, on_progress=None, stop=None,
         entry_sets = [node_entries + ([zero] if zero not in node_entries
                                       else [])]
     here = Path(__file__).resolve().parent
+    worker = here.parent / "tools" / "dbm_validation" / "brute.worker.js"
+    if not worker.exists():
+        # without this check a dead node drained an empty stdout and the
+        # search returned [] as a legitimate "0 candidates"
+        raise ValueError("brute.worker.js not downloaded yet")
     ctx = Ctx(level, platform, row_pool)
     matches = []
     total = 1 << 32
@@ -884,6 +907,7 @@ def _search_full_node(level, platform, entries, on_progress=None, stop=None,
                                 pass
                             return
                 _th.Thread(target=_watch, daemon=True).start()
+            saw_done = False
             for line in proc.stdout:
                 try:
                     m = _json.loads(line)
@@ -910,7 +934,13 @@ def _search_full_node(level, platform, entries, on_progress=None, stop=None,
                         if on_match:
                             on_match(s)
                 elif m.get("type") == "done":
+                    saw_done = True
                     break
+            if not saw_done and not (stop is not None and stop.is_set()):
+                rc = proc.poll()
+                raise RuntimeError(
+                    f"node exited (rc={rc}) before finishing — "
+                    "see debug\\node_search.log")
         finally:
             try:
                 proc.kill()

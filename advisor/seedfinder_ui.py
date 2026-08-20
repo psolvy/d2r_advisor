@@ -259,6 +259,9 @@ class SeedFinder(tk.Toplevel):
         self.geometry(f"{int(1020 * s)}x{int(860 * s)}")
         self.attributes("-topmost", True)
         self.stop_event = threading.Event()
+        # closing mid-search must stop the node/pool burn — without this
+        # the workers kept every core busy until the app exited
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
         self.msgs = queue.Queue()
         self.items = items()
         from advisor.gamble_seed import poolable_codes
@@ -268,6 +271,7 @@ class SeedFinder(tk.Toplevel):
         self.get_last_offer = get_last_offer
         self.get_last_entries = get_last_entries
         self.searching = False
+        self._last_fill_key = None
         self.plans = []
         self.calib = load_calib()
         self.slots = []          # placed items: {"idx", "x", "y"}
@@ -1183,12 +1187,20 @@ class SeedFinder(tk.Toplevel):
         self._screen_scanning = False
         self.scan_btn.configure(text="📷 Scan screen", state="normal")
 
+    def _on_close(self):
+        self.stop_event.set()
+        self.destroy()
+
     def scan_screen(self):
         """Capture every monitor and read the gamble grid right from here —
         no hotkey needed. Fills the visual grid; fix mistakes by clicking.
         Has its OWN feedback (the button) — the SEED progress bar belongs
         to the seed search and stays out of this."""
         if getattr(self, "_screen_scanning", False):
+            return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            self.log(f"busy: {capture_guard.busy_with()} is running", "dim")
             return
         self._screen_scanning = True
         self.scan_btn.configure(text="⏳ Scanning…", state="disabled")
@@ -1224,6 +1236,10 @@ class SeedFinder(tk.Toplevel):
     def fill_from_scan(self, quiet=False):
         entries = list(self.get_last_entries() or []) if self.get_last_entries else []
         if entries:
+            key = tuple(sorted(entries))
+            if quiet and key == self._last_fill_key:
+                return  # same scan as before — keep the user's hand edits
+            self._last_fill_key = key
             self._invalidate(plans=True, preview=True, candidates=True)
             self._clear_session("new scan")
             self.slots = [{"idx": i, "x": x, "y": y} for i, x, y in entries]
@@ -1957,6 +1973,9 @@ class SeedFinder(tk.Toplevel):
                         self.game_seed.set(False)
                         self.offset_var.set("0")
                     if found:
+                        # the loop left found[-1] in the field while the
+                        # preview showed found[0]
+                        self.seed_var.set(str(found[0]))
                         try:
                             n_prev = int(self.n_refresh.get() or 30)
                         except ValueError:
@@ -2185,6 +2204,11 @@ class SeedFinder(tk.Toplevel):
             cleared = True
         if candidates and self.cand_list.size():
             self.cand_list.delete(0, "end")
+            cleared = True
+        if candidates and self.seed_var.get().strip():
+            # the old seed silently fed Preview/Plan during a new search
+            self.seed_var.set("")
+            self.offset_var.set("0")
             cleared = True
         if why and cleared:
             self.log(f"({why} — stale results cleared)", "dim")
