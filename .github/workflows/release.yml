@@ -68,12 +68,6 @@ jobs:
         env:
           PYTHONIOENCODING: utf-8
 
-      - name: Package source archive
-        # git archive ships ONLY tracked files — no personal state and no
-        # third-party assets (users fetch those with tools/setup_assets.py,
-        # which install.bat runs automatically).
-        run: git archive --format=zip --prefix=d2r-advisor/ -o d2r-advisor-${{ steps.ver.outputs.version }}-source.zip HEAD
-
       - name: Build standalone exe (PyInstaller onedir)
         # Built from the checkout, which contains no third-party assets —
         # the exe downloads icons + fast-search workers on its first run.
@@ -117,7 +111,6 @@ jobs:
           name: ${{ steps.ver.outputs.version == 'latest' && 'Latest build (main)' || '' }}
           target_commitish: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
           files: |
-            d2r-advisor-${{ steps.ver.outputs.version }}-source.zip
             d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
           generate_release_notes: ${{ steps.ver.outputs.version != 'latest' }}
           body: |
@@ -150,13 +143,14 @@ jobs:
             6. In game: **Windowed / Windowed Fullscreen**, **Large Font
                Mode ON** (Options → Interface), English client.
 
-            Default hotkeys: **F8/F9** — item verdict, **F10** — read the
-            gamble offer, **Shift+F10** — Seed Finder. All configurable in
+            Default hotkeys: **F9** — item verdict, **Shift+F9** — gear
+            compare, **F10** — read the gamble offer, **Shift+F10** — Seed
+            Finder. All configurable in
             Settings.
 
             ## Run from source (only if you prefer to)
 
-            1. Download **d2r-advisor-…-source.zip** (needs Python 3.9+).
+            1. Download **Source code (zip)** below (needs Python 3.9+).
             2. Run `install.bat` — installs dependencies, Tesseract (via
                winget) and the assets; then start with `run.bat`.
 

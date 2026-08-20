@@ -43,15 +43,39 @@ IS_WINDOWS = sys.platform == "win32"
 _MUTEX = None  # keep a reference or Windows frees the handle
 
 
-def _claim_single_instance():
-    """Windows named mutex; False when another instance already holds it."""
+def _claim_single_instance(retry_s=6.0):
+    """Windows named mutex; False when another instance already holds it.
+
+    Retries for a few seconds: during Save & Restart (and the git-path
+    auto-update) the NEW process starts while the dying one still holds
+    the mutex — without the retry the replacement saw "already running"
+    and exited, so restart just closed the app."""
     global _MUTEX
     try:
-        _MUTEX = ctypes.windll.kernel32.CreateMutexW(
-            None, False, "d2r-advisor-single-instance")
-        return ctypes.windll.kernel32.GetLastError() != 183  # ERROR_ALREADY_EXISTS
+        deadline = time.time() + retry_s
+        while True:
+            _MUTEX = ctypes.windll.kernel32.CreateMutexW(
+                None, False, "d2r-advisor-single-instance")
+            if ctypes.windll.kernel32.GetLastError() != 183:  # ERROR_ALREADY_EXISTS
+                return True
+            ctypes.windll.kernel32.CloseHandle(_MUTEX)
+            _MUTEX = None
+            if time.time() >= deadline:
+                return False
+            time.sleep(0.5)
     except Exception:
         return True  # can't tell — don't block startup
+
+
+def _release_single_instance():
+    """Free the mutex so a replacement process can claim it instantly."""
+    global _MUTEX
+    try:
+        if _MUTEX:
+            ctypes.windll.kernel32.CloseHandle(_MUTEX)
+            _MUTEX = None
+    except Exception:
+        pass
 
 
 def load_config():
@@ -731,6 +755,9 @@ class App:
     def restart(self):
         """Relaunch (exe or source) so new hotkeys/scales apply."""
         import subprocess
+        # free the single-instance mutex FIRST — the replacement starts
+        # while we are still alive
+        _release_single_instance()
         if getattr(sys, "frozen", False):
             subprocess.Popen([sys.executable], cwd=str(ROOT))
         else:

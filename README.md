@@ -373,9 +373,9 @@ formally a gray area under the game's ToS — use at your own risk.
 - **CD** (`.github/workflows/release.yml`), two paths:
   - a merge to `main` triggers CI, and a **green CI** then triggers the
     release build automatically (CI → CD), refreshing the rolling
-    **`latest` pre-release** with a source zip and a standalone
-    **PyInstaller exe** bundle;
-  - a `v*` tag cuts a **versioned release** with the same two artifacts
+    **`latest` pre-release** with a standalone **PyInstaller exe**
+    bundle (sources come from GitHub's own "Source code" archive);
+  - a `v*` tag cuts a **versioned release** with the same artifact
     and auto-generated notes: `git tag v1.0.1 && git push origin v1.0.1`.
 
 Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md); bugs and
