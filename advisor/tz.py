@@ -8,9 +8,12 @@ The parser is defensive: it walks whatever JSON comes back and pulls the
 current/next zone names, so minor API format changes don't break it.
 """
 import json
+import urllib.error
 import urllib.request
 
 import tkinter as tk
+
+_open_window = None
 
 
 def fetch(cfg, timeout=15):
@@ -19,16 +22,27 @@ def fetch(cfg, timeout=15):
     token = (cfg.get("tz_api_token") or "").strip()
     if not url:
         return None, None, "not configured"
-    headers = {"User-Agent": "d2r-advisor"}
+    headers = {"User-Agent": "d2r-advisor",
+               "D2R-Contact": "github.com/psolvy/d2r_advisor",
+               "D2R-Platform": "GitHub", "D2R-Repo": "psolvy/d2r_advisor"}
     if token:
         if "d2emu" in url:
-            headers["x-emu-username"] = "d2r-advisor"
+            # d2emu authenticates username+token; a hardcoded username
+            # guaranteed a 401 for every user
+            user = (cfg.get("tz_api_user") or "").strip()
+            if not user:
+                return None, None, ("d2emu needs your account name — set "
+                                    "tz_api_user in Settings")
+            headers["x-emu-username"] = user
             headers["x-emu-token"] = token
         else:
             url += ("&" if "?" in url else "?") + "token=" + token
     try:
         req = urllib.request.Request(url, headers=headers)
         data = json.load(urllib.request.urlopen(req, timeout=timeout))
+    except urllib.error.HTTPError as e:
+        hint = " — check your token in Settings" if e.code in (401, 403)             else " — provider rate limit, try later" if e.code == 429 else ""
+        return None, None, f"HTTP {e.code}{hint}"
     except Exception as e:
         return None, None, f"{type(e).__name__}: {e}"
 
@@ -58,17 +72,30 @@ def fetch(cfg, timeout=15):
                     cur = cur or z
                 else:
                     nxt = nxt or z
-        if cur is None:
-            cur = zone_of(data)
     if not cur and not nxt:
-        return None, None, "no zone in the response"
+        # deliberately NOT walking the whole payload as a fallback: it
+        # confidently returned the first string it met ("providedBy", a
+        # timestamp) as the current zone
+        return None, None, "unexpected response format (no current/next "                            "zone keys) — check tz_api_url"
     return cur, nxt, None
 
 
 def open_tz_window(root, cfg, scale=1.0):
+    # singleton: every tray click used to stack one more always-on-top window
+    global _open_window
+    if _open_window is not None:
+        try:
+            if _open_window.winfo_exists():
+                _open_window.deiconify()
+                _open_window.lift()
+                return _open_window
+        except Exception:
+            pass
+        _open_window = None
     from advisor.seedfinder_ui import BG, DIM, FG, GOLD, GOLD_HI, LINE, PANEL
     s = max(1.0, float(scale))
     win = tk.Toplevel(root)
+    _open_window = win
     win.title("D2R Item Advisor — Terror Zone")
     win.configure(bg=BG)
     win.resizable(False, False)

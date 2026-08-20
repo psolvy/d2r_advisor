@@ -51,6 +51,7 @@ GENERAL = [
     ("compare_hotkey", "Gear-compare hotkey", "str", None),
     ("tz_api_url", "Terror Zone API url", "str", None),
     ("tz_api_token", "Terror Zone API token", "str", None),
+    ("tz_api_user", "Terror Zone API username (d2emu)", "str", None),
     ("tesseract_cmd", "Tesseract path (empty = auto)", "str", None),
 ]
 SEEDFINDER = [
