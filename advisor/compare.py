@@ -16,30 +16,65 @@ def _num(v):
 
 
 def _render(tmpl, params):
-    """Fill EVERY # with successive params ('Adds #-# ...' -> 'Adds 1-3')."""
+    """Fill placeholders with successive params: numbers go into '#',
+    words into '[...]' segments (same contract as overlay._render_affix —
+    compare used to leave '[skill]' brackets raw)."""
     if not isinstance(params, (list, tuple)):
         params = [params]
     out = tmpl
     for p in params:
-        if "#" not in out:
-            break
-        out = out.replace("#", str(p), 1)
+        if _num(p) or (isinstance(p, str) and "→" in p):
+            i = out.find("#")
+            if i >= 0:
+                out = out[:i] + str(p) + out[i + 1:]
+        else:
+            i = out.find("[")
+            if i >= 0:
+                j = out.find("]", i)
+                out = out[:i] + str(p) + out[j + 1:] if j >= 0 else out
     return out
 
 
 def _affix_map(item):
-    """template -> (numeric_params_tuple, all_params). The numeric tuple
-    is what gets compared; the full list is what gets rendered."""
+    """(template, non-numeric params) -> (numeric_params_tuple, all_params).
+    Keying on the non-numeric params too keeps '+2 to Fireball' and
+    '+1 to Meteor' (same template, different skill) as separate rows —
+    a plain template key silently dropped the second one and reported
+    '+3 Fireball' vs '+3 Frozen Orb' as no change."""
     out = {}
     for entry in item.get("affixes") or []:
         tmpl, params = entry[0], entry[1]
         nums = tuple(p for p in params or [] if _num(p))
-        if tmpl in out:
-            prev_n, prev_p = out[tmpl]
+        words = tuple(p for p in params or [] if not _num(p))
+        key = (tmpl, words)
+        if key in out:
+            prev_n, prev_p = out[key]
             if len(prev_n) == 1 and len(nums) == 1:
-                out[tmpl] = ((prev_n[0] + nums[0],), prev_p)  # summed dupes
+                out[key] = ((prev_n[0] + nums[0],), prev_p)  # summed dupes
         else:
-            out[tmpl] = (nums, list(params or []))
+            out[key] = (nums, list(params or []))
+    return out
+
+
+# stat lines worth diffing that the parser does NOT emit as affixes —
+# pulled straight from the raw tooltip. (label, lower_is_better)
+_STAT_LINES = [
+    ("Defense", False),
+    ("Required Strength", True),
+    ("Required Dexterity", True),
+    ("Required Level", True),
+]
+
+
+def _tooltip_stats(item):
+    """{label: number} for defense/requirement lines in the raw tooltip."""
+    import re
+    out = {}
+    for ln in item.get("tooltip") or []:
+        for label, _low in _STAT_LINES:
+            m = re.match(rf"\s*{label}\s*:?\s*(\d+)\s*$", ln, re.I)
+            if m:
+                out[label] = int(m.group(1))
     return out
 
 
@@ -51,18 +86,22 @@ def diff_items(new_item, old_item, max_lines=16):
         text = text.replace("  ", " ").strip()
         return text if text.startswith(sign) else f"{sign} {text}"
 
-    for tmpl, (nn, nparams) in new_a.items():
-        if tmpl not in old_a:
+    for key, (nn, nparams) in new_a.items():
+        tmpl = key[0]
+        if key not in old_a:
             gains.append((mark("+", _render(tmpl, nparams)), GREEN))
             continue
-        on = old_a[tmpl][0]
+        on = old_a[key][0]
         if nn == on:
             continue
         if nn and on and len(nn) == len(on):
             up = sum(nn) > sum(on)
             arrow, color = ("▲", GREEN) if up else ("▼", RED)
             if len(nn) == 1:
-                text = _render(tmpl, [f"{on[0]}→{nn[0]}"])
+                idx = next((i for i, p in enumerate(nparams) if _num(p)), 0)
+                shown = list(nparams)
+                shown[idx] = f"{on[0]}→{nn[0]}"
+                text = _render(tmpl, shown)
             else:  # ranges: full new value + the old one in brackets
                 text = (_render(tmpl, list(nn))
                         + f"  (was {'-'.join(str(v) for v in on)})")
@@ -71,11 +110,23 @@ def diff_items(new_item, old_item, max_lines=16):
             # one side didn't read as numbers — show the new line neutrally
             changes.append((f"◈ {_render(tmpl, nparams)} — equipped value "
                             "unreadable", "#ffd94d"))
-    for tmpl, (_on, oparams) in old_a.items():
-        if tmpl not in new_a:
-            losses.append((mark("−", _render(tmpl, oparams)), RED))
+    for key, (_on, oparams) in old_a.items():
+        if key not in new_a:
+            losses.append((mark("−", _render(key[0], oparams)), RED))
 
-    lines = gains + changes + losses
+    # Defense / requirements come from the raw tooltip — the single most
+    # important armour number was previously not diffed at all
+    ns, os_ = _tooltip_stats(new_item), _tooltip_stats(old_item)
+    stats = []
+    for label, lower_better in _STAT_LINES:
+        a, b = os_.get(label), ns.get(label)
+        if a is None or b is None or a == b:
+            continue
+        better = (b < a) if lower_better else (b > a)
+        arrow, color = ("▲", GREEN) if better else ("▼", RED)
+        stats.append((f"{arrow} {label}: {a}→{b}", color))
+
+    lines = stats + gains + changes + losses
     if not lines:
         lines = [("stat lines are identical", DIM)]
     if len(lines) > max_lines:

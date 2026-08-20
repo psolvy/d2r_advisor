@@ -335,6 +335,9 @@ class App:
                     winsound.Beep(660, 160)
                 elif verdict == "trash":
                     winsound.Beep(233, 140)
+                elif verdict == "compare":
+                    # neutral blip — compare used to play the ERROR buzz
+                    winsound.Beep(740, 90)
                 else:
                     winsound.Beep(160, 220)
             except RuntimeError:
@@ -551,11 +554,14 @@ class App:
             if self.cfg.get("debug"):
                 dump("ok")
             from advisor.compare import diff_items
+            # cap per section: two rings x 17 lines could run the popup
+            # off the bottom of the screen
+            per = 12 if len(old_items) > 1 else 16
             extra = []
             for k, old in enumerate(old_items):
                 if k:
                     extra.append((" ", "#9a9a9a"))  # section spacer
-                extra += diff_items(new_item, old)
+                extra += diff_items(new_item, old, max_lines=per)
             self.results.put({
                 "verdict": "compare",
                 "item": new_item,
