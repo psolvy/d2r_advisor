@@ -486,4 +486,26 @@ check("render: numbers and skills fill placeholders",
       render_affix("+# to [skill]", [2, "Meteor"]) == "+2 to Meteor"
       and render_affix("Adds #-# Damage", [1, 3]) == "Adds 1-3 Damage")
 
+# -------------------------------------------------- onboarding helpers
+from advisor.onboarding import hotkey_rows, suggest_scale
+
+check("wizard: scale suggestions", suggest_scale(2160) == 2.0
+      and suggest_scale(1080) == 1.0 and suggest_scale(1440) == 1.25)
+check("wizard: hotkey clash detection",
+      [c for _l, _k, c in hotkey_rows({"hotkey": "f9",
+                                       "compare_hotkey": "f9"})][:2]
+      == [True, True])
+
+# ------------------------------------------------- unknown-name honesty
+_mod_item = parse_best(iter([["Storm Heart", "Amulet",
+                              "Required Level: 41",
+                              "+13 Maximum Stamina"]]),
+                       quality_hint="Unique")
+check("mod unique flags unknown_name",
+      _mod_item.get("unknown_name") is True)
+_vanilla = parse_best(iter([["Harlequin Crest", "Shako",
+                             "Defense: 98", "+2 to All Skills"]]),
+                      quality_hint="Unique")
+check("vanilla unique does not flag", not _vanilla.get("unknown_name"))
+
 print(f"\nALL {ok} REGRESSION TESTS PASSED")

@@ -875,6 +875,14 @@ class App:
             # Start Menu discoverable
             tray.ensure_start_menu_shortcut()
         self.root.after(1500, lambda: self._report_health(tray_icon))
+        # first-run wizard: only on a genuinely fresh install
+        try:
+            from advisor import onboarding
+            if onboarding.should_show(self.cfg):
+                self.root.after(900, lambda: onboarding.open_wizard(
+                    self.root, self.cfg, scale=self._ui_scale()))
+        except Exception as e:
+            print(f"onboarding skipped: {e}")
         if self.cfg.get("auto_update", True):
             self.root.after(5000, self.check_updates)
         self.root.after(100, self.poll)
