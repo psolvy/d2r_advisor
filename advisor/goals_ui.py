@@ -33,6 +33,10 @@ class GoalsWindow(tk.Toplevel):
     def __init__(self, root, scale=1.0, cfg=None):
         super().__init__(root)
         self.cfg = cfg or {}
+        self._guard_hold = None
+        # closing the window mid-countdown must free the capture guard,
+        # or every later scan reports "busy" until an app restart
+        self.bind("<Destroy>", self._drop_guard, add="+")
         self.s = s = max(1.0, float(scale))
         self.title("D2R Item Advisor — Season Goals")
         self.configure(bg=BG)
@@ -46,8 +50,8 @@ class GoalsWindow(tk.Toplevel):
                  font=("Segoe UI", int(13 * s), "bold")
                  ).grid(row=0, column=0, columnspan=3, sticky="w",
                         padx=pad, pady=(pad, int(4 * s)))
-        tk.Label(self, text="runes are collected from your scans "
-                            "automatically; use +/− to correct counts",
+        tk.Label(self, text="counts come from the tab scans below; "
+                            "use +/− to correct them by hand",
                  bg=BG, fg=DIM, font=self.f_sub
                  ).grid(row=1, column=0, columnspan=3, sticky="w", padx=pad)
 
@@ -244,18 +248,39 @@ class GoalsWindow(tk.Toplevel):
     def _made(self):
         sel = self.tv.selection()
         if sel:
-            goals.mark_made(sel[0])
+            _st, ok, msg = goals.mark_made(sel[0])
+            if not ok:
+                self.status.configure(text=f"✕ {sel[0]}: {msg}", fg=RED)
+                return
+            self.status.configure(text=f"✓ {sel[0]} made — runes spent",
+                                  fg=GREEN)
             self.refresh()
 
     # -------------------------------------------------- stash-tab scanning
 
-    def _calibrate(self, key, what):
-        """3 hovered points pin a whole tab lattice: first cell, LAST cell
-        of the FIRST row, then the LAST cell overall."""
+    def _guard_acquire(self, what):
         from advisor import capture_guard
-        if not capture_guard.acquire(f"{what} grid calibration"):
+        if not capture_guard.acquire(what):
             self.status.configure(
                 text=f"busy: {capture_guard.busy_with()} is running", fg=RED)
+            return False
+        self._guard_hold = what
+        return True
+
+    def _guard_release(self):
+        from advisor import capture_guard
+        if self._guard_hold:
+            capture_guard.release(self._guard_hold)
+            self._guard_hold = None
+
+    def _drop_guard(self, event=None):
+        if event is None or event.widget is self:
+            self._guard_release()
+
+    def _calibrate(self, key, what):
+        """4 hovered points pin a whole tab lattice: first cell, END of the
+        top row, the cell BELOW the first, then the LAST cell overall."""
+        if not self._guard_acquire(f"{what} grid calibration"):
             return
         from advisor.autoclicker import get_cursor_pos, load_calib, save_calib
         if what == "rune":
@@ -271,6 +296,9 @@ class GoalsWindow(tk.Toplevel):
         points = []
 
         def capture(step, countdown):
+            if not self.winfo_exists():
+                self._guard_release()
+                return
             if countdown > 0:
                 self.status.configure(
                     text=f"{prompts[step]}  {countdown}", fg=GOLD_HI)
@@ -284,26 +312,27 @@ class GoalsWindow(tk.Toplevel):
                 calib[key] = points
                 save_calib(calib)
                 self.status.configure(text=f"✓ {what} grid saved", fg=GREEN)
-                capture_guard.release()
+                self._guard_release()
 
         capture(0, 4)
 
-    def _scan_counted(self, key, names, apply_fn, what, band=False):
-        from advisor import capture_guard
-        if not capture_guard.acquire(f"{what} tab scan"):
-            self.status.configure(
-                text=f"busy: {capture_guard.busy_with()} is running", fg=RED)
+    def _scan_counted(self, key, names, apply_fn, what, band=False,
+                      pool_key="runes"):
+        if not self._guard_acquire(f"{what} tab scan"):
             return
         from advisor.autoclicker import load_calib
         calib = load_calib()
         pts = calib.get(key)
         if not pts or len(pts) != 8:
-            capture_guard.release()
+            self._guard_release()
             self.status.configure(
                 text=f"set the {what} grid first (4 points)", fg=RED)
             return
 
         def go(countdown):
+            if not self.winfo_exists():
+                self._guard_release()
+                return
             if countdown > 0:
                 self.status.configure(
                     text=f"open the stash {what.upper()} tab — scanning in "
@@ -328,27 +357,49 @@ class GoalsWindow(tk.Toplevel):
                 tess = resolve_tesseract(self.cfg or load_config())
                 from datetime import datetime
                 from pathlib import Path
-                dbg_dir = Path(__file__).resolve().parents[1] / "debug"
+                from advisor.paths import STATE_DIR
+                dbg_dir = STATE_DIR / "debug"
                 dbg_dir.mkdir(exist_ok=True)
-                dbg = dbg_dir / (datetime.now().strftime("%H%M%S")
-                                 + f"_tabscan_{what}.png")
+                from advisor.dbg import prune, stamp
+                prune(dbg_dir)
+                dbg = dbg_dir / (stamp() + f"_tabscan_{what}.png")
                 counts = scan_counted_tab(img, pts, names,
                                           screen_rect=rect,
                                           tesseract_cmd=tess,
                                           debug_out=dbg, band=band)
             except Exception as e:
-                capture_guard.release()
+                self._guard_release()
                 self.status.configure(text=f"scan failed: {e}", fg=RED)
                 return
             if not counts:
-                capture_guard.release()
+                self._guard_release()
                 self.status.configure(text="scan failed: bad grid points",
                                       fg=RED)
                 return
-            capture_guard.release()
-            apply_fn(counts)
+            self._guard_release()
             total = sum(counts.values())
             kinds = sum(1 for n in counts.values() if n > 0)
+            # a scan REPLACES the whole pool — show the diff and confirm
+            # before overwriting hand-curated counts
+            cur = goals.load_state().get(pool_key) or {}
+            changes = []
+            for name in sorted(set(cur) | set(counts)):
+                old, new = cur.get(name, 0), counts.get(name, 0)
+                if old != new:
+                    changes.append(f"{name} {old}→{new}")
+            if cur and changes:
+                from tkinter import messagebox
+                shown = ", ".join(changes[:8]) + \
+                    (f" … +{len(changes) - 8} more" if len(changes) > 8
+                     else "")
+                if not messagebox.askyesno(
+                        "Apply scan?",
+                        f"{total} {what}s ({kinds} kinds) scanned.\n\n"
+                        f"Changes: {shown}\n\nReplace the current "
+                        f"{what} counters?", parent=self):
+                    self.status.configure(text="scan discarded", fg=GOLD_HI)
+                    return
+            apply_fn(counts)
             self.status.configure(
                 text=f"✓ {total} {what}s ({kinds} kinds) — counters set",
                 fg=GREEN)
@@ -363,4 +414,4 @@ class GoalsWindow(tk.Toplevel):
     def _scan_gems(self):
         from advisor.rune_tab import GEM_ORDER
         self._scan_counted("gemstab", GEM_ORDER, goals.set_gem_counts,
-                           "gem", band=True)
+                           "gem", band=True, pool_key="gems")

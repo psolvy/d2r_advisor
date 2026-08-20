@@ -21,6 +21,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from advisor.paths import STATE_DIR  # mutable state (frozen: %LOCALAPPDATA%)
+
 from advisor.ocr import scan_tooltip
 from advisor.overlay import Overlay
 from advisor.parse import parse_best
@@ -38,9 +40,22 @@ from d2rlootreader.screen import capture_monitor_at
 
 IS_WINDOWS = sys.platform == "win32"
 
+_MUTEX = None  # keep a reference or Windows frees the handle
+
+
+def _claim_single_instance():
+    """Windows named mutex; False when another instance already holds it."""
+    global _MUTEX
+    try:
+        _MUTEX = ctypes.windll.kernel32.CreateMutexW(
+            None, False, "d2r-advisor-single-instance")
+        return ctypes.windll.kernel32.GetLastError() != 183  # ERROR_ALREADY_EXISTS
+    except Exception:
+        return True  # can't tell — don't block startup
+
 
 def load_config():
-    cfg_path = ROOT / "config.yaml"
+    cfg_path = STATE_DIR / "config.yaml"
     try:
         with open(cfg_path, encoding="utf-8") as f:
             return yaml.safe_load(f) or {}
@@ -93,7 +108,12 @@ def resolve_rules_file(cfg):
         if candidate.exists():
             return candidate
         print(f"WARNING: preset '{preset}' not found ({candidate}), falling back to rules.yaml")
-    return ROOT / "rules.yaml"
+    return STATE_DIR / "rules.yaml"
+
+
+def _dbg_prune(dbg_dir):
+    from advisor.dbg import prune
+    prune(dbg_dir)
 
 
 APP_NAME = "D2R Item Advisor"
@@ -152,6 +172,15 @@ class App:
         """Runs in a worker thread: capture -> detect -> OCR -> parse -> verdict."""
         if not self.busy.acquire(blocking=False):
             return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
+            return
         try:
             # Give the just-hidden verdict popup time to leave the screen so
             # it isn't captured and OCR'd as part of the tooltip.
@@ -167,10 +196,12 @@ class App:
                 crop, box = fallback_region(img, local_cursor)
                 used_fallback = True
 
-            stamp = datetime.now().strftime("%H%M%S")
+            from advisor.dbg import stamp as _stamp, prune as _prune
+            stamp = _stamp()
             if self.cfg.get("debug"):
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
+                _dbg_prune(dbg)
                 cv2.imwrite(str(dbg / f"{stamp}_full.png"), img)
                 cv2.imwrite(str(dbg / f"{stamp}_crop.png"), crop)
 
@@ -185,8 +216,9 @@ class App:
             if not item.get("tooltip"):
                 # always dump the RAW frame on failure — cursor in the name,
                 # no annotations (they poison offline tuning)
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
+                _dbg_prune(dbg)
                 cx, cy = local_cursor
                 cv2.imwrite(str(dbg / f"{stamp}_scanfail_{cx}x{cy}_full.png"),
                             img)
@@ -265,7 +297,7 @@ class App:
 
             if self.cfg.get("debug"):
                 dump = {k: v for k, v in item.items() if k != "tooltip"}
-                with open(ROOT / "debug" / f"{stamp}_parse.txt", "w", encoding="utf-8") as f:
+                with open(STATE_DIR / "debug" / f"{stamp}_parse.txt", "w", encoding="utf-8") as f:
                     f.write(f"hint: {quality_hint}\nverdict: {verdict} ({rule_name})\n\n")
                     f.write("OCR lines:\n" + "\n".join(item.get("tooltip") or []) + "\n\n")
                     f.write("item:\n" + json.dumps(dump, ensure_ascii=False, indent=1, default=str))
@@ -281,6 +313,8 @@ class App:
 
     def log_history(self, verdict, item, rule_name):
         """Append the scan to history.log (one JSON object per line)."""
+        from advisor.dbg import rotate
+        rotate(STATE_DIR / "history.log")
         if not self.cfg.get("history", True):
             return
         try:
@@ -293,7 +327,7 @@ class App:
                 "base": item.get("base"),
                 "rule": rule_name,
             }
-            with open(ROOT / "history.log", "a", encoding="utf-8") as f:
+            with open(STATE_DIR / "history.log", "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         except OSError:
             pass
@@ -313,6 +347,9 @@ class App:
                     winsound.Beep(660, 160)
                 elif verdict == "trash":
                     winsound.Beep(233, 140)
+                elif verdict == "compare":
+                    # neutral blip — compare used to play the ERROR buzz
+                    winsound.Beep(740, 90)
                 else:
                     winsound.Beep(160, 220)
             except RuntimeError:
@@ -324,6 +361,15 @@ class App:
         """Read the whole gamble offer around the cursor: mark which slots are
         worth buying and copy the list for the DBM seed simulator."""
         if not self.busy.acquire(blocking=False):
+            return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
             return
         try:
             time.sleep(0.15)
@@ -344,9 +390,11 @@ class App:
                 from advisor.gamble_vision import scan_gamble_icons
                 # always keep the recognition overlay — it is the ground
                 # truth for fixing any misread remotely
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
-                debug_out = dbg / f"{datetime.now():%H%M%S}_gamble_grid.png"
+                _dbg_prune(dbg)
+                from advisor.dbg import stamp as _stamp
+                debug_out = dbg / f"{_stamp()}_gamble_grid.png"
                 entries = scan_gamble_icons(img, screen_rect,
                                             debug_out=debug_out, diag=diag)
             except ValueError as e:
@@ -356,9 +404,11 @@ class App:
             if entries is None:
                 # always dump a failure bundle — this is what fixes it remotely
                 try:
-                    dbg = ROOT / "debug"
+                    dbg = STATE_DIR / "debug"
                     dbg.mkdir(exist_ok=True)
-                    stamp = f"{datetime.now():%H%M%S}"
+                    _dbg_prune(dbg)
+                    from advisor.dbg import stamp as _stamp
+                    stamp = _stamp()
                     cv2.imwrite(str(dbg / f"{stamp}_gamble_fail_frame.png"), img)
                     with open(dbg / f"{stamp}_gamble_fail.txt", "w",
                               encoding="utf-8") as f:
@@ -462,6 +512,15 @@ class App:
         loses vs the equipped one."""
         if not self.busy.acquire(blocking=False):
             return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
+            return
         try:
             time.sleep(0.15)
             cursor = get_cursor_pos()
@@ -470,9 +529,11 @@ class App:
             hov, others = find_compare_tooltips(img, local_cursor)
 
             def dump(reason):
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
-                stamp = datetime.now().strftime("%H%M%S")
+                _dbg_prune(dbg)
+                from advisor.dbg import stamp as _stamp, prune as _prune
+                stamp = _stamp()
                 cv2.imwrite(str(dbg / f"{stamp}_cmp_full.png"), img)
                 if hov is not None:
                     cv2.imwrite(str(dbg / f"{stamp}_cmp_hovered.png"), hov)
@@ -511,11 +572,14 @@ class App:
             if self.cfg.get("debug"):
                 dump("ok")
             from advisor.compare import diff_items
+            # cap per section: two rings x 17 lines could run the popup
+            # off the bottom of the screen
+            per = 12 if len(old_items) > 1 else 16
             extra = []
             for k, old in enumerate(old_items):
                 if k:
                     extra.append((" ", "#9a9a9a"))  # section spacer
-                extra += diff_items(new_item, old)
+                extra += diff_items(new_item, old, max_lines=per)
             self.results.put({
                 "verdict": "compare",
                 "item": new_item,
@@ -529,9 +593,25 @@ class App:
             self.busy.release()
 
     def on_compare_hotkey(self):
+        # Hide our own popup first — otherwise the previous verdict is
+        # captured and diffed as an "equipped" tooltip.
+        self.root.after(0, self.overlay.hide)
         threading.Thread(target=self.scan_compare, daemon=True).start()
 
     def on_hotkey(self):
+        # compare_hotkey is usually "shift+<hotkey>", and the keyboard lib
+        # fires the bare-key hotkey even with shift held — both handlers
+        # used to race for self.busy and compare silently lost half the
+        # time. Same guard as on_gamble_hotkey.
+        cmp_hk = str(self.cfg.get("compare_hotkey") or "").lower()
+        base_hk = str(self.cfg.get("hotkey", "f9")).lower()
+        if cmp_hk == f"shift+{base_hk}":
+            try:
+                import keyboard
+                if keyboard.is_pressed("shift"):
+                    return
+            except Exception:
+                pass
         # Hide our own popup first — otherwise it gets captured and OCR'd.
         self.root.after(0, self.overlay.hide)
         threading.Thread(target=self.scan, daemon=True).start()
@@ -616,14 +696,18 @@ class App:
             if newer:
                 self.root.after(0, lambda: self._update_dialog(tag, asset))
             elif interactive:
-                self.root.after(0, lambda: self._update_dialog(None, None,
-                                                               True))
+                # tag None = the check itself failed (offline) — saying
+                # "up to date" there was a lie
+                failed = tag is None
+                self.root.after(0, lambda: self._update_dialog(
+                    None, None, up_to_date=not failed, check_failed=failed))
         threading.Thread(target=work, daemon=True).start()
 
-    def _update_dialog(self, tag, asset, up_to_date=False):
+    def _update_dialog(self, tag, asset, up_to_date=False,
+                       check_failed=False):
         from advisor.settings_ui import open_update_dialog
         open_update_dialog(self.root, tag, asset, scale=self._ui_scale(),
-                           up_to_date=up_to_date)
+                           up_to_date=up_to_date, check_failed=check_failed)
 
     def restart(self):
         """Relaunch (exe or source) so new hotkeys/scales apply."""
@@ -638,7 +722,9 @@ class App:
 
     def _report_health(self, tray_icon):
         from advisor.health import health_report, summary_line
-        issues = health_report(self.cfg)
+        extra = [("error", "Hotkey failed to register", e)
+                 for e in getattr(self, "hotkey_errors", [])]
+        issues = health_report(self.cfg, extra=extra)
         for lv, title, detail in issues:
             mark = {"error": "ERROR", "warn": "warning", "ok": "note"}[lv]
             print(f"[{mark}] {title} — {detail}")
@@ -659,19 +745,39 @@ class App:
             print("WARNING: Tesseract not found — tooltip scans (hotkey "
                   "verdicts) are disabled. See Settings / README.")
 
-        import keyboard  # imported late: on some systems needs admin
+        # Refuse to run twice: two instances double every global hook and
+        # fight over config/history/log files.
+        if IS_WINDOWS and not _claim_single_instance():
+            print("Another instance is already running — exiting.")
+            return
 
         hotkey = self.cfg.get("hotkey", "f8")
-        keyboard.add_hotkey(hotkey, self.on_hotkey)
+        self.hotkey_errors = []
+
+        def _register(key, fn, what):
+            if not key:
+                return
+            try:
+                import keyboard  # late: on some systems needs admin
+                keyboard.add_hotkey(key, fn)
+            except Exception as e:
+                # a typo'd hotkey must not kill the whole app before the
+                # tray even exists — collect and surface via health
+                self.hotkey_errors.append(f"{what} '{key}': {e}")
+                print(f"WARNING: cannot register {what} hotkey '{key}': {e}")
+
+        _register(hotkey, self.on_hotkey, "scan")
         gamble_key = (self.cfg.get("gamble_hotkey") or "").strip()
-        if gamble_key:
-            keyboard.add_hotkey(gamble_key, self.on_gamble_hotkey)
+        _register(gamble_key, self.on_gamble_hotkey, "gamble")
         seed_key = (self.cfg.get("seed_hotkey") or "").strip()
-        if seed_key:
-            keyboard.add_hotkey(seed_key, self.open_finder)
+        # threaded: the first open imports a 2300-line module — done inline
+        # it stalls the keyboard hook thread for seconds
+        _register(seed_key,
+                  lambda: threading.Thread(target=self.open_finder,
+                                           daemon=True).start(),
+                  "seed finder")
         compare_key = (self.cfg.get("compare_hotkey") or "").strip()
-        if compare_key:
-            keyboard.add_hotkey(compare_key, self.on_compare_hotkey)
+        _register(compare_key, self.on_compare_hotkey, "compare")
         bits = [f"[{hotkey.upper()}] item verdict"]
         if compare_key:
             bits.append(f"[{compare_key.upper()}] compare vs equipped "

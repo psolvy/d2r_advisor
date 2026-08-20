@@ -189,11 +189,17 @@ def find_compare_tooltips(img_bgr, cursor=None):
         return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
 
     # equipped: the best-scoring OTHER blocks (two for rings!),
-    # non-overlapping with the hovered one and with each other
+    # non-overlapping with the hovered one and with each other. The score
+    # floor keeps chat/character-panel text from becoming a bogus second
+    # "equipped" when only one real tooltip is on screen.
+    hovered_score = next(sc for b, sc in scored if b == hovered)
+    floor = 0.35 * hovered_score
     others = []
-    for box, _sc in sorted((s for s in scored
-                            if not overlaps(s[0], hovered)),
-                           key=lambda b: -b[1]):
+    for box, sc in sorted((s for s in scored
+                           if not overlaps(s[0], hovered)),
+                          key=lambda b: -b[1]):
+        if sc < floor:
+            break
         if all(not overlaps(box, o) for o in others):
             others.append(box)
         if len(others) == 2:

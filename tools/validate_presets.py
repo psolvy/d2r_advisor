@@ -23,8 +23,7 @@ QUALITIES = {"Base", "Magic", "Rare", "Crafted", "Set", "Unique", "Runeword",
              "Unknown"}
 COND_KEYS = {"quality", "slot", "tier", "base_any", "name_any", "ethereal",
              "text_any", "text_all", "line_any", "affix_all", "affix_any",
-             "no_base", "sockets_min", "sockets_max", "level_max",
-             "level_min"}
+             "no_base"}
 
 
 def _load(name):

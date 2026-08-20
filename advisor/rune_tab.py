@@ -362,7 +362,9 @@ def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,
     if debug_out:
         # RAW frame too: annotation lines cross the digit zones and make
         # the annotated image useless for offline OCR tuning
-        raw_path = str(debug_out).replace(".png", "_raw.png")
+        base = str(debug_out)
+        raw_path = (base[:-4] + "_raw.png") if base.endswith(".png") \
+            else base + "_raw.png"
         cv2.imwrite(raw_path, img)
     for rune, (cx, cy) in zip(names, centers):
         x, y = int(cx - off_x), int(cy - off_y)

@@ -1,5 +1,5 @@
-# PRESET: LEVELING / LADDER START (levels 1-75, first days of the season)
-# Selected in config.yaml: preset: leveling
+# CUSTOM RULES (config.yaml: preset: custom) — edit freely.
+# Starts as a copy of the leveling preset; the presets/ files show more examples.
 #
 # Rules are checked top-down; the first match wins.
 # Verdicts: keep / check / trash.
@@ -89,6 +89,12 @@ rules:
       quality: [Base, Unknown]
     verdict: check
     note: "Couldn't read the stats — check it yourself"
+  - name: "Charm (base unread — safety net)"
+    when:
+      no_base: true
+      text_any: ["Keep in Inventory"]
+    verdict: check
+    note: "It's a charm but the base/name didn't read — check it yourself"
 
   # ---- rings / amulets -----------------------------------------------------
   - name: "Caster ring/amulet (FCR)"

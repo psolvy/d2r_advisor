@@ -48,6 +48,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Tag must match advisor/version.py
+        # A mismatched tag ships a build that thinks it is out of date and
+        # prompts for the same update on every launch, forever.
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          code_ver=$(python -c "from advisor.version import __version__; print(__version__)")
+          tag_ver="${GITHUB_REF_NAME#v}"
+          if [ "$code_ver" != "$tag_ver" ]; then
+            echo "::error::tag v$tag_ver but __version__ = $code_ver"
+            exit 1
+          fi
+
       - name: Run tests before releasing
         # The workflow_run path already had CI pass on this exact commit.
         if: github.event_name == 'push'

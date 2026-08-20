@@ -1,17 +1,19 @@
 """Season goals: runes you have vs runewords you are building.
 
 State lives in season_goals.json next to config (never committed).
-Runes are auto-collected from scans (with a dedupe window so re-scanning
-the same rune doesn't double-count) and adjustable by hand in the Season
-Goals window. Rune counts are a SHARED pool — each goal shows what is
-missing against that pool.
+Rune counts come from the one-shot stash-tab scans (or the +/- buttons)
+in the Season Goals window — hover scans deliberately do NOT touch the
+counters. Counts are a SHARED pool — each goal shows what is missing
+against that pool.
 """
 import json
+import os
 import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STATE_FILE = ROOT / "season_goals.json"
+from advisor.paths import STATE_DIR
+STATE_FILE = STATE_DIR / "season_goals.json"
 
 # ladder-start classics — seeded on first run, editable in the UI
 DEFAULT_GOALS = ["Stealth", "Lore", "Rhyme", "Ancients' Pledge", "Smoke",
@@ -20,17 +22,36 @@ DEFAULT_GOALS = ["Stealth", "Lore", "Rhyme", "Ancients' Pledge", "Smoke",
 _DEDUPE_S = 90  # same rune scanned again within this window = same drop
 
 
+_RW_CACHE = None
+
+
 def _runewords():
-    with open(ROOT / "d2rlootreader" / "repository" / "runewords_full.json",
-              encoding="utf-8") as f:
-        return json.load(f)
+    global _RW_CACHE
+    if _RW_CACHE is None:
+        try:
+            with open(ROOT / "d2rlootreader" / "repository"
+                      / "runewords_full.json", encoding="utf-8") as f:
+                _RW_CACHE = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            # a missing repo file must not kill the Goals window
+            _RW_CACHE = {}
+    return _RW_CACHE
 
 
 def load_state():
     try:
         with open(STATE_FILE, encoding="utf-8") as f:
             st = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        st = {}
+    except json.JSONDecodeError:
+        # never silently discard the pool — keep the corrupt file around
+        try:
+            os.replace(STATE_FILE, str(STATE_FILE) + ".corrupt")
+            print(f"WARNING: {STATE_FILE.name} was corrupt — saved as "
+                  f"{STATE_FILE.name}.corrupt, starting fresh")
+        except OSError:
+            pass
         st = {}
     st.setdefault("runes", {})
     st.setdefault("goals", list(DEFAULT_GOALS))
@@ -40,8 +61,11 @@ def load_state():
 
 
 def save_state(st):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
+    # atomic: a crash mid-write must not truncate the season pool
+    tmp = str(STATE_FILE) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(st, f, indent=1)
+    os.replace(tmp, STATE_FILE)
 
 
 def add_scanned_rune(rune):
@@ -77,15 +101,14 @@ def set_gem_counts(counts):
 
 # --------------------------------------------------------- cube upgrades
 
-# 2 lower runes per upgrade from Pul upward, 3 below; the gem consumed
-# when upgrading FROM that rune (None = no gem needed)
-_TWO_PER_UP = {"Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur",
-               "Ber", "Jah", "Cham"}
+def _two_per_up():
+    from advisor.knowledge import TWO_PER_UP
+    return TWO_PER_UP
 
 
 def _up_gems():
-    from advisor.knowledge import _UP_GEMS
-    return _UP_GEMS
+    from advisor.knowledge import UP_GEMS
+    return UP_GEMS
 
 
 def _rune_order():
@@ -115,7 +138,7 @@ def _feasible(per_copy, copies, runes_pool, gems_pool, allow_up):
         if not allow_up or i == 0:
             return False
         lower = order[i - 1]
-        per = 2 if lower in _TWO_PER_UP else 3
+        per = 2 if lower in _two_per_up() else 3
         gem = _up_gems().get(lower)
         if gem:
             gem = gem.title()  # knowledge stores 'chipped amethyst'
@@ -217,6 +240,11 @@ def goal_progress(st=None):
     out = []
     for goal in st["goals"]:
         runes = (rw.get(goal) or {}).get("runes") or []
+        if not runes:
+            # unknown/renamed runeword — all([]) used to render it as a
+            # completed goal; show it as broken instead
+            out.append((goal, [("unknown runeword?", 1, 0)], False))
+            continue
         need = {}
         for r in runes:
             need[r] = need.get(r, 0) + 1
@@ -245,17 +273,28 @@ def rune_popup_lines(rune):
 
 
 def mark_made(goal):
-    """Subtract the goal's runes from the pool and log it as made."""
+    """Subtract the goal's runes from the pool and log it as made.
+    Returns (state, ok, msg) — an incomplete goal is refused instead of
+    silently eating whatever runes the pool does have."""
     st = load_state()
     rw = _runewords()
-    for r in (rw.get(goal) or {}).get("runes") or []:
-        if st["runes"].get(r, 0) > 0:
-            st["runes"][r] -= 1
-            if st["runes"][r] == 0:
-                st["runes"].pop(r)
+    runes = (rw.get(goal) or {}).get("runes") or []
+    if not runes:
+        return st, False, f"unknown runeword: {goal}"
+    need = {}
+    for r in runes:
+        need[r] = need.get(r, 0) + 1
+    missing = [f"{r}×{n - st['runes'].get(r, 0)}" for r, n in need.items()
+               if st["runes"].get(r, 0) < n]
+    if missing:
+        return st, False, f"missing {', '.join(missing)}"
+    for r in runes:
+        st["runes"][r] -= 1
+        if st["runes"][r] == 0:
+            st["runes"].pop(r)
     st["made"].append(goal)
     save_state(st)
-    return st
+    return st, True, ""
 
 
 def set_goals(goals):

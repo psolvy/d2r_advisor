@@ -8,11 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def health_report(cfg, calib=None):
-    """[(level, title, detail)] — everything worth telling the user."""
+def health_report(cfg, calib=None, extra=None):
+    """[(level, title, detail)] — everything worth telling the user.
+    extra: pre-built (level, title, detail) rows from the app (e.g.
+    hotkeys that failed to register)."""
     from advisor.app import resolve_tesseract
-    issues = []
+    issues = list(extra or [])
 
+    scan_key = str(cfg.get("hotkey", "f9")).upper()
     tess = resolve_tesseract(cfg)
     if tess and ("/" in tess or "\\" in tess) and not Path(tess).exists():
         issues.append((
@@ -21,9 +24,16 @@ def health_report(cfg, calib=None):
     elif not tess:
         issues.append((
             "error", "Tesseract OCR not found",
-            "Tooltip scans (F8/F9) are disabled. Install it from "
+            f"Tooltip scans ({scan_key}) are disabled. Install it from "
             "github.com/UB-Mannheim/tesseract/wiki or set tesseract_cmd "
             "in Settings."))
+
+    tz_url = (cfg.get("tz_api_url") or "").strip()
+    if tz_url and not (cfg.get("tz_api_token") or "").strip():
+        issues.append((
+            "warn", "Terror Zone URL set but no token",
+            "The TZ widget will get HTTP 401 — set tz_api_token in "
+            "Settings."))
 
     from advisor.gamble_vision import ICON_DIR
     if not (ICON_DIR / "rin.png").exists():
@@ -60,6 +70,12 @@ def health_report(cfg, calib=None):
             "ok", "Auto-clicker: sell zone not set",
             "Optional — filler buys won't auto-sell back until you click "
             "'Set sell zone' in the Seed Finder."))
+    if not calib.get("runetab") or not calib.get("gemstab"):
+        missing = [k for k in ("runetab", "gemstab") if not calib.get(k)]
+        issues.append((
+            "ok", "Season Goals: stash grid not calibrated",
+            f"{', '.join(missing)} — tab scans need the 4-point grid "
+            "(Season Goals window, 'Set … grid')."))
     return issues
 
 

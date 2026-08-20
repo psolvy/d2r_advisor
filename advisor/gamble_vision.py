@@ -418,7 +418,10 @@ def scan_gamble_icons(img_bgr, screen_rect, debug_out=None, diag=None):
 
     def accept(gx, gy, cell, entries):
         global _auto_cache
-        _auto_cache = (gx, gy, cell)
+        # keyed by monitor rect: a cache from monitor 2 used to be retried
+        # (and on a false accept, SAVED into the clicker calibration)
+        # against monitor 1's frame
+        _auto_cache = (tuple(screen_rect), gx, gy, cell)
         # refresh the auto-clicker's cell calibration from the located grid
         left, top = screen_rect[0], screen_rect[1]
         calib["cell00"] = [left + gx + cell / 2.0, top + gy + cell / 2.0]
@@ -426,10 +429,10 @@ def scan_gamble_icons(img_bgr, screen_rect, debug_out=None, diag=None):
         save_calib(calib)
         return entries
 
-    if _auto_cache is not None:
-        entries = try_loc(*_auto_cache)
+    if _auto_cache is not None and _auto_cache[0] == tuple(screen_rect):
+        entries = try_loc(*_auto_cache[1:])
         if entries is not None:
-            return accept(*_auto_cache, entries)
+            return accept(*_auto_cache[1:], entries)
         _auto_cache = None
     locs = auto_locate_grid(img_bgr, diag=diag)
     if not locs:

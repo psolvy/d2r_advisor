@@ -103,6 +103,8 @@ count_upcube: false
 # API token: d2runewizard.com/integration or d2emu.com/terms.
 tz_api_url: ""
 tz_api_token: ""
+# d2emu only: your account name (their API authenticates username+token)
+tz_api_user: ""
 
 # Path to tesseract.exe. Empty = auto-detect
 # (PATH, then C:\Program Files\Tesseract-OCR\tesseract.exe)
