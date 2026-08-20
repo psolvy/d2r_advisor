@@ -23,7 +23,7 @@ QUALITIES = {"Base", "Magic", "Rare", "Crafted", "Set", "Unique", "Runeword",
              "Unknown"}
 COND_KEYS = {"quality", "slot", "tier", "base_any", "name_any", "ethereal",
              "text_any", "text_all", "line_any", "affix_all", "affix_any",
-             "no_base"}
+             "affix_n_of", "affix_sum", "no_base"}
 
 
 def _load(name):
@@ -62,7 +62,10 @@ def main():
         seen_names = set()
         for i, rule in enumerate(rules, 1):
             label = f"rule {i} ({rule.get('name', '?')})"
-            if rule.get("verdict") not in VERDICTS:
+            if "score" in rule and "verdict" not in rule:
+                if not isinstance(rule["score"], (int, float)):
+                    err(f"{label}: score must be a number")
+            elif rule.get("verdict") not in VERDICTS:
                 err(f"{label}: bad verdict {rule.get('verdict')!r}")
             if rule.get("name") in seen_names:
                 warn(f"{label}: duplicate rule name")
@@ -90,8 +93,15 @@ def main():
             for n in when.get("name_any") or []:
                 if not any(n.lower() in kn for kn in known_names):
                     warn(f"{label}: name {n!r} matches no known item")
+            n_of_conds = (when.get("affix_n_of") or {}).get("any") or []
+            sum_affixes = (when.get("affix_sum") or {}).get("affixes") or []
+            for t in sum_affixes:
+                if t not in affixes:
+                    err(f"{label}: affix_sum template not in affixes.json: "
+                        f"{t!r}")
             for ck in ("affix_all", "affix_any"):
-                for cond in when.get(ck) or []:
+                for cond in (when.get(ck) or []) + (
+                        n_of_conds if ck == "affix_any" else []):
                     t = cond.get("affix")
                     if t not in affixes:
                         err(f"{label}: affix template {t!r} not in "

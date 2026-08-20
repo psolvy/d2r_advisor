@@ -89,6 +89,24 @@ class ItemParser:
                 if fname.exists():
                     with open(fname, encoding="utf-8") as f:
                         data[stem] = json.load(f)
+            # MOD OVERLAY: repository/overlay/<same name>.json merges over
+            # the vanilla tables — renamed/new mod uniques, changed bases
+            # etc. live there and survive updates (the dir is user data).
+            overlay_dir = REPOSITORY_DIR / "overlay"
+            if overlay_dir.is_dir():
+                for fname in sorted(overlay_dir.glob("*.json")):
+                    try:
+                        with open(fname, encoding="utf-8") as f:
+                            extra = json.load(f)
+                    except (OSError, ValueError):
+                        continue
+                    base = data.get(fname.stem)
+                    if isinstance(base, dict) and isinstance(extra, dict):
+                        base.update(extra)
+                    elif isinstance(base, list) and isinstance(extra, list):
+                        base.extend(x for x in extra if x not in base)
+                    else:
+                        data[fname.stem] = extra
             cls._REPO_CACHE = data
         return cls._REPO_CACHE
 

@@ -168,7 +168,8 @@ class App:
         self.cfg = load_config()
         rules_path = resolve_rules_file(self.cfg)
         try:
-            self.rules, self.default = load_rules(rules_path)
+            self.rules, self.default = load_rules(
+                rules_path, my_class=self.cfg.get("my_class"))
             print(f"Rules: {rules_path.name}")
         except Exception as e:
             print(f"ERROR: cannot load {rules_path.name} ({type(e).__name__}: {e})")
@@ -336,6 +337,10 @@ class App:
             if flags.get("unmet"):
                 note = (note + " · red requirement line — you can't equip "
                                "this yet").strip(" ·")
+            if item.get("unknown_name"):
+                note = (note + " · name not in the database (mod item?) — "
+                               "ranges unavailable; add it via "
+                               "repository/overlay/").strip(" ·")
 
             if self.cfg.get("debug"):
                 dump = {k: v for k, v in item.items() if k != "tooltip"}
@@ -343,6 +348,13 @@ class App:
                     f.write(f"hint: {quality_hint}\nverdict: {verdict} ({rule_name})\n\n")
                     f.write("OCR lines:\n" + "\n".join(item.get("tooltip") or []) + "\n\n")
                     f.write("item:\n" + json.dumps(dump, ensure_ascii=False, indent=1, default=str))
+
+            # accuracy flywheel: one click files the OCR lines + verdict
+            # into tuning.jsonl for later rule/parser tuning
+            extra = list(extra or [])
+            extra.append(("⚑ verdict wrong? click to log it for tuning",
+                          "#777777",
+                          self._make_wrong_logger(item, verdict, rule_name)))
 
             self.log_history(verdict, item, rule_name)
             self.results.put({"verdict": verdict, "item": item, "rule": rule_name,
@@ -352,6 +364,26 @@ class App:
             self.results.put({"verdict": "error", "note": f"{type(e).__name__}: {e}"})
         finally:
             self.busy.release()
+
+    def _make_wrong_logger(self, item, verdict, rule_name):
+        def log_wrong():
+            import time as _time
+            rec = {"ts": _time.strftime("%Y-%m-%d %H:%M:%S"),
+                   "verdict": verdict, "rule": rule_name,
+                   "quality": item.get("quality"),
+                   "name": item.get("name"), "base": item.get("base"),
+                   "affixes": item.get("affixes"),
+                   "tooltip": item.get("tooltip")}
+            try:
+                with open(STATE_DIR / "tuning.jsonl", "a",
+                          encoding="utf-8") as f:
+                    f.write(json.dumps(rec, ensure_ascii=False,
+                                       default=str) + "\n")
+                print("logged to tuning.jsonl — thanks, this tunes the "
+                      "rules/parser")
+            except OSError as e:
+                print(f"could not write tuning.jsonl: {e}")
+        return log_wrong
 
     def log_history(self, verdict, item, rule_name):
         """Append the scan to history.log (one JSON object per line)."""
@@ -843,6 +875,14 @@ class App:
             # Start Menu discoverable
             tray.ensure_start_menu_shortcut()
         self.root.after(1500, lambda: self._report_health(tray_icon))
+        # first-run wizard: only on a genuinely fresh install
+        try:
+            from advisor import onboarding
+            if onboarding.should_show(self.cfg):
+                self.root.after(900, lambda: onboarding.open_wizard(
+                    self.root, self.cfg, scale=self._ui_scale()))
+        except Exception as e:
+            print(f"onboarding skipped: {e}")
         if self.cfg.get("auto_update", True):
             self.root.after(5000, self.check_updates)
         self.root.after(100, self.poll)

@@ -152,9 +152,22 @@ def _known_db():
         def load(fn):
             try:
                 with open(REPOSITORY_DIR / fn, encoding="utf-8") as f:
-                    return json.load(f)
+                    data = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError):
                 return {}
+            # the mod overlay counts as "known" too — a unique added via
+            # repository/overlay/uniques.json must stop flagging as
+            # "name not in the database"
+            ov = REPOSITORY_DIR / "overlay" / fn
+            if ov.exists() and isinstance(data, dict):
+                try:
+                    with open(ov, encoding="utf-8") as f:
+                        extra = json.load(f)
+                    if isinstance(extra, dict):
+                        data = {**data, **extra}
+                except (OSError, ValueError):
+                    pass
+            return data
 
         rw = load("runewords_full.json")
         _known_db_cache = {
@@ -418,4 +431,10 @@ def parse_best(line_variants, quality_hint=None):
                 uncertain.setdefault(tmpl, set()).update((a, b))
     if uncertain:
         best["uncertain"] = {t: sorted(v) for t, v in uncertain.items()}
+    # honest flag for modded games: a gold/green title whose name is not
+    # in the databases used to fuzzy-match to a look-alike vanilla item
+    # or show silently without ranges — the popup now says so
+    if best.get("quality") in ("Unique", "Set", "Runeword") \
+            and best.get("name") and not _name_known(best):
+        best["unknown_name"] = True
     return best

@@ -35,12 +35,19 @@ rules:
     verdict: keep
 
   # ---- charms --------------------------------------------------------------
-  - name: "Skiller (grand charm +1 to a skill tree)"
+  - name: "Skiller (my class)"
     when:
       base_any: ["Grand Charm"]
-      affix_any_ref: {list: skill_trees, min: 1}
+      affix_any_ref: {list: skill_trees, min: 1, class: mine}
     verdict: keep
-    note: "Skiller! Currency at season start"
+    note: "Skiller for YOUR class — currency at season start"
+
+  - name: "Skiller (other class)"
+    when:
+      base_any: ["Grand Charm"]
+      affix_any_ref: {list: skill_trees, min: 1, class: other}
+    verdict: check
+    note: "skiller for another class — trade fodder"
 
   - name: "Grand charm (not a skiller)"
     when:
@@ -102,6 +109,36 @@ rules:
       affix_any_ref: {list: class_and_tree_skills, min: 2}
     verdict: keep
     note: "+2 amulet (class or skill tree) is expensive; with life/FCR — very"
+
+  - name: "Rare/craft jewelry (2+ good mods)"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+      affix_n_of:
+        min: 2
+        any:
+          - {affix: "+#% Faster Cast Rate", min: 10}
+          - {affix: "+# to Life", min: 30}
+          - {affix: "+# to Mana", min: 40}
+          - {affix: "All Resistances +#", min: 8}
+          - {affix: "#% Life stolen per hit", min: 3}
+          - {affix: "#% Mana stolen per hit", min: 3}
+          - {affix: "+# to Strength", min: 12}
+          - {affix: "+# to Dexterity", min: 12}
+          - {affix: "#% Better Chance of Getting Magic Items", min: 15}
+    verdict: keep
+    note: "2+ useful mods — wear or trade"
+
+  - name: "Resist jewelry (summed single resists)"
+    when:
+      quality: [Rare, Crafted]
+      slot: [Ring, Amulet]
+      affix_sum:
+        affixes: ["Fire Resist +#%", "Cold Resist +#%",
+                  "Lightning Resist +#%", "Poison Resist +#%"]
+        min: 30
+    verdict: keep
+    note: "30+ total resists across single-res rolls"
 
   - name: "Rare/crafted ring or amulet"
     when:

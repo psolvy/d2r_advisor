@@ -306,6 +306,89 @@ check("tabscan: lone stem is one glyph and thin (reads as '1')",
       _grp2 is not None and len(_grp2) == 1
       and _grp2[0][2] <= 0.45 * _grp2[0][3])
 
+# ------------------------------------------------- rules engine v2
+from advisor.rules import expand_refs
+
+def _ring(affixes):
+    return {"quality": "Rare", "name": "X", "base": "Ring", "slot": "Ring",
+            "affixes": affixes, "tooltip": ["X", "Ring"]}
+
+_nof_rules = [{"name": "good ring", "verdict": "keep",
+               "when": {"slot": "Ring", "affix_n_of": {"min": 2, "any": [
+                   {"affix": "+#% Faster Cast Rate", "min": 10},
+                   {"affix": "+# to Life", "min": 30},
+                   {"affix": "All Resistances +#", "min": 8}]}}}]
+_v, _r, _n = evaluate(_ring([("+#% Faster Cast Rate", [10]),
+                             ("+# to Life", [35])]),
+                      _nof_rules, {"verdict": "trash", "note": ""})
+check("n_of: 2 of 3 keeps", _v == "keep", _v)
+_v, _r, _n = evaluate(_ring([("+#% Faster Cast Rate", [10])]),
+                      _nof_rules, {"verdict": "trash", "note": ""})
+check("n_of: 1 of 3 falls through", _v == "trash", _v)
+_v, _r, _n = evaluate(_ring([("+#% Faster Cast Rate", [10]),
+                             ("+# to Life", [0])]),
+                      _nof_rules, {"verdict": "trash", "note": ""})
+check("n_of: zero-read tips to check", _v == "check", _v)
+
+_sum_rules = [{"name": "res ring", "verdict": "keep",
+               "when": {"slot": "Ring", "affix_sum": {
+                   "affixes": ["Fire Resist +#%", "Cold Resist +#%"],
+                   "min": 40}}}]
+_v, _r, _n = evaluate(_ring([("Fire Resist +#%", [25]),
+                             ("Cold Resist +#%", [20])]),
+                      _sum_rules, {"verdict": "trash", "note": ""})
+check("affix_sum: 45 total >= 40 keeps", _v == "keep", _v)
+_v, _r, _n = evaluate(_ring([("Fire Resist +#%", [25])]),
+                      _sum_rules, {"verdict": "trash", "note": ""})
+check("affix_sum: 25 total falls through", _v == "trash", _v)
+
+_score_rules = [
+    {"name": "fcr pts", "score": 3,
+     "when": {"affix_any": [{"affix": "+#% Faster Cast Rate", "min": 10}]}},
+    {"name": "life pts", "score": 3,
+     "when": {"affix_any": [{"affix": "+# to Life", "min": 30}]}},
+    {"name": "broad ring check", "verdict": "check",
+     "when": {"slot": "Ring"}}]
+_score_default = {"verdict": "trash", "note": "", "_scoring": {"keep": 5,
+                                                               "check": 3}}
+_v, _r, _n = evaluate(_ring([("+#% Faster Cast Rate", [10]),
+                             ("+# to Life", [40])]), _score_rules,
+                      _score_default)
+check("score: 6 pts beats the broad check", _v == "keep" and _r == "score",
+      (_v, _r))
+_v, _r, _n = evaluate(_ring([("+#% Faster Cast Rate", [10])]), _score_rules,
+                      _score_default)
+check("score: 3 pts = check via broad rule (equal rank)",
+      _v == "check", (_v, _r))
+
+_defs = {"skill_trees": ["+# to Fire Skills (Sorceress only)",
+                         "+# to Warcries (Barbarian only)"]}
+_cls_rules = expand_refs(
+    [{"name": "mine", "verdict": "keep",
+      "when": {"affix_any_ref": {"list": "skill_trees", "min": 1,
+                                 "class": "mine"}}},
+     {"name": "other", "verdict": "check",
+      "when": {"affix_any_ref": {"list": "skill_trees", "min": 1,
+                                 "class": "other"}}}],
+    defs=_defs, my_class="Sorceress")
+_sorc = {"quality": "Magic", "base": "Grand Charm",
+         "affixes": [("+# to Fire Skills (Sorceress only)", [1])],
+         "tooltip": []}
+_barb = {"quality": "Magic", "base": "Grand Charm",
+         "affixes": [("+# to Warcries (Barbarian only)", [1])],
+         "tooltip": []}
+check("class rules: my skiller keeps",
+      evaluate(_sorc, _cls_rules, {"verdict": "trash"})[0] == "keep")
+check("class rules: other skiller checks",
+      evaluate(_barb, _cls_rules, {"verdict": "trash"})[0] == "check")
+_no_cls = expand_refs(
+    [{"name": "mine", "verdict": "keep",
+      "when": {"affix_any_ref": {"list": "skill_trees", "min": 1,
+                                 "class": "mine"}}}],
+    defs=_defs, my_class=None)
+check("class rules: no my_class = old behavior (full list keeps)",
+      evaluate(_barb, _no_cls, {"verdict": "trash"})[0] == "keep")
+
 # ------------------------------------------------------- settings write
 import tempfile as _tf
 from pathlib import Path as _P
@@ -402,5 +485,27 @@ from advisor.render import render_affix
 check("render: numbers and skills fill placeholders",
       render_affix("+# to [skill]", [2, "Meteor"]) == "+2 to Meteor"
       and render_affix("Adds #-# Damage", [1, 3]) == "Adds 1-3 Damage")
+
+# -------------------------------------------------- onboarding helpers
+from advisor.onboarding import hotkey_rows, suggest_scale
+
+check("wizard: scale suggestions", suggest_scale(2160) == 2.0
+      and suggest_scale(1080) == 1.0 and suggest_scale(1440) == 1.25)
+check("wizard: hotkey clash detection",
+      [c for _l, _k, c in hotkey_rows({"hotkey": "f9",
+                                       "compare_hotkey": "f9"})][:2]
+      == [True, True])
+
+# ------------------------------------------------- unknown-name honesty
+_mod_item = parse_best(iter([["Storm Heart", "Amulet",
+                              "Required Level: 41",
+                              "+13 Maximum Stamina"]]),
+                       quality_hint="Unique")
+check("mod unique flags unknown_name",
+      _mod_item.get("unknown_name") is True)
+_vanilla = parse_best(iter([["Harlequin Crest", "Shako",
+                             "Defense: 98", "+2 to All Skills"]]),
+                      quality_hint="Unique")
+check("vanilla unique does not flag", not _vanilla.get("unknown_name"))
 
 print(f"\nALL {ok} REGRESSION TESTS PASSED")
