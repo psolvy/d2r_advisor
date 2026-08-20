@@ -37,3 +37,4 @@ tools/dbm_validation/fill_cases.json
 
 # d2data JSON dumps — auto-downloaded by tools/update_repository.py etc.
 tools/_cache/
+d2rlootreader/repository/overlay/
