@@ -74,6 +74,10 @@ DIFFICULTIES = ["Normal", "Nightmare", "Hell"]
 RARITY_CHOICES = [("set/unique/rare (default)", None),
                   ("Unique only", Q_UNIQUE), ("Set only", Q_SET),
                   ("Rare only", Q_RARE), ("Any quality", -1)]
+# planner auto-deepening ladder: starts at the DBM site's default
+# (depth 400 / buys 4), climbs past its slider max (1000/8) only when a
+# rung searched its WHOLE tree and found nothing
+_PLAN_RUNGS = [(400, 4), (1000, 6), (2500, 8), (5000, 10)]
 TIER_CHOICES = [("any tier", -1), ("normal", 0),
                 ("exceptional", 1), ("elite", 2)]
 
@@ -294,8 +298,8 @@ class SeedFinder(tk.Toplevel):
                                 if d.lower() == str(sf.get("difficulty",
                                                            "Hell")).lower()),
                                "Hell"),
-            "depth": sf.get("depth", 5000),
-            "shift_buys": sf.get("shift_buys", 10),
+            "depth": sf.get("depth", 400),
+            "shift_buys": sf.get("shift_buys", 4),
             "budget": sf.get("budget", NODE_CAP),
             "refreshes": sf.get("refreshes", 30),
             "max_offset": sf.get("max_offset", 2000000),
@@ -1573,16 +1577,32 @@ class SeedFinder(tk.Toplevel):
                 lo, hi, abs_pos, slots = state
                 self._plan_input_win = slots
                 # budget: user-set, up to the DBM site's own 2M. The
-                # soft cap keeps common targets at the old fast speed —
-                # only an empty-handed search burns the full budget
-                # (narrow targets like Unique + elite need it).
-                result = plan_buys(
-                    lo, hi, abs_pos, slots, ctx, specs=specs,
-                    max_depth=depth, max_buys=buys, node_cap=budget,
-                    soft_cap=min(400_000, budget),
-                    progress=lambda e, n: self.msgs.put(
-                        ("plan_prog", min(1.0, n / budget))),
-                    stop=stop)
+                # soft cap keeps common targets fast — only an
+                # empty-handed search burns the full budget (narrow
+                # targets like Unique + elite need it). When the WHOLE
+                # tree fits the budget and holds no route, auto-deepen
+                # up the ladder with a notice instead of a bare "no
+                # route" (rare targets often live a rung deeper).
+                d, b = depth, buys
+                while True:
+                    result = plan_buys(
+                        lo, hi, abs_pos, slots, ctx, specs=specs,
+                        max_depth=d, max_buys=b, node_cap=budget,
+                        soft_cap=min(400_000, budget),
+                        progress=lambda e, n: self.msgs.put(
+                            ("plan_prog", min(1.0, n / budget))),
+                        stop=stop)
+                    if result["plans"] or result["capped"] or stop.is_set():
+                        break
+                    nxt = next(((rd, rb) for rd, rb in _PLAN_RUNGS
+                                if rd > d), None)
+                    if nxt is None:
+                        break
+                    self.msgs.put(("step", f"no route within depth {d} / "
+                                           f"buys {b} — auto-deepening to "
+                                           f"{nxt[0]}/{nxt[1]}…"))
+                    d, b = nxt[0], max(b, nxt[1])
+                result["esc_at"] = (d, b) if (d, b) != (depth, buys) else None
                 self.msgs.put(("plans", result, ctx))
             except Exception as e:
                 self.msgs.put(("err", f"{type(e).__name__}: {e}"))
@@ -1631,11 +1651,18 @@ class SeedFinder(tk.Toplevel):
         self._plan_ctx = ctx
         tv = self.plans_tv
         tv.delete(*tv.get_children())
-        note = " (node cap hit — deepen carefully)" if result["capped"] else ""
+        esc = result.get("esc_at")
+        note = (" (budget exhausted — raise it in the budget spinner)"
+                if result["capped"] else "")
+        if esc:
+            note += f" (auto-deepened to depth {esc[0]} / buys {esc[1]})"
         if not self.plans:
-            self.log(f"— planner: no route within depth/buys "
-                     f"({result['explored']} states explored{note}) — raise "
-                     "depth, or refresh manually and re-plan", "dim")
+            hint = ("raise the budget"
+                    if result["capped"] else
+                    "refresh manually and re-plan, or widen the target")
+            self.log(f"— planner: no route "
+                     f"({result['explored']} states explored{note}) — "
+                     f"{hint}", "dim")
             self.plan_steps_lbl.configure(text="")
             return
         for i, p in enumerate(self.plans, 1):

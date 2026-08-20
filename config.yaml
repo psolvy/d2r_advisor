@@ -63,8 +63,9 @@ history: true
 #   "https://duckduckgo.com/?q={query}"
 link_template: "https://duckduckgo.com/?q={query}"
 
-# Verdict popup size. 2.0 — 4K, 1.5 — 1440p, 1.0 — 1080p
-ui_scale: 2.0
+# Verdict popup size. 2.0 — 4K, 1.5 — 1440p, 1.0 — 1080p (the first-run
+# wizard suggests the right value for your screen)
+ui_scale: 1.0
 
 # Seed Finder window size multiplier (empty = use ui_scale). The window is
 # also freely resizable by dragging its edges.
@@ -81,8 +82,11 @@ seedfinder:
   version: row
   npc: gheed
   difficulty: Hell
-  depth: 5000        # planner search depth (refreshes+buys lookahead)
-  shift_buys: 10     # planner junk-buys allowed
+  depth: 400         # planner search depth — the DBM site's default;
+                     # an empty result auto-deepens 400→1000→2500→5000
+                     # with a notice, so keep this LOW for fast plans
+  shift_buys: 4      # planner junk-buys allowed (site default; deepens
+                     # together with depth)
   budget: 2000000    # planner state budget (2M = the DBM site's own);
                      # once routes exist the search returns by 400k, the
                      # full budget only burns while NOTHING is found yet
@@ -92,8 +96,9 @@ seedfinder:
   click_delay: 0.8   # auto-clicker seconds between clicks
   execute_delay: 5   # seconds to focus the game before clicking starts
   target: ""         # planner target item name ("" or (any) = any item)
-  target_rarity: unique   # default (set/unique/rare) / unique / set / rare / any
-  target_tier: elite # any / normal / exceptional / elite
+  target_rarity: default  # default (set/unique/rare) / unique / set / rare / any
+  target_tier: any   # any / normal / exceptional / elite (narrow combos
+                     # like unique+elite are RARE — plans take longer)
 
 # Check GitHub releases for a new version on start and offer the
 # update (tray menu -> Check for updates does it on demand)

@@ -300,6 +300,25 @@ check("finder: planner budget is user-set with the soft cap",
       and "soft_cap=min(400_000, budget)" in _sf_src
       and "node_cap=400_000" not in _sf_src
       and '"budget": sf.get("budget", NODE_CAP)' in _sf_src)
+check("finder: empty plans auto-deepen up the ladder",
+      "_PLAN_RUNGS = [(400, 4), (1000, 6), (2500, 8), (5000, 10)]" in _sf_src
+      and "auto-deepening to" in _sf_src)
+
+# shipped defaults must match the DBM site's own (trustworthy out of the
+# box: depth 400 / buys 4 / budget 2M / broad target) and the in-code
+# fallbacks must agree with config.yaml
+import yaml as _yaml
+with open(ROOT / "config.yaml", encoding="utf-8") as _f:
+    _cfg = _yaml.safe_load(_f)
+_sfd = _cfg.get("seedfinder") or {}
+check("config: planner defaults are the site's",
+      _sfd.get("depth") == 400 and _sfd.get("shift_buys") == 4
+      and _sfd.get("budget") == 2_000_000
+      and _sfd.get("target_rarity") == "default"
+      and _sfd.get("target_tier") == "any")
+check("config: code fallbacks match config.yaml",
+      'sf.get("depth", 400)' in _sf_src
+      and 'sf.get("shift_buys", 4)' in _sf_src)
 check("finder: only a new search wipes the seed field",
       _sf_src.count("candidates=True, seed=True") == 1
       and "if seed and self.seed_var.get().strip():" in _sf_src)
