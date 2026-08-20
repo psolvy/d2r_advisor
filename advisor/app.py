@@ -165,6 +165,15 @@ class App:
         """Runs in a worker thread: capture -> detect -> OCR -> parse -> verdict."""
         if not self.busy.acquire(blocking=False):
             return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
+            return
         try:
             # Give the just-hidden verdict popup time to leave the screen so
             # it isn't captured and OCR'd as part of the tooltip.
@@ -338,6 +347,15 @@ class App:
         worth buying and copy the list for the DBM seed simulator."""
         if not self.busy.acquire(blocking=False):
             return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
+            return
         try:
             time.sleep(0.15)
             cursor = get_cursor_pos()
@@ -474,6 +492,15 @@ class App:
         """Both Shift-compare tooltips -> what the hovered item gains and
         loses vs the equipped one."""
         if not self.busy.acquire(blocking=False):
+            return
+        from advisor import capture_guard
+        if capture_guard.busy_with():
+            # a calibration/tab-scan countdown is capturing the screen —
+            # our popup must not photobomb its frame
+            self.busy.release()
+            self.results.put({"verdict": "error",
+                              "note": f"busy: {capture_guard.busy_with()} "
+                                      "is running"})
             return
         try:
             time.sleep(0.15)
