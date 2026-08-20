@@ -54,8 +54,11 @@ def _evaluate(bright, gray, boxes, scale, W, cursor):
     for x, y, w, h in boxes:
         if w < 110 * scale or h < 70 * scale:
             continue
+        # equipped-item tooltips render BELOW the slot, so the cursor sits
+        # just outside the block — treat near-cursor blocks like containing
+        # ones for the over-merge rescue
         contains = (cursor is not None
-                    and x <= cursor[0] <= x + w and y <= cursor[1] <= y + h)
+                    and _cursor_dist((x, y, w, h), cursor) <= 130 * scale)
         block = bright[y:y + h, x:x + w]
         density = cv2.countNonZero(block) / float(w * h)
         rows = (block.sum(axis=1) > 0).astype(np.uint8)
