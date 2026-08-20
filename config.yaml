@@ -87,16 +87,17 @@ seedfinder:
                      # with a notice, so keep this LOW for fast plans
   shift_buys: 4      # planner junk-buys allowed (site default; deepens
                      # together with depth)
-  budget: 2000000    # planner state budget (2M = the DBM site's own);
-                     # once routes exist the search returns by 400k, the
-                     # full budget only burns while NOTHING is found yet
-                     # (needed for rare targets like Unique + elite)
+  budget: 200000     # planner SEARCH size in simulated store states —
+                     # not gold! ~10 s worst case; raise toward 2000000
+                     # (the DBM site's own budget, ~1.5 min) when a rare
+                     # target like Unique + elite reports 'raise the
+                     # search states'
   refreshes: 30      # how many future refreshes to preview
   max_offset: 2000000  # Find offset scan range after buys
   click_delay: 0.8   # auto-clicker seconds between clicks
   execute_delay: 5   # seconds to focus the game before clicking starts
   target: ""         # planner target item name ("" or (any) = any item)
-  target_rarity: default  # default (set/unique/rare) / unique / set / rare / any
+  target_rarity: unique   # unique / default (set/unique/rare) / set / rare / any
   target_tier: any   # any / normal / exceptional / elite (narrow combos
                      # like unique+elite are RARE — plans take longer)
 

@@ -300,7 +300,7 @@ class SeedFinder(tk.Toplevel):
                                "Hell"),
             "depth": sf.get("depth", 400),
             "shift_buys": sf.get("shift_buys", 4),
-            "budget": sf.get("budget", NODE_CAP),
+            "budget": sf.get("budget", 200_000),
             "refreshes": sf.get("refreshes", 30),
             "max_offset": sf.get("max_offset", 2000000),
             "click_delay": sf.get("click_delay", 0.8),
@@ -311,7 +311,7 @@ class SeedFinder(tk.Toplevel):
                                   ("Unique only", "unique"),
                                   ("Set only", "set"), ("Rare only", "rare"),
                                   ("Any quality", "any")],
-                sf.get("target_rarity", "default"), RARITY_CHOICES[0][0]),
+                sf.get("target_rarity", "unique"), "Unique only"),
             "target_tier": self._label_of(
                 TIER_CHOICES + [("any tier", "any")],
                 sf.get("target_tier", "any"), TIER_CHOICES[0][0]),
@@ -683,7 +683,9 @@ class SeedFinder(tk.Toplevel):
         self._lbl(r5, "shift-buys").pack(side="left")
         self.max_buys = self._spin(r5, 0, 100, str(self.sf["shift_buys"]), 3)
         self.max_buys.pack(side="left", padx=(2, int(8 * s)))
-        self._lbl(r5, "budget").pack(side="left")
+        # "budget" read as GOLD to spend next to "Plan buys" — it is the
+        # SEARCH size (simulated store states), so say that
+        self._lbl(r5, "search states").pack(side="left")
         self.budget = self._spin(r5, 100_000, NODE_CAP,
                                  str(self.sf["budget"]), 8,
                                  increment=100_000)
@@ -1652,12 +1654,12 @@ class SeedFinder(tk.Toplevel):
         tv = self.plans_tv
         tv.delete(*tv.get_children())
         esc = result.get("esc_at")
-        note = (" (budget exhausted — raise it in the budget spinner)"
+        note = (" (search-states cap hit — raise it in the spinner)"
                 if result["capped"] else "")
         if esc:
             note += f" (auto-deepened to depth {esc[0]} / buys {esc[1]})"
         if not self.plans:
-            hint = ("raise the budget"
+            hint = ("raise the search states (2000000 = the DBM site's)"
                     if result["capped"] else
                     "refresh manually and re-plan, or widen the target")
             self.log(f"— planner: no route "
