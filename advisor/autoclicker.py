@@ -85,17 +85,39 @@ def _click(x, y, right=False, settle=0.06, ctrl=False):
     if ctrl:
         _ctrl(True)                        # Ctrl+click = sell to vendor
         time.sleep(0.08)
-    if right:
-        u.mouse_event(0x0008, 0, 0, 0, 0)  # right down
-        time.sleep(0.02)
-        u.mouse_event(0x0010, 0, 0, 0, 0)  # right up
-    else:
-        u.mouse_event(0x0002, 0, 0, 0, 0)  # left down
-        time.sleep(0.02)
-        u.mouse_event(0x0004, 0, 0, 0, 0)  # left up
-    if ctrl:
-        time.sleep(0.08)
-        _ctrl(False)
+    try:
+        if right:
+            u.mouse_event(0x0008, 0, 0, 0, 0)  # right down
+            time.sleep(0.02)
+            u.mouse_event(0x0010, 0, 0, 0, 0)  # right up
+        else:
+            u.mouse_event(0x0002, 0, 0, 0, 0)  # left down
+            time.sleep(0.02)
+            u.mouse_event(0x0004, 0, 0, 0, 0)  # left up
+    finally:
+        if ctrl:
+            # finally: an exception mid-click must never leave the OS
+            # with Ctrl held down
+            time.sleep(0.08)
+            _ctrl(False)
+
+
+def _foreground_title():
+    try:
+        u = ctypes.windll.user32
+        hwnd = u.GetForegroundWindow()
+        buf = ctypes.create_unicode_buffer(256)
+        u.GetWindowTextW(hwnd, buf, 256)
+        return buf.value or ""
+    except Exception:
+        return ""
+
+
+def _game_focused():
+    """True when Diablo II is the foreground window. Alt-tabbing away
+    mid-run used to send right-clicks and Ctrl+clicks into whatever app
+    came to front."""
+    return "diablo" in _foreground_title().lower()
 
 
 def calib_ok(calib):
@@ -120,8 +142,10 @@ def sell_points(calib):
     (two hovered corners) beats a single 'sellslot': the game packs small
     items bottom-right but larger ones elsewhere — sweeping every cell of
     the kept-empty zone catches the purchase wherever it landed (Ctrl+click
-    on an empty cell is a no-op). Cell pitch comes from the store-grid
-    calibration (inventory cells are the same size)."""
+    on an empty cell is a no-op). KEEP THE ZONE EMPTY: anything sitting in
+    those cells — including the unique collected by a previous run — gets
+    sold by the sweep. Cell pitch comes from the store-grid calibration
+    (inventory cells are the same size)."""
     z = calib.get("sellzone")
     if z and calib_ok(calib):
         x1, y1, x2, y2 = z
@@ -153,12 +177,26 @@ def execute_plan(steps, items_table, calib, delay=0.8, on_step=None,
         import keyboard
     except ImportError:
         keyboard = None
+    delay = max(0.05, float(delay))  # a 0 delay outruns the game UI
+    if not _game_focused():
+        return 0, "Diablo II is not the foreground window — click into " \
+                  "the game first"
+    restore = get_cursor_pos()
+
+    def aborted():
+        if stop is not None and stop.is_set():
+            return "stopped"
+        if keyboard is not None and keyboard.is_pressed("esc"):
+            return "aborted with ESC"
+        if not _game_focused():
+            return "game lost focus — aborted"
+        return None
+
     done = 0
     for i, s in enumerate(steps):
-        if stop is not None and stop.is_set():
-            return done, "stopped"
-        if keyboard is not None and keyboard.is_pressed("esc"):
-            return done, "aborted with ESC"
+        why = aborted()
+        if why:
+            return done, why
         if s["type"] == "R":
             if on_step:
                 on_step(i, "click Refresh")
@@ -183,10 +221,17 @@ def execute_plan(steps, items_table, calib, delay=0.8, on_step=None,
                     on_step(i, f"sell back {it['name']} "
                                f"(Ctrl+click sweep, {len(pts)} cells)")
                 for px2, py2 in pts:
-                    if stop is not None and stop.is_set():
-                        return done + 1, "stopped"
+                    # ESC/focus are polled INSIDE the sweep too — a
+                    # 16-cell Ctrl+click run must stay interruptible
+                    why = aborted()
+                    if why:
+                        return done + 1, why
                     _click(px2, py2, ctrl=True, settle=0.04)
                     time.sleep(0.12)
         done += 1
         time.sleep(delay)
+    try:
+        ctypes.windll.user32.SetCursorPos(*restore)
+    except Exception:
+        pass
     return done, None
