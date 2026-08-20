@@ -672,14 +672,18 @@ class App:
             if newer:
                 self.root.after(0, lambda: self._update_dialog(tag, asset))
             elif interactive:
-                self.root.after(0, lambda: self._update_dialog(None, None,
-                                                               True))
+                # tag None = the check itself failed (offline) — saying
+                # "up to date" there was a lie
+                failed = tag is None
+                self.root.after(0, lambda: self._update_dialog(
+                    None, None, up_to_date=not failed, check_failed=failed))
         threading.Thread(target=work, daemon=True).start()
 
-    def _update_dialog(self, tag, asset, up_to_date=False):
+    def _update_dialog(self, tag, asset, up_to_date=False,
+                       check_failed=False):
         from advisor.settings_ui import open_update_dialog
         open_update_dialog(self.root, tag, asset, scale=self._ui_scale(),
-                           up_to_date=up_to_date)
+                           up_to_date=up_to_date, check_failed=check_failed)
 
     def restart(self):
         """Relaunch (exe or source) so new hotkeys/scales apply."""

@@ -317,9 +317,11 @@ class Settings(tk.Toplevel):
             self.restart_cb()
 
 
-def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False):
-    """'New version available — Update now?' (or a you're-up-to-date note).
-    Applying runs in a thread; when the updater takes over, the app quits."""
+def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False,
+                       check_failed=False):
+    """'New version available — Update now?' (or a you're-up-to-date /
+    couldn't-check note). Applying runs in a thread; when the updater
+    takes over, the app quits."""
     import threading
     from advisor.version import __version__
     s = max(1.0, float(scale))
@@ -329,7 +331,16 @@ def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False):
     win.resizable(False, False)
     f_base = ("Segoe UI", int(11 * s))
     pad = int(14 * s)
-    if up_to_date:
+    if check_failed:
+        # offline / rate-limited used to render as "you are up to date"
+        tk.Label(win, text="✕ Couldn't check for updates (offline or "
+                           "GitHub unreachable)", bg=BG, fg=RED,
+                 font=f_base, wraplength=int(420 * s)
+                 ).pack(padx=pad, pady=(pad, int(6 * s)))
+        tk.Button(win, text="OK", command=win.destroy, bg=GOLD,
+                  fg="#191307", relief="flat", font=f_base,
+                  padx=int(16 * s)).pack(pady=(0, pad))
+    elif up_to_date:
         tk.Label(win, text=f"✓ You are up to date (v{__version__})",
                  bg=BG, fg=GREEN, font=f_base
                  ).pack(padx=pad, pady=(pad, int(6 * s)))
@@ -352,14 +363,30 @@ def open_update_dialog(root, tag, asset_url, scale=1.0, up_to_date=False):
         def do_update():
             upd.configure(state="disabled", text="updating…")
 
+            def set_status(m, color=DIM):
+                root.after(0, lambda: status.configure(
+                    text=str(m)[:200], fg=color))
+
+            def fail(msg):
+                # a failed download/unpack used to freeze the dialog with
+                # the button dead and no message anywhere
+                set_status(msg, RED)
+                root.after(0, lambda: upd.configure(
+                    state="normal", text="Retry update"))
+
             def work():
                 from advisor import updater
-                ok = updater.apply_update(
-                    asset_url,
-                    on_step=lambda m: root.after(
-                        0, lambda: status.configure(text=str(m)[:200])))
+                try:
+                    ok = updater.apply_update(asset_url, on_step=set_status)
+                except Exception as e:
+                    fail(f"update failed: {type(e).__name__}: {e} — "
+                         f"get it manually: {updater.RELEASES_URL}")
+                    return
                 if ok:
                     root.after(500, root.quit)  # the updater takes over
+                else:
+                    fail("update did not start — see the log, or get it "
+                         f"manually: {updater.RELEASES_URL}")
             threading.Thread(target=work, daemon=True).start()
 
         upd = tk.Button(btns, text="Update now", command=do_update,
