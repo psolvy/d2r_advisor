@@ -77,15 +77,14 @@ def set_gem_counts(counts):
 
 # --------------------------------------------------------- cube upgrades
 
-# 2 lower runes per upgrade from Pul upward, 3 below; the gem consumed
-# when upgrading FROM that rune (None = no gem needed)
-_TWO_PER_UP = {"Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur",
-               "Ber", "Jah", "Cham"}
+def _two_per_up():
+    from advisor.knowledge import TWO_PER_UP
+    return TWO_PER_UP
 
 
 def _up_gems():
-    from advisor.knowledge import _UP_GEMS
-    return _UP_GEMS
+    from advisor.knowledge import UP_GEMS
+    return UP_GEMS
 
 
 def _rune_order():
@@ -115,7 +114,7 @@ def _feasible(per_copy, copies, runes_pool, gems_pool, allow_up):
         if not allow_up or i == 0:
             return False
         lower = order[i - 1]
-        per = 2 if lower in _TWO_PER_UP else 3
+        per = 2 if lower in _two_per_up() else 3
         gem = _up_gems().get(lower)
         if gem:
             gem = gem.title()  # knowledge stores 'chipped amethyst'

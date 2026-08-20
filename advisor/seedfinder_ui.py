@@ -2040,8 +2040,8 @@ class SeedFinder(tk.Toplevel):
             tv.insert("", "end", iid=str(k - 1), text=f" R{k:>3}   {txt}",
                       tags=(tag,))
         if self._session is not None:
-            src = (f"the TRACKED state "
-                   f"({self._session.get("buys", 0)} buys applied)")
+            n_buys = self._session.get("buys", 0)
+            src = f"the TRACKED state ({n_buys} buys applied)"
         else:
             src = f"seed {seed}" + (f" from offset {offset}" if offset else "")
         self.log(f"— preview ready: {n} refreshes for {src} at "
@@ -2163,9 +2163,9 @@ class SeedFinder(tk.Toplevel):
 
     def _update_state_lbl(self):
         st = self._session
+        n_buys = st.get("buys", 0) if st else 0
         self.state_lbl.configure(
-            text=(f"● tracked state · {st.get("buys", 0)} buy(s)"
-                  if st else ""))
+            text=f"● tracked state · {n_buys} buy(s)" if st else "")
 
     def _invalidate(self, plans=False, preview=False, candidates=False,
                     why=""):

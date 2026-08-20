@@ -19,17 +19,24 @@ RUNE_ORDER = [
 _RUNE_INDEX = {r: i for i, r in enumerate(RUNE_ORDER)}
 
 # Cube upgrade: (count of this rune, extra gem) -> next rune.
-# El..Ort need 3 runes and no gem; Thul..Lem need 3 runes + a gem;
-# Pul..Cham need 2 runes + a gem.
-_UP_GEMS = {
+# El..Ort need 3 runes and no gem; Thul..Pul need 3 runes + a gem;
+# Pul..Cham consume 2 runes + a gem. Generated from cubemain.json —
+# the old hand-written table skipped Shael and mis-gemmed every rune
+# from there up.
+UP_GEMS = {
     "Thul": "chipped topaz", "Amn": "chipped amethyst", "Sol": "chipped sapphire",
-    "Dol": "chipped ruby", "Hel": "chipped emerald", "Io": "chipped diamond",
-    "Lum": "flawed topaz", "Ko": "flawed amethyst", "Fal": "flawed sapphire",
-    "Lem": "flawed ruby", "Pul": "flawed emerald", "Um": "flawed diamond",
-    "Mal": "topaz", "Ist": "amethyst", "Gul": "sapphire", "Vex": "ruby",
-    "Ohm": "emerald", "Lo": "diamond", "Sur": "flawless topaz",
-    "Ber": "flawless amethyst", "Jah": "flawless sapphire", "Cham": "flawless ruby",
+    "Shael": "chipped ruby", "Dol": "chipped emerald", "Hel": "chipped diamond",
+    "Io": "flawed topaz", "Lum": "flawed amethyst", "Ko": "flawed sapphire",
+    "Fal": "flawed ruby", "Lem": "flawed emerald", "Pul": "flawed diamond",
+    "Um": "topaz", "Mal": "amethyst", "Ist": "sapphire", "Gul": "ruby",
+    "Vex": "emerald", "Ohm": "diamond", "Lo": "flawless topaz",
+    "Sur": "flawless amethyst", "Ber": "flawless sapphire",
+    "Jah": "flawless ruby", "Cham": "flawless emerald",
 }
+_UP_GEMS = UP_GEMS  # legacy alias
+# runes whose upgrade consumes 2 of them instead of 3 (from cubemain.json)
+TWO_PER_UP = frozenset(("Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm",
+                        "Lo", "Sur", "Ber", "Jah", "Cham"))
 
 _RUNE_LINE = re.compile(r"^([A-Za-z]+)\s+Rune$", re.I)
 
@@ -83,9 +90,8 @@ def rune_advice(item):
     i = _RUNE_INDEX[rune]
     if i + 1 < len(RUNE_ORDER):
         nxt = RUNE_ORDER[i + 1]
-        count = 2 if rune in ("Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm",
-                              "Lo", "Sur", "Ber", "Jah", "Cham") else 3
-        gem = _UP_GEMS.get(rune)
+        count = 2 if rune in TWO_PER_UP else 3
+        gem = UP_GEMS.get(rune)
         recipe = f"{count}× {rune}" + (f" + {gem}" if gem else "") + f" → {nxt}"
         lines.append((f"Cube up: {recipe}", "#e8e8e8", recipe_url("rune upgrade cube recipes")))
 

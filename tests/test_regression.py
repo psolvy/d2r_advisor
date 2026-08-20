@@ -86,7 +86,8 @@ check("junk-hinted charm requalified Magic",
 
 # magic-name affix synthesis: "of Good Luck" GUARANTEES magic find — when
 # that stat line fails OCR the affix must be synthesized (value 0 = the
-# zero-policy's "unknown, err toward keep") so charm rules still fire
+# zero-policy's "unknown"), and a rule that needs the roll can neither
+# keep nor trash it: the item lands on "check", never on default trash
 mf = parse_best(iter([["Lizard's Small Charm of Good Luck",
                        "Required Level: 33", "+3 to Mana"]]),
                 quality_hint="Magic")
@@ -94,7 +95,32 @@ check("MF affix synthesized from suffix",
       any(a[0] == "#% Better Chance of Getting Magic Items"
           for a in mf.get("affixes") or []))
 verdict, _r, _n = evaluate(mf, *load_rules(ROOT / "presets" / "rules-leveling.yaml"))
-check("good-luck charm keeps on leveling", verdict == "keep", verdict)
+check("good-luck charm checks on leveling (roll unread)",
+      verdict == "check", verdict)
+
+# zero-read values must NOT satisfy min/max conditions ("Socketed (0)"
+# used to match {min: 4, max: 4} and keep a 0-socket base as Insight)
+zero_sock = {"quality": "Base", "base": "Cryptic Axe", "tier": "Elite",
+             "affixes": [("Socketed (#)", [0])], "tooltip": ["Cryptic Axe"]}
+sock_rules = [{"name": "insight base", "verdict": "keep",
+               "when": {"affix_any": [{"affix": "Socketed (#)",
+                                       "min": 4, "max": 4}]}}]
+v, r, n = evaluate(zero_sock, sock_rules, {"verdict": "trash", "note": ""})
+check("zero sockets never keep as 4os base", v == "check" and "0" in n, (v, r, n))
+v2, _r2, _n2 = evaluate(
+    {"quality": "Base", "base": "Cryptic Axe", "tier": "Elite",
+     "affixes": [("Socketed (#)", [4])], "tooltip": ["Cryptic Axe"]},
+    sock_rules, {"verdict": "trash", "note": ""})
+check("real 4 sockets still keep", v2 == "keep", v2)
+
+# rune cube-up recipes must match cubemain.json (the old hand table
+# skipped Shael and mis-gemmed 21 runes)
+from advisor.knowledge import UP_GEMS, TWO_PER_UP
+check("cube-up: Shael needs chipped ruby", UP_GEMS.get("Shael") == "chipped ruby")
+check("cube-up: Cham needs flawless emerald",
+      UP_GEMS.get("Cham") == "flawless emerald")
+check("cube-up: 23 gem recipes, 12 two-per upgrades",
+      len(UP_GEMS) == 23 and len(TWO_PER_UP) == 12)
 
 # charm base recovery: truncated name ("Lizard's Small Cha…") must still
 # yield base Small Charm so the charm rules fire
@@ -156,7 +182,7 @@ verdict, _rule, _note = evaluate(
      "affixes": [("#% Faster Cast Rate", [0])], "stats": {},
      "requirements": {}, "tooltip": []}, rules_zero,
     {"verdict": "trash", "note": ""})
-check("zero affix passes min-rule", verdict == "keep", verdict)
+check("zero affix escalates to check, not trash", verdict == "check", verdict)
 
 # ---------------------------------------------------------------- knowledge
 

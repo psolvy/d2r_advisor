@@ -36,15 +36,17 @@ def _affix_value(item, template, param_index=0):
 
 
 def _affix_cond_ok(item, cond):
+    """True / False / None — None means the value read as 0 (an OCR
+    misread; no D2 affix rolls 0) so the condition is INDETERMINATE.
+    The old behavior treated 0 as a match, which let 'Socketed (0)'
+    satisfy {min: 4, max: 4} and keep a 0-socket base as an Insight
+    candidate."""
     template = cond.get("affix")
     val = _affix_value(item, template, cond.get("param", 0))
     if val is None:
         return False
-    # A 0 value on a numeric affix is always an OCR misread (no D2 affix
-    # rolls 0) — treat as unknown and let it pass rather than trash a
-    # potentially good item; the popup flags it for eye-checking.
     if val == 0 and "#" in (template or ""):
-        return True
+        return None
     if "min" in cond and not (isinstance(val, (int, float)) and val >= cond["min"]):
         return False
     if "max" in cond and not (isinstance(val, (int, float)) and val <= cond["max"]):
@@ -114,24 +116,44 @@ def _matches(item, when):
             if "ethereal" not in joined:
                 return False
 
+    indeterminate = False
     for cond in when.get("affix_all", []):
-        if not _affix_cond_ok(item, cond):
+        ok = _affix_cond_ok(item, cond)
+        if ok is False:
             return False
+        if ok is None:
+            indeterminate = True
 
     affix_any = when.get("affix_any", [])
-    if affix_any and not any(_affix_cond_ok(item, c) for c in affix_any):
-        return False
+    if affix_any:
+        results = [_affix_cond_ok(item, c) for c in affix_any]
+        if not any(r is True for r in results):
+            if any(r is None for r in results):
+                indeterminate = True
+            else:
+                return False
 
-    return True
+    # A rule that would need a value that read as 0 can neither match nor
+    # reject — the caller skips it and flags the item for eye-checking.
+    return None if indeterminate else True
 
 
 def evaluate(item, rules, default):
     """Return (verdict, rule_name, note)."""
+    unreadable = None
     for rule in rules:
-        if _matches(item, rule.get("when", {})):
+        got = _matches(item, rule.get("when", {}))
+        if got is None and unreadable is None:
+            unreadable = rule.get("name", "unnamed rule")
+            continue
+        if got:
             return (
                 rule.get("verdict", "check"),
                 rule.get("name", "unnamed rule"),
                 rule.get("note", ""),
             )
+    if unreadable and default.get("verdict", "trash") == "trash":
+        # Don't trash an item a rule couldn't judge because of a misread.
+        return ("check", unreadable,
+                "a value read as 0 — check by eye")
     return default.get("verdict", "trash"), "default", default.get("note", "")
