@@ -277,12 +277,23 @@ class App:
                 if flags.get("shop") and not item.get("affixes"):
                     extra = (gamble_advice(item, char_level=int(self.cfg.get("char_level") or 0))
                              or []) + extra
-                # Price check: clickable line for tradeable qualities.
+                # Price check: clickable line for tradeable qualities —
+                # runes and gems included (the most-traded items of all).
                 price_tmpl = (self.cfg.get("price_link_template") or "").strip()
-                if price_tmpl and item.get("quality") in (
-                        "Unique", "Set", "Runeword", "Rare", "Crafted"):
+                if price_tmpl:
+                    import re as _re
                     from urllib.parse import quote
-                    q = item.get("name") or item.get("base") or ""
+                    q = ""
+                    if item.get("quality") in ("Unique", "Set", "Runeword",
+                                               "Rare", "Crafted"):
+                        q = item.get("name") or item.get("base") or ""
+                    else:
+                        first = ((item.get("tooltip") or [""])[0]).strip()
+                        m = _re.match(r"([A-Za-z]+)\s+Rune\b", first, _re.I)
+                        if m:
+                            q = f"{m.group(1).title()} Rune"
+                        elif gem_advice(item):
+                            q = first
                     if q:
                         extra += [("💰 Price check", "#ffd94d",
                                    price_tmpl.replace("{query}", quote(q)))]
@@ -586,7 +597,8 @@ class App:
             for k, old in enumerate(old_items):
                 if k:
                     extra.append((" ", "#9a9a9a"))  # section spacer
-                extra += diff_items(new_item, old, max_lines=per)
+                lbl = f"#{k + 1}" if len(old_items) > 1 else ""
+                extra += diff_items(new_item, old, max_lines=per, label=lbl)
             self.results.put({
                 "verdict": "compare",
                 "item": new_item,

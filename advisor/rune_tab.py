@@ -2,9 +2,9 @@
 
 The tab lays all 33 runes out in a fixed reading order (El … Zod), each
 cell showing its count; runes you don't own are grayed out. A one-time
-3-point calibration (hover El, then its RIGHT NEIGHBOR Eld — that pins
-the exact cell pitch — then the last cell Zod) fixes the lattice with
-no column guessing.
+4-point calibration (first cell, END of the top row, the cell BELOW the
+first, the LAST cell) pins the lattice; the pitch is then refined from
+the image itself and anchors snap to cell centers.
 
 Per cell: OCR the count digits (tesseract, digit whitelist); when no
 digits read, brightness decides owned=1 vs grayed=0.
@@ -16,29 +16,7 @@ import numpy as np
 
 from advisor.knowledge import RUNE_ORDER
 
-CALIB_KEY = "runetab"  # [x_el, y_el, x_row_end, y_row_end, x_zod, y_zod]
 
-
-def solve_lattice(p_first, p_row_end, p_below, total=33):
-    """(cols, pitch_x, pitch_y) from three unambiguous cells: the FIRST
-    cell, the LAST cell of the FIRST row, and the cell DIRECTLY BELOW the
-    first (start of row 2).
-
-    pitch_y comes from one exact row step; the column count divides the
-    LONG first-row distance (hover jitter spreads over cols-1 gaps, so a
-    ±10px hover can no longer shift the whole grid by a column — the old
-    3-point guess did exactly that on the user's 10x4 tab)."""
-    pitch_y = float(p_below[1] - p_first[1])
-    if pitch_y <= 4:
-        return None
-    row_w = float(p_row_end[0] - p_first[0])
-    if row_w <= 4:
-        return None
-    cols = round(row_w / pitch_y) + 1  # cells are square
-    if cols < 2:
-        return None
-    pitch_x = row_w / (cols - 1)
-    return cols, pitch_x, pitch_y
 
 
 def _autocorr_pitch(sig, lo, hi):
@@ -339,10 +317,6 @@ def scan_counted_tab(img, calib_pts, names, screen_rect=None,
     return _scan(img, calib_pts, names, screen_rect, tesseract_cmd,
                  debug_out=debug_out, band=band)
 
-
-def scan_rune_tab(img, calib_pts, screen_rect=None, tesseract_cmd=None):
-    """{rune: count} read from a full-screen capture. img is BGR."""
-    return _scan(img, calib_pts, RUNE_ORDER, screen_rect, tesseract_cmd)
 
 
 def _scan(img, calib_pts, names, screen_rect=None, tesseract_cmd=None,

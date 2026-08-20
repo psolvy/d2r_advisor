@@ -217,12 +217,6 @@ def find_compare_tooltips(img_bgr, cursor=None):
     return crop(hovered), [crop(b) for b in others]
 
 
-def find_two_tooltips(img_bgr, cursor=None):
-    """Back-compat wrapper: (hovered, first_other)."""
-    hov, others = find_compare_tooltips(img_bgr, cursor)
-    return hov, (others[0] if others else None)
-
-
 def fallback_region(img_bgr, cursor, width=760, height=640):
     """Fixed crop around the cursor when detection fails."""
     H, W = img_bgr.shape[:2]

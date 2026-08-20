@@ -7,20 +7,6 @@ import numpy as np
 ADAPTIVE_THRESHOLD_BLOCK_SIZE = 21
 
 
-def capture_screen():
-    """
-    Captures the entire virtual desktop (all monitors) using mss.
-
-    Returns:
-        numpy.ndarray: The captured image in BGR format.
-    """
-    with mss.mss() as sct:
-        monitor = sct.monitors[0]  # the whole virtual desktop
-        sct_img = sct.grab(monitor)
-        # Convert to numpy array and then to BGR format for OpenCV
-        img = np.array(sct_img)
-        return img[:, :, :3]  # Convert BGRA to BGR
-
 
 def capture_monitor_at(cursor):
     """
@@ -57,23 +43,6 @@ def capture_monitor_at(cursor):
             local = (cursor[0] - mon["left"], cursor[1] - mon["top"])
         return img, local, (mon["left"], mon["top"], mon["width"], mon["height"])
 
-
-def capture_region(sct_instance, region):
-    """
-    Captures a specific region of the screen using a given mss instance.
-
-    This function does not create any windows and returns the image data directly.
-
-    Args:
-        sct_instance (mss.mss): An active mss instance.
-        region (dict): The screen region to capture, with 'left', 'top',
-                       'width', and 'height'.
-
-    Returns:
-        numpy.ndarray: The captured image in BGR format.
-    """
-    screenshot = sct_instance.grab(region)
-    return np.array(screenshot)[:, :, :3]  # Convert BGRA -> BGR
 
 
 def preprocess(image_bgr: np.ndarray, mode: Literal["otsu", "adaptive", "none"] = "adaptive") -> np.ndarray:

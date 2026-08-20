@@ -19,9 +19,6 @@ STATE_FILE = STATE_DIR / "season_goals.json"
 DEFAULT_GOALS = ["Stealth", "Lore", "Rhyme", "Ancients' Pledge", "Smoke",
                  "Insight", "Spirit"]
 
-_DEDUPE_S = 90  # same rune scanned again within this window = same drop
-
-
 _RW_CACHE = None
 
 
@@ -56,7 +53,6 @@ def load_state():
     st.setdefault("runes", {})
     st.setdefault("goals", list(DEFAULT_GOALS))
     st.setdefault("made", [])
-    st.setdefault("_last_scan", {})
     return st
 
 
@@ -66,21 +62,6 @@ def save_state(st):
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(st, f, indent=1)
     os.replace(tmp, STATE_FILE)
-
-
-def add_scanned_rune(rune):
-    """Auto-count a scanned rune drop; dedupes rapid re-scans.
-    Returns True when the count actually increased."""
-    st = load_state()
-    now = time.time()
-    if now - float(st["_last_scan"].get(rune, 0)) < _DEDUPE_S:
-        st["_last_scan"][rune] = now
-        save_state(st)
-        return False
-    st["_last_scan"][rune] = now
-    st["runes"][rune] = st["runes"].get(rune, 0) + 1
-    save_state(st)
-    return True
 
 
 def set_counts(counts):

@@ -109,6 +109,23 @@ def open_tz_window(root, cfg, scale=1.0):
                     padx=10, pady=8, highlightthickness=1,
                     highlightbackground=LINE)
     body.pack(fill="x", padx=pad)
+    # TZ flips on the hour — the countdown is the number a player wants
+    timer = tk.Label(win, text="", bg=BG, fg=GOLD_HI, font=f_base)
+    timer.pack(anchor="w", padx=pad, pady=(int(4 * s), 0))
+
+    def tick():
+        if not win.winfo_exists():
+            return
+        import time as _t
+        now = _t.localtime()
+        left = 60 - now.tm_min - (1 if now.tm_sec else 0)
+        timer.configure(text=f"next rotation in ~{max(0, left)} min")
+        # refresh shortly after the flip, once per hour
+        if now.tm_min == 0 and now.tm_sec < 45:
+            _load(win, body, cfg)
+        win.after(30000, tick)
+
+    tick()
 
     # clickable provider links: left click opens, right click copies
     links = tk.Frame(win, bg=BG)
