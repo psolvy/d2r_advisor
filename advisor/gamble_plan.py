@@ -72,14 +72,17 @@ def _match(specs, ctx, idx, tier, quality):
 
 
 def plan_buys(lo, hi, abs_pos, win, ctx, specs=None, max_depth=5, max_buys=3,
-              node_cap=NODE_CAP, reroll_bought=None, progress=None, stop=None):
+              node_cap=NODE_CAP, soft_cap=None, reroll_bought=None,
+              progress=None, stop=None):
     """Explore refresh/buy sequences from the current store state.
 
     win: the current 14 slots as [{'idx','tier','quality'} or None (bought,
     classic behavior)]. specs: targets [{'name': item idx or -1, 'tier':
-    0/1/2/-1, 'rarity': 4/5/6/7/-1}]. Returns {'plans': [...], 'explored',
-    'nodes', 'capped', 'outcomes'} — plans sorted best-first, each with the
-    step list (type R refresh / B shift-buy / C collect, slot, grid x/y).
+    0/1/2/-1, 'rarity': 4/5/6/7/-1}]. soft_cap: once at least one route is
+    found, stop expanding here (the fast path); only an empty-handed search
+    runs on to node_cap. Returns {'plans': [...], 'explored', 'nodes',
+    'capped', 'outcomes'} — plans sorted best-first, each with the step
+    list (type R refresh / B shift-buy / C collect, slot, grid x/y).
     """
     specs = list(specs) if specs else list(DEFAULT_SPECS)
     if reroll_bought is None:
@@ -107,7 +110,8 @@ def plan_buys(lo, hi, abs_pos, win, ctx, specs=None, max_depth=5, max_buys=3,
             break
         if v.collected >= 1 or v.depth >= max_depth:
             continue
-        if len(nodes) >= node_cap:
+        if len(nodes) >= node_cap or (soft_cap is not None and terminals
+                                      and len(nodes) >= soft_cap):
             capped = True
             continue
 

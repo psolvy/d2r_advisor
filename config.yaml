@@ -83,6 +83,10 @@ seedfinder:
   difficulty: Hell
   depth: 5000        # planner search depth (refreshes+buys lookahead)
   shift_buys: 10     # planner junk-buys allowed
+  budget: 2000000    # planner state budget (2M = the DBM site's own);
+                     # once routes exist the search returns by 400k, the
+                     # full budget only burns while NOTHING is found yet
+                     # (needed for rare targets like Unique + elite)
   refreshes: 30      # how many future refreshes to preview
   max_offset: 2000000  # Find offset scan range after buys
   click_delay: 0.8   # auto-clicker seconds between clicks

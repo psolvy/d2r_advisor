@@ -63,6 +63,7 @@ SEEDFINDER = [
     ("difficulty", "Difficulty", "choice", DIFFICULTIES),
     ("depth", "Planner depth", "int", None),
     ("shift_buys", "Planner shift-buys", "int", None),
+    ("budget", "Planner state budget (2M = DBM site)", "int", None),
     ("refreshes", "Preview refreshes", "int", None),
     ("max_offset", "Find-offset max", "int", None),
     ("click_delay", "Clicker delay (s)", "float", None),

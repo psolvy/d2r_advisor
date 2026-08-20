@@ -21,7 +21,7 @@ from tkinter import ttk
 
 from advisor.autoclicker import (calib_ok, execute_plan, get_cursor_pos,
                                  load_calib, save_calib)
-from advisor.gamble_plan import plan_buys
+from advisor.gamble_plan import NODE_CAP, plan_buys
 from advisor.gamble_seed import (Ctx, Q_RARE, Q_SET, Q_UNIQUE, QUALITY_NAMES,
                                  find_offsets, game_seed_to_store, item_index,
                                  items, refresh_chain_full,
@@ -296,6 +296,7 @@ class SeedFinder(tk.Toplevel):
                                "Hell"),
             "depth": sf.get("depth", 5000),
             "shift_buys": sf.get("shift_buys", 10),
+            "budget": sf.get("budget", NODE_CAP),
             "refreshes": sf.get("refreshes", 30),
             "max_offset": sf.get("max_offset", 2000000),
             "click_delay": sf.get("click_delay", 0.8),
@@ -677,7 +678,12 @@ class SeedFinder(tk.Toplevel):
         self.max_depth.pack(side="left", padx=(2, int(8 * s)))
         self._lbl(r5, "shift-buys").pack(side="left")
         self.max_buys = self._spin(r5, 0, 100, str(self.sf["shift_buys"]), 3)
-        self.max_buys.pack(side="left", padx=(2, 0))
+        self.max_buys.pack(side="left", padx=(2, int(8 * s)))
+        self._lbl(r5, "budget").pack(side="left")
+        self.budget = self._spin(r5, 100_000, NODE_CAP,
+                                 str(self.sf["budget"]), 8,
+                                 increment=100_000)
+        self.budget.pack(side="left", padx=(2, 0))
         rq = tk.Frame(sec3, bg=PANEL)
         rq.pack(fill="x", padx=int(8 * s), pady=(0, int(4 * s)))
         tk.Label(rq, text="click a plan: its steps show below, the plan # "
@@ -1544,6 +1550,7 @@ class SeedFinder(tk.Toplevel):
             specs = self._specs()
             depth = int(self.max_depth.get())
             buys = int(self.max_buys.get())
+            budget = max(100_000, min(NODE_CAP, int(self.budget.get())))
         except ValueError as e:
             self.log(f"! {e}")
             return
@@ -1565,15 +1572,16 @@ class SeedFinder(tk.Toplevel):
             try:
                 lo, hi, abs_pos, slots = state
                 self._plan_input_win = slots
-                # NODE_CAP = the DBM site's own budget (2M). The old
-                # 400k UI throttle made narrow targets (Unique + elite)
-                # return 0 routes where the site finds some.
-                from advisor.gamble_plan import NODE_CAP
+                # budget: user-set, up to the DBM site's own 2M. The
+                # soft cap keeps common targets at the old fast speed —
+                # only an empty-handed search burns the full budget
+                # (narrow targets like Unique + elite need it).
                 result = plan_buys(
                     lo, hi, abs_pos, slots, ctx, specs=specs,
-                    max_depth=depth, max_buys=buys, node_cap=NODE_CAP,
+                    max_depth=depth, max_buys=buys, node_cap=budget,
+                    soft_cap=min(400_000, budget),
                     progress=lambda e, n: self.msgs.put(
-                        ("plan_prog", min(1.0, n / NODE_CAP))),
+                        ("plan_prog", min(1.0, n / budget))),
                     stop=stop)
                 self.msgs.put(("plans", result, ctx))
             except Exception as e:

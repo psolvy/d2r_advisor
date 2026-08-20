@@ -277,13 +277,29 @@ uni = plan_buys(lo, hi, abs_pos, slots, ctx,
 check("planner unique-only filter",
       all(p["quality"] == 7 for p in uni["plans"]))
 
+# soft cap: once ANY route exists the search stops there (old fast
+# behavior); only an empty-handed search burns the full budget
+soft = plan_buys(lo, hi, abs_pos, slots, ctx, max_depth=60, max_buys=3,
+                 node_cap=200_000, soft_cap=2_000)
+check("planner soft cap stops early once routes exist",
+      soft["plans"] and soft["explored"] < 10_000,
+      f"explored={soft['explored']}")
+full = plan_buys(lo, hi, abs_pos, slots, ctx, max_depth=60, max_buys=3,
+                 node_cap=200_000, soft_cap=None)
+check("planner without soft cap explores further",
+      full["explored"] > soft["explored"])
+
 # UI wiring (source-level: the finder window needs tk + a live screen).
 # The 400k UI throttle made Unique+elite return 0 routes where the DBM
-# site (2M budget) finds some; and a settings change must not wipe the
-# seed — a seed stays a valid RNG state under any level/version.
+# site (2M budget) finds some; the budget is now a user setting with the
+# soft cap wired in; and a settings change must not wipe the seed — a
+# seed stays a valid RNG state under any level/version.
 _sf_src = (ROOT / "advisor" / "seedfinder_ui.py").read_text(encoding="utf-8")
-check("finder: planner runs at the site's node budget",
-      "node_cap=NODE_CAP" in _sf_src and "node_cap=400_000" not in _sf_src)
+check("finder: planner budget is user-set with the soft cap",
+      "node_cap=budget" in _sf_src
+      and "soft_cap=min(400_000, budget)" in _sf_src
+      and "node_cap=400_000" not in _sf_src
+      and '"budget": sf.get("budget", NODE_CAP)' in _sf_src)
 check("finder: only a new search wipes the seed field",
       _sf_src.count("candidates=True, seed=True") == 1
       and "if seed and self.seed_var.get().strip():" in _sf_src)

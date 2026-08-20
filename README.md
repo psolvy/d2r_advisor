@@ -317,11 +317,13 @@ you buy it.*
   - the forecast shows **purchase quality**: which slot of which refresh
     becomes **UNIQUE / SET / rare** (the whole point of the simulator);
   - "Plan buys" — the **buy planner** (a port of the site's
-    search.worker, same 2M-state search budget): finds the shortest
-    route of refreshes and pool-shifting buys to a target item (any
-    unique/set/rare, or a specific base + quality + tier). Narrow
-    targets (e.g. Unique + elite) are genuinely rare — a run can take
-    a minute and still report only a handful of routes;
+    search.worker): finds the shortest route of refreshes and
+    pool-shifting buys to a target item (any unique/set/rare, or a
+    specific base + quality + tier). The state **budget** is editable
+    (up to the site's own 2M); once routes exist the search returns
+    fast, and only an empty-handed hunt for genuinely rare targets
+    (e.g. Unique + elite) burns the full budget — that run can take a
+    minute and is cancellable with live progress;
   - "Execute plan" — the **auto-clicker**: clicks the chosen plan through
     in game (refresh = button click, buy = right-click on the cell) with
     a focus countdown and live progress. Grid cells calibrate
