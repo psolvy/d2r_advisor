@@ -15,24 +15,7 @@ def _num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
-def _render(tmpl, params):
-    """Fill placeholders with successive params: numbers go into '#',
-    words into '[...]' segments (same contract as overlay._render_affix —
-    compare used to leave '[skill]' brackets raw)."""
-    if not isinstance(params, (list, tuple)):
-        params = [params]
-    out = tmpl
-    for p in params:
-        if _num(p) or (isinstance(p, str) and "→" in p):
-            i = out.find("#")
-            if i >= 0:
-                out = out[:i] + str(p) + out[i + 1:]
-        else:
-            i = out.find("[")
-            if i >= 0:
-                j = out.find("]", i)
-                out = out[:i] + str(p) + out[j + 1:] if j >= 0 else out
-    return out
+from advisor.render import render_affix as _render
 
 
 def _affix_map(item):
@@ -78,8 +61,10 @@ def _tooltip_stats(item):
     return out
 
 
-def diff_items(new_item, old_item, max_lines=16):
-    """[(text, color)] — gains first, then losses, then changes."""
+def diff_items(new_item, old_item, max_lines=16, label=""):
+    """[(text, color)] — gains first, then losses, then changes.
+    label distinguishes sections when there are two equipped items
+    ('vs equipped ring 1: …')."""
     new_a, old_a = _affix_map(new_item), _affix_map(old_item)
     gains, losses, changes = [], [], []
     def mark(sign, text):
@@ -133,5 +118,6 @@ def diff_items(new_item, old_item, max_lines=16):
         lines = lines[:max_lines] + [(f"… {len(lines) - max_lines} more",
                                       DIM)]
     old_name = old_item.get("name") or old_item.get("base") or "equipped"
-    header = [(f"vs equipped: {old_name}", "#e8e8e8")]
+    tag = f" {label}" if label else ""
+    header = [(f"vs equipped{tag}: {old_name}", "#e8e8e8")]
     return header + lines

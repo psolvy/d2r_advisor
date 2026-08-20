@@ -101,6 +101,10 @@ count_upcube: false
 
 # Terror Zone widget (tray -> Terror Zone). Needs a FREE community
 # API token: d2runewizard.com/integration or d2emu.com/terms.
+# Seconds to wait after hiding our own popup before capturing (raise on
+# slow machines if the old popup leaks into scans)
+scan_settle: 0.15
+
 tz_api_url: ""
 tz_api_token: ""
 # d2emu only: your account name (their API authenticates username+token)

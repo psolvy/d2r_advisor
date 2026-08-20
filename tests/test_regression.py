@@ -306,4 +306,101 @@ check("tabscan: lone stem is one glyph and thin (reads as '1')",
       _grp2 is not None and len(_grp2) == 1
       and _grp2[0][2] <= 0.45 * _grp2[0][3])
 
+# ------------------------------------------------------- settings write
+import tempfile as _tf
+from pathlib import Path as _P
+from advisor.settings_ui import write_config
+import yaml as _yaml
+
+_cfgp = _P(_tf.mkdtemp()) / "cfg.yaml"
+_cfgp.write_text('hotkey: f9   # scan key\n'
+                 'link_template: "https://x/y#frag"\n'
+                 'seedfinder:\n  scale: 1.5  # sf\n', encoding="utf-8")
+write_config({"hotkey": "f8", "brand_new": True},
+             {"scale": 2.0, "new_sf": 7}, path=_cfgp)
+_cfg = _yaml.safe_load(_cfgp.read_text(encoding="utf-8"))
+check("settings: rewrite + append missing keys",
+      _cfg["hotkey"] == "f8" and _cfg["brand_new"] is True
+      and _cfg["seedfinder"]["scale"] == 2.0
+      and _cfg["seedfinder"]["new_sf"] == 7)
+check("settings: '#' inside a value survives",
+      _cfg["link_template"] == "https://x/y#frag")
+check("settings: comments preserved",
+      "# scan key" in _cfgp.read_text(encoding="utf-8"))
+
+# ------------------------------------------------------------- updater
+from advisor.updater import _ver_tuple
+
+check("updater: version ordering",
+      _ver_tuple("v1.4.10") > _ver_tuple("1.4.9")
+      and _ver_tuple("latest") == (0,))
+
+# ------------------------------------------------------------- goals
+import advisor.goals as _G
+
+_G.STATE_FILE = _P(_tf.mkdtemp()) / "goals.json"
+_G.set_counts({"Tal": 4, "Eth": 1, "Ral": 1, "Ort": 1, "Amn": 3})
+_G.set_gem_counts({"Chipped Ruby": 2, "Chipped Topaz": 5,
+                   "Chipped Amethyst": 1})
+check("goals: base requirement", _G.base_requirement("Spirit")
+      == "4os sword/shield")
+check("goals: cube plan empty when pool covers it",
+      _G.cube_plan("Ancients' Pledge") == [])
+_plan = _G.cube_plan("Lore")  # needs Ort + Sol; Sol must be cubed up
+check("goals: cube plan lists executable steps",
+      _plan and any("→ Sol" in s for s in _plan), _plan)
+_shop = _G.shopping_list()
+check("goals: shopping list aggregates gaps",
+      any(r == "Sol" for r, _m, _b in _shop))
+_st, _ok2, _msg = _G.mark_made("Stealth")
+check("goals: mark_made spends runes", _ok2 and
+      _G.load_state()["runes"].get("Eth") is None)
+_st, _ok3, _msg3 = _G.mark_made("Stealth")
+check("goals: incomplete goal refused", not _ok3 and "Eth" in _msg3)
+_st, _goal = _G.undo_made()
+check("goals: undo restores runes", _goal == "Stealth"
+      and _st["runes"].get("Eth") == 1)
+check("goals: unknown runeword is not complete",
+      any(g == "Nonexistent Word" and not c
+          for g, _r, c in _G.goal_progress(
+              {"runes": {}, "goals": ["Nonexistent Word"], "made": []})))
+_G.set_counts({"Nef": 1})
+_G.set_gem_counts({"Perfect Ruby": 1})
+_ready = [r for r in _G.craftable_recipes() if r[4] and r[5]]
+check("goals: craft recipes check rune AND gem",
+      any(r[0] == "Blood Gloves" for r in _ready)
+      and all("Sapphire" not in r[2] for r in _ready))
+
+# ------------------------------------------------------------ compare
+from advisor.compare import diff_items
+
+_cmp = diff_items(
+    {"name": "A", "tooltip": ["A", "Defense: 500"],
+     "affixes": [("+# to [skill]", [2, "Fireball"])]},
+    {"name": "B", "tooltip": ["B", "Defense: 300"],
+     "affixes": [("+# to [skill]", [3, "Frozen Orb"]),
+                 ("+# to [skill]", [1, "Meteor"])]})
+_txt = "\n".join(t for t, _c in _cmp)
+check("compare: defense diffed from tooltip", "Defense: 300→500" in _txt)
+check("compare: same-template different skills kept",
+      "Frozen Orb" in _txt and "Meteor" in _txt and "Fireball" in _txt)
+
+# ------------------------------------------------------- capture guard
+from advisor import capture_guard as _cg
+
+check("guard: exclusive acquire", _cg.acquire("t1") and not _cg.acquire("t2"))
+_cg.release("wrong-owner")
+check("guard: owner-checked release keeps the hold",
+      _cg.busy_with() == "t1")
+_cg.release("t1")
+check("guard: released", _cg.busy_with() is None and _cg.acquire("t3"))
+_cg.release()
+
+# -------------------------------------------------------------- render
+from advisor.render import render_affix
+
+check("render: numbers and skills fill placeholders",
+      render_affix("+# to [skill]", [2, "Meteor"]) == "+2 to Meteor"
+      and render_affix("Adds #-# Damage", [1, 3]) == "Adds 1-3 Damage")
+
 print(f"\nALL {ok} REGRESSION TESTS PASSED")

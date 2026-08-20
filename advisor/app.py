@@ -184,7 +184,7 @@ class App:
         try:
             # Give the just-hidden verdict popup time to leave the screen so
             # it isn't captured and OCR'd as part of the tooltip.
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             # Capture only the monitor under the cursor: multi-monitor virtual
             # desktops have a different origin than cursor coordinates, and
@@ -277,12 +277,23 @@ class App:
                 if flags.get("shop") and not item.get("affixes"):
                     extra = (gamble_advice(item, char_level=int(self.cfg.get("char_level") or 0))
                              or []) + extra
-                # Price check: clickable line for tradeable qualities.
+                # Price check: clickable line for tradeable qualities —
+                # runes and gems included (the most-traded items of all).
                 price_tmpl = (self.cfg.get("price_link_template") or "").strip()
-                if price_tmpl and item.get("quality") in (
-                        "Unique", "Set", "Runeword", "Rare", "Crafted"):
+                if price_tmpl:
+                    import re as _re
                     from urllib.parse import quote
-                    q = item.get("name") or item.get("base") or ""
+                    q = ""
+                    if item.get("quality") in ("Unique", "Set", "Runeword",
+                                               "Rare", "Crafted"):
+                        q = item.get("name") or item.get("base") or ""
+                    else:
+                        first = ((item.get("tooltip") or [""])[0]).strip()
+                        m = _re.match(r"([A-Za-z]+)\s+Rune\b", first, _re.I)
+                        if m:
+                            q = f"{m.group(1).title()} Rune"
+                        elif gem_advice(item):
+                            q = first
                     if q:
                         extra += [("💰 Price check", "#ffd94d",
                                    price_tmpl.replace("{query}", quote(q)))]
@@ -294,6 +305,13 @@ class App:
                 note = (note + " · tooltip detection was fuzzy").strip(" ·")
             if any("#" in t and p and p[0] == 0 for t, p in item.get("affixes") or []):
                 note = (note + " · ⚠ a value read as 0 — check the real number by eye").strip(" ·")
+            elif flags.get("low_conf"):
+                # tesseract's own word confidence on a digit-bearing line
+                note = (note + " · ⚠ low OCR confidence on: "
+                        + flags["low_conf"][0][:40]).strip(" ·")
+            if flags.get("unmet"):
+                note = (note + " · red requirement line — you can't equip "
+                               "this yet").strip(" ·")
 
             if self.cfg.get("debug"):
                 dump = {k: v for k, v in item.items() if k != "tooltip"}
@@ -372,7 +390,7 @@ class App:
                                       "is running"})
             return
         try:
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             # instant feedback AFTER the capture (so it isn't in the shot) —
@@ -522,7 +540,7 @@ class App:
                                       "is running"})
             return
         try:
-            time.sleep(0.15)
+            time.sleep(float(self.cfg.get("scan_settle", 0.15)))
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             from advisor.tooltip import find_compare_tooltips
@@ -579,7 +597,8 @@ class App:
             for k, old in enumerate(old_items):
                 if k:
                     extra.append((" ", "#9a9a9a"))  # section spacer
-                extra += diff_items(new_item, old, max_lines=per)
+                lbl = f"#{k + 1}" if len(old_items) > 1 else ""
+                extra += diff_items(new_item, old, max_lines=per, label=lbl)
             self.results.put({
                 "verdict": "compare",
                 "item": new_item,

@@ -47,7 +47,10 @@ def main():
     for path in files:
         with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-        rules = data.get("rules", [])
+        # expand shared-list refs exactly like the engine, so the affix
+        # names inside _common.yaml get linted too
+        from advisor.rules import expand_refs
+        rules = expand_refs(data.get("rules", []))
         problems = []
 
         def err(msg):

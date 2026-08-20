@@ -49,6 +49,7 @@ GENERAL = [
     ("link_template", "Link template ({query})", "str", None),
     ("price_link_template", "Price-check link ({query})", "str", None),
     ("compare_hotkey", "Gear-compare hotkey", "str", None),
+    ("scan_settle", "Capture settle delay (s)", "float", None),
     ("tz_api_url", "Terror Zone API url", "str", None),
     ("tz_api_token", "Terror Zone API token", "str", None),
     ("tz_api_user", "Terror Zone API username (d2emu)", "str", None),

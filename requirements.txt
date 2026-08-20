@@ -1,9 +1,11 @@
-opencv-python>=4.8
-numpy
-mss
-pytesseract
-rapidfuzz
-keyboard
-pyyaml
-Pillow
-pystray
+# Pinned so releases are reproducible — a transitive break used to ship
+# straight to users. Bump deliberately, run the test suite, release.
+opencv-python==5.0.0.93
+numpy==2.5.1
+mss==10.2.0
+pytesseract==0.3.13
+rapidfuzz==3.14.5
+keyboard==0.13.5
+pyyaml==6.0.3
+Pillow==12.3.0
+pystray==0.19.5

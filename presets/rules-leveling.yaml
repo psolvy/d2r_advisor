@@ -1,4 +1,4 @@
-﻿# PRESET: LEVELING / LADDER START (levels 1-75, first days of the season)
+# PRESET: LEVELING / LADDER START (levels 1-75, first days of the season)
 # Selected in config.yaml: preset: leveling
 #
 # Rules are checked top-down; the first match wins.
@@ -34,28 +34,7 @@ rules:
   - name: "Skiller (grand charm +1 to a skill tree)"
     when:
       base_any: ["Grand Charm"]
-      affix_any:
-        - {affix: "+# to Bow and Crossbow Skills (Amazon only)", min: 1}
-        - {affix: "+# to Passive and Magic Skills (Amazon only)", min: 1}
-        - {affix: "+# to Javelin and Spear Skills (Amazon only)", min: 1}
-        - {affix: "+# to Fire Skills (Sorceress only)", min: 1}
-        - {affix: "+# to Lightning Skills (Sorceress only)", min: 1}
-        - {affix: "+# to Cold Skills (Sorceress only)", min: 1}
-        - {affix: "+# to Curses (Necromancer only)", min: 1}
-        - {affix: "+# to Poison and Bone Skills (Necromancer only)", min: 1}
-        - {affix: "+# to Summoning Skills (Necromancer only)", min: 1}
-        - {affix: "+# to Combat Skills (Paladin only)", min: 1}
-        - {affix: "+# to Offensive Auras (Paladin only)", min: 1}
-        - {affix: "+# to Defensive Auras (Paladin only)", min: 1}
-        - {affix: "+# to Combat Skills (Barbarian only)", min: 1}
-        - {affix: "+# to Combat Masteries (Barbarian only)", min: 1}
-        - {affix: "+# to Warcries (Barbarian only)", min: 1}
-        - {affix: "+# to Summoning Skills (Druid only)", min: 1}
-        - {affix: "+# to Shapeshifting Skills (Druid only)", min: 1}
-        - {affix: "+# to Elemental Skills (Druid only)", min: 1}
-        - {affix: "+# to Traps (Assassin only)", min: 1}
-        - {affix: "+# to Martial Arts (Assassin only)", min: 1}
-        - {affix: "+# to Shadow Disciplines (Assassin only)", min: 1}
+      affix_any_ref: {list: skill_trees, min: 1}
     verdict: keep
     note: "Skiller! Currency at season start"
 
@@ -116,35 +95,7 @@ rules:
   - name: "Amulet +2 to skills (class or tree)"
     when:
       slot: Amulet
-      affix_any:
-        - {affix: "+# to Amazon Skill Levels", min: 2}
-        - {affix: "+# to Assassin Skill Levels", min: 2}
-        - {affix: "+#  to Barbarian Skill Levels", min: 2}
-        - {affix: "+# to Druid Skill Levels", min: 2}
-        - {affix: "+# to Necromancer Skill Levels", min: 2}
-        - {affix: "+# to Paladin Skill Levels", min: 2}
-        - {affix: "+# to Sorceress Skill Levels", min: 2}
-        - {affix: "+# to Bow and Crossbow Skills (Amazon only)", min: 2}
-        - {affix: "+# to Passive and Magic Skills (Amazon only)", min: 2}
-        - {affix: "+# to Javelin and Spear Skills (Amazon only)", min: 2}
-        - {affix: "+# to Fire Skills (Sorceress only)", min: 2}
-        - {affix: "+# to Lightning Skills (Sorceress only)", min: 2}
-        - {affix: "+# to Cold Skills (Sorceress only)", min: 2}
-        - {affix: "+# to Curses (Necromancer only)", min: 2}
-        - {affix: "+# to Poison and Bone Skills (Necromancer only)", min: 2}
-        - {affix: "+# to Summoning Skills (Necromancer only)", min: 2}
-        - {affix: "+# to Combat Skills (Paladin only)", min: 2}
-        - {affix: "+# to Offensive Auras (Paladin only)", min: 2}
-        - {affix: "+# to Defensive Auras (Paladin only)", min: 2}
-        - {affix: "+# to Combat Skills (Barbarian only)", min: 2}
-        - {affix: "+# to Combat Masteries (Barbarian only)", min: 2}
-        - {affix: "+# to Warcries (Barbarian only)", min: 2}
-        - {affix: "+# to Summoning Skills (Druid only)", min: 2}
-        - {affix: "+# to Shapeshifting Skills (Druid only)", min: 2}
-        - {affix: "+# to Elemental Skills (Druid only)", min: 2}
-        - {affix: "+# to Traps (Assassin only)", min: 2}
-        - {affix: "+# to Martial Arts (Assassin only)", min: 2}
-        - {affix: "+# to Shadow Disciplines (Assassin only)", min: 2}
+      affix_any_ref: {list: class_and_tree_skills, min: 2}
     verdict: keep
     note: "+2 amulet (class or skill tree) is expensive; with life/FCR — very"
 

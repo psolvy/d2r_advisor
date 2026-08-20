@@ -31,20 +31,7 @@ QUALITY_COLORS = {
 MAX_STAT_LINES = 14
 
 
-def _render_affix(tmpl, params):
-    """Substitute parsed params back into an affix template for display."""
-    out = tmpl
-    for p in params or []:
-        token = "#" if isinstance(p, (int, float)) else "["
-        i = out.find(token)
-        if i < 0:
-            continue
-        if token == "#":
-            out = out[:i] + str(p) + out[i + 1:]
-        else:
-            j = out.find("]", i)
-            out = out[:i] + str(p) + out[j + 1:] if j >= 0 else out
-    return out
+from advisor.render import render_affix as _render_affix
 
 
 class Overlay:
@@ -230,6 +217,11 @@ class Overlay:
             self._label(win, bg, note, size=10, fg="#cccccc", italic=True, pady=(2, 8))
         else:
             tk.Label(win, text="", bg=bg).pack(pady=(0, self._fs(6)))
+        if item:
+            # the copy affordance was invisible — nothing hinted at it
+            tk.Label(win, text="right-click: copy for trade chat · click: "
+                     "close", font=("Segoe UI", self._fs(8)), fg="#777777",
+                     bg=bg).pack(pady=(0, self._fs(4)))
 
         win.update_idletasks()
         w, h = win.winfo_reqwidth(), win.winfo_reqheight()
@@ -247,6 +239,7 @@ class Overlay:
             x, y = sx + (sw - w) // 2, sy + 80
         win.geometry(f"+{x}+{y}")
         win.bind("<Button-1>", lambda e: self.hide())
+        win.bind("<Escape>", lambda e: self.hide())
         # Right-click anywhere on the popup: copy trade-ready item text.
         self._clip = f"[{title}] " + self._clip_text(verdict, item, ranges) if item else ""
         win.bind("<Button-3>", self._copy_clip)

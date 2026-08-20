@@ -23,19 +23,7 @@ def _load():
     return _data
 
 
-def _render(tmpl, params):
-    out = tmpl
-    for p in params or []:
-        token = "#" if isinstance(p, (int, float)) else "["
-        i = out.find(token)
-        if i < 0:
-            continue
-        if token == "#":
-            out = out[:i] + str(p) + out[i + 1:]
-        else:
-            j = out.find("]", i)
-            out = out[:i] + str(p) + out[j + 1:] if j >= 0 else out
-    return out
+from advisor.render import render_affix as _render
 
 
 def magic_affix_ranges(item):
