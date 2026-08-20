@@ -129,16 +129,22 @@ class GoalsWindow(tk.Toplevel):
         self.status.grid(row=6, column=0, columnspan=3, sticky="ew",
                          padx=pad)
 
+        # aggregated shopping list + made log across the tracked goals
+        self.shop_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
+                                 highlightbackground=LINE)
+        self.shop_box.grid(row=7, column=0, columnspan=3, sticky="ew",
+                           padx=pad, pady=(int(6 * s), 0))
+
         # craft stock from the scanned gems
         self.craft_box = tk.Frame(self, bg=PANEL, highlightthickness=1,
                                   highlightbackground=LINE)
-        self.craft_box.grid(row=7, column=0, columnspan=3, sticky="ew",
+        self.craft_box.grid(row=8, column=0, columnspan=3, sticky="ew",
                             padx=pad, pady=(int(6 * s), 0))
 
         # everything makeable RIGHT NOW from the pools
         self.make_tv = ttk.Treeview(self, show="tree", style="SG.Treeview",
                                     selectmode="browse", height=6)
-        self.make_tv.grid(row=8, column=0, columnspan=3, sticky="ew",
+        self.make_tv.grid(row=9, column=0, columnspan=3, sticky="ew",
                           padx=pad, pady=(int(6 * s), pad))
         self.make_tv.tag_configure("hot", foreground=GREEN)
         self.make_tv.tag_configure("dim", foreground=DIM)
@@ -168,6 +174,38 @@ class GoalsWindow(tk.Toplevel):
             self.tv.selection_set(keep)
         self._pick()
         allow_up = bool(self.cfg.get("count_upcube"))
+        if hasattr(self, "shop_box"):
+            for w in self.shop_box.winfo_children():
+                w.destroy()
+            shop = goals.shopping_list()
+            if shop:
+                text = "  ".join(
+                    f"{r}×{m}" + (f" (blocks {b})" if b > 1 else "")
+                    for r, m, b in shop[:10])
+                tk.Label(self.shop_box, text="STILL MISSING (all goals): "
+                         + text, bg=PANEL, fg=GOLD, font=self.f_sub,
+                         anchor="w", wraplength=int(560 * self.s),
+                         justify="left").pack(fill="x", padx=8, pady=(4, 2))
+            st_now = goals.load_state()
+            made = st_now.get("made") or []
+            if made:
+                last = made[-1]
+                last_name = (last.get("goal")
+                             if isinstance(last, dict) else last)
+                row_ = tk.Frame(self.shop_box, bg=PANEL)
+                row_.pack(fill="x", padx=8, pady=(0, 4))
+                tk.Label(row_, text=f"made this season: {len(made)} · "
+                         f"last: {last_name}", bg=PANEL, fg=DIM,
+                         font=self.f_sub).pack(side="left")
+                if isinstance(last, dict):
+                    tk.Button(row_, text="Undo last", bg=FIELD, fg=FG,
+                              relief="flat", font=self.f_sub, padx=6,
+                              command=self._undo_made).pack(side="right")
+            if not shop and not made:
+                tk.Label(self.shop_box, text="STILL MISSING: nothing — all "
+                         "tracked goals are ready or done ★", bg=PANEL,
+                         fg=GREEN, font=self.f_sub, anchor="w"
+                         ).pack(fill="x", padx=8, pady=4)
         if hasattr(self, "craft_box"):
             for w in self.craft_box.winfo_children():
                 w.destroy()
@@ -180,6 +218,26 @@ class GoalsWindow(tk.Toplevel):
                          bg=PANEL, fg=GREEN if ok else DIM,
                          font=self.f_sub, anchor="w"
                          ).pack(fill="x", padx=8, pady=1)
+            # real recipes (cube.json), rune AND gem checked
+            ready = [r for r in goals.craftable_recipes(allow_up)
+                     if r[4] and r[5]]
+            if ready:
+                tk.Label(self.craft_box,
+                         text="READY CRAFTS (rune + gem in stock):",
+                         bg=PANEL, fg=GOLD, font=self.f_sub
+                         ).pack(anchor="w", padx=8, pady=(4, 0))
+                for res, rune, gem, bases, _ro, _go in ready[:6]:
+                    tk.Label(self.craft_box,
+                             text=f"✓ {res} — {rune} + {gem} + magic "
+                                  f"{bases}", bg=PANEL, fg=GREEN,
+                             font=self.f_sub, anchor="w",
+                             wraplength=int(560 * self.s), justify="left"
+                             ).pack(fill="x", padx=8, pady=1)
+                if len(ready) > 6:
+                    tk.Label(self.craft_box,
+                             text=f"… {len(ready) - 6} more ready",
+                             bg=PANEL, fg=DIM, font=self.f_sub, anchor="w"
+                             ).pack(fill="x", padx=8)
         if hasattr(self, "make_tv"):
             tv = self.make_tv
             tv.delete(*tv.get_children())
@@ -205,8 +263,10 @@ class GoalsWindow(tk.Toplevel):
         goal = sel[0]
         rows = next((r for g, r, _c in goals.goal_progress() if g == goal),
                     [])
+        chips = tk.Frame(self.rune_row, bg=BG)
+        chips.pack(side="top", anchor="w")
         for rune, need, have in rows:
-            cell = tk.Frame(self.rune_row, bg=PANEL, highlightthickness=1,
+            cell = tk.Frame(chips, bg=PANEL, highlightthickness=1,
                             highlightbackground=LINE)
             cell.pack(side="left", padx=3)
             color = GREEN if have >= need else RED
@@ -218,6 +278,32 @@ class GoalsWindow(tk.Toplevel):
                           command=lambda r=rune, dd=d: (
                               goals.adjust_rune(r, dd), self.refresh())
                           ).pack(side="left", padx=1, pady=2)
+        # base the runeword needs + an executable cube chain for the gaps
+        info_bits = []
+        base_req = goals.base_requirement(goal)
+        if base_req:
+            info_bits.append(f"base: {base_req}")
+        complete = next((c for g, _r, c in goals.goal_progress()
+                         if g == goal), False)
+        if not complete:
+            plan = goals.cube_plan(goal)
+            if plan:
+                info_bits.append("cube: " + ";  ".join(plan[:4])
+                                 + ("…" if len(plan) > 4 else ""))
+            elif plan is None and rows and not rows[0][0].endswith("?"):
+                info_bits.append("cube-ups can't cover the gap yet")
+        if info_bits:
+            tk.Label(self.rune_row, text="   ".join(info_bits), bg=BG,
+                     fg=DIM, font=self.f_sub, anchor="w", justify="left",
+                     wraplength=int(560 * self.s)
+                     ).pack(side="top", anchor="w", pady=(2, 0))
+
+    def _undo_made(self):
+        _st, goal = goals.undo_made()
+        if goal:
+            self.status.configure(text=f"↩ undid: {goal} — runes restored",
+                                  fg=GREEN)
+        self.refresh()
 
     def _add_pick(self, name):
         self.add_var.set(name)
