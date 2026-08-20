@@ -82,11 +82,12 @@ seedfinder:
   version: row
   npc: gheed
   difficulty: Hell
-  depth: 400         # planner search depth — the DBM site's default;
-                     # an empty result auto-deepens 400→1000→2500→5000
-                     # with a notice, so keep this LOW for fast plans
-  shift_buys: 4      # planner junk-buys allowed (site default; deepens
-                     # together with depth)
+  depth: 1000        # planner search depth (the DBM site's slider max;
+                     # play-tested as the best results/second point).
+                     # An empty result auto-deepens 1000→2500→5000 with
+                     # a notice, so it never needs raising by hand
+  shift_buys: 5      # planner junk-buys allowed (play-tested with the
+                     # depth above; deepens together with it)
   budget: 200000     # planner SEARCH size in simulated store states —
                      # not gold! ~10 s worst case; raise toward 2000000
                      # (the DBM site's own budget, ~1.5 min) when a rare

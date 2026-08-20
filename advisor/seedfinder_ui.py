@@ -74,10 +74,10 @@ DIFFICULTIES = ["Normal", "Nightmare", "Hell"]
 RARITY_CHOICES = [("set/unique/rare (default)", None),
                   ("Unique only", Q_UNIQUE), ("Set only", Q_SET),
                   ("Rare only", Q_RARE), ("Any quality", -1)]
-# planner auto-deepening ladder: starts at the DBM site's default
-# (depth 400 / buys 4), climbs past its slider max (1000/8) only when a
-# rung searched its WHOLE tree and found nothing
-_PLAN_RUNGS = [(400, 4), (1000, 6), (2500, 8), (5000, 10)]
+# planner auto-deepening ladder: starts at the play-tested default
+# (depth 1000 / buys 5 — the site's slider max), climbs beyond it only
+# when a rung searched its WHOLE tree and found nothing
+_PLAN_RUNGS = [(1000, 5), (2500, 8), (5000, 10)]
 TIER_CHOICES = [("any tier", -1), ("normal", 0),
                 ("exceptional", 1), ("elite", 2)]
 
@@ -298,8 +298,8 @@ class SeedFinder(tk.Toplevel):
                                 if d.lower() == str(sf.get("difficulty",
                                                            "Hell")).lower()),
                                "Hell"),
-            "depth": sf.get("depth", 400),
-            "shift_buys": sf.get("shift_buys", 4),
+            "depth": sf.get("depth", 1000),
+            "shift_buys": sf.get("shift_buys", 5),
             "budget": sf.get("budget", 200_000),
             "refreshes": sf.get("refreshes", 30),
             "max_offset": sf.get("max_offset", 2000000),
@@ -1999,11 +1999,20 @@ class SeedFinder(tk.Toplevel):
                     # Stop kills the pool — re-warm it for the next search
                     threading.Thread(target=self._prewarm, daemon=True).start()
                     if not found:
-                        self.log("no seed matched — recheck items / level / "
-                                 "platform (or the offer got refreshed mid-scan)")
+                        # the DBM site's own three suspects, in its order
+                        self.log("no seed matched — the usual suspects:")
+                        self.log("  · the board doesn't match the window — "
+                                 "compare item by item, especially top-left")
+                        self.log("  · wrong character level, version or "
+                                 "platform (console builds use a different "
+                                 "pool order — try yours)")
+                        self.log("  · this isn't the FIRST window of the game "
+                                 "session (you refreshed or gambled before) — "
+                                 "start a fresh game and enter that window")
                     if len(found) > 1:
-                        self.log(f"{len(found)} seeds match — refresh once in "
-                                 "game, F10, search again to disambiguate")
+                        self.log(f"{len(found)} seeds match — your items are "
+                                 "common; add 2-3 more items (or refresh once "
+                                 "in game, F10, search again) to pin one")
                     if found:
                         self._clear_session("new seed")
                     for sd in found:

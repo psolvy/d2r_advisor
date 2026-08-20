@@ -301,8 +301,47 @@ check("finder: planner budget is user-set with the soft cap",
       and "node_cap=400_000" not in _sf_src
       and '"budget": sf.get("budget", 200_000)' in _sf_src)
 check("finder: empty plans auto-deepen up the ladder",
-      "_PLAN_RUNGS = [(400, 4), (1000, 6), (2500, 8), (5000, 10)]" in _sf_src
+      "_PLAN_RUNGS = [(1000, 5), (2500, 8), (5000, 10)]" in _sf_src
       and "auto-deepening to" in _sf_src)
+check("finder: no-match prints the site's three suspects",
+      _sf_src.count("  · ") >= 3
+      and "the usual suspects" in _sf_src
+      and "FIRST window of the game" in _sf_src)
+
+# Tuple-arity guard: a helper whose return grew a field while a call site
+# kept the old unpack ships a ValueError on the FIRST real use — exactly
+# how scan_tooltip lost every OCR scan in 1.5.0 (_ocr_data returned 3,
+# the caller unpacked 4). Static, so CI catches it without Tesseract.
+import ast as _ast
+
+_arity_bad = []
+for _path in sorted((ROOT / "advisor").glob("*.py")) + sorted(
+        (ROOT / "d2rlootreader").glob("*.py")):
+    _tree = _ast.parse(_path.read_text(encoding="utf-8"))
+    _rets = {}
+    for _fn in _ast.walk(_tree):
+        if isinstance(_fn, _ast.FunctionDef):
+            _sizes = {len(r.value.elts) for r in _ast.walk(_fn)
+                      if isinstance(r, _ast.Return)
+                      and isinstance(r.value, _ast.Tuple)}
+            _others = [r for r in _ast.walk(_fn) if isinstance(r, _ast.Return)
+                       and not isinstance(r.value, _ast.Tuple)]
+            if len(_sizes) == 1 and not _others:
+                _rets[_fn.name] = _sizes.pop()
+    for _node in _ast.walk(_tree):
+        if not isinstance(_node, _ast.Assign) or len(_node.targets) != 1:
+            continue
+        _tgt, _val = _node.targets[0], _node.value
+        if not isinstance(_tgt, _ast.Tuple) or not isinstance(_val, _ast.Call):
+            continue
+        _name = getattr(_val.func, "id", None) or getattr(_val.func, "attr",
+                                                          None)
+        _want = _rets.get(_name)
+        if _want is not None and len(_tgt.elts) != _want:
+            _arity_bad.append(f"{_path.name}:{_node.lineno} {_name}() returns "
+                              f"{_want}, unpacked into {len(_tgt.elts)}")
+check("no call site unpacks the wrong number of return values",
+      not _arity_bad, "; ".join(_arity_bad))
 
 # shipped defaults must match the DBM site's own (trustworthy out of the
 # box: depth 400 / buys 4 / budget 2M / broad target) and the in-code
@@ -311,14 +350,14 @@ import yaml as _yaml
 with open(ROOT / "config.yaml", encoding="utf-8") as _f:
     _cfg = _yaml.safe_load(_f)
 _sfd = _cfg.get("seedfinder") or {}
-check("config: planner defaults are fast and honest",
-      _sfd.get("depth") == 400 and _sfd.get("shift_buys") == 4
+check("config: planner defaults are the play-tested ones",
+      _sfd.get("depth") == 1000 and _sfd.get("shift_buys") == 5
       and _sfd.get("budget") == 200_000
       and _sfd.get("target_rarity") == "unique"
       and _sfd.get("target_tier") == "any")
 check("config: code fallbacks match config.yaml",
-      'sf.get("depth", 400)' in _sf_src
-      and 'sf.get("shift_buys", 4)' in _sf_src)
+      'sf.get("depth", 1000)' in _sf_src
+      and 'sf.get("shift_buys", 5)' in _sf_src)
 check("finder: only a new search wipes the seed field",
       _sf_src.count("candidates=True, seed=True") == 1
       and "if seed and self.seed_var.get().strip():" in _sf_src)

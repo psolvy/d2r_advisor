@@ -57,7 +57,9 @@ def _clean_line(line: str) -> str:
 
 
 def _ocr_data(rgb, config):
-    """OCR returning (lines, boxes): cleaned text lines with their pixel boxes."""
+    """OCR returning (lines, boxes, confs, raw): cleaned text lines, their
+    pixel boxes and the mean word confidence per line (tesseract's own
+    doubt, used to flag digits worth an eye-check)."""
     data = pytesseract.image_to_data(
         rgb, lang="d2r", config=config, output_type=pytesseract.Output.DICT
     )
@@ -71,14 +73,19 @@ def _ocr_data(rgb, config):
         x, y = data["left"][i], data["top"][i]
         x1, y1 = x + data["width"][i], y + data["height"][i]
         if key not in grouped:
-            grouped[key] = {"words": [], "x0": x, "y0": y, "x1": x1, "y1": y1}
+            grouped[key] = {"words": [], "confs": [], "x0": x, "y0": y,
+                            "x1": x1, "y1": y1}
             order.append(key)
         g = grouped[key]
         g["words"].append(word)
+        try:
+            g["confs"].append(float(data["conf"][i]))
+        except (TypeError, ValueError):
+            pass
         g["x0"], g["y0"] = min(g["x0"], x), min(g["y0"], y)
         g["x1"], g["y1"] = max(g["x1"], x1), max(g["y1"], y1)
 
-    lines, boxes, raw = [], [], []
+    lines, boxes, confs, raw = [], [], [], []
     for key in order:
         g = grouped[key]
         raw.append(" ".join(g["words"]))
@@ -86,7 +93,9 @@ def _ocr_data(rgb, config):
         if line and not _is_junk(line):
             lines.append(line)
             boxes.append((g["x0"], g["y0"], g["x1"] - g["x0"], g["y1"] - g["y0"]))
-    return lines, boxes, "\n".join(raw)
+            ok = [c for c in g["confs"] if c >= 0]
+            confs.append(sum(ok) / len(ok) if ok else 100.0)
+    return lines, boxes, confs, "\n".join(raw)
 
 
 def _prepare(crop_bgr):
