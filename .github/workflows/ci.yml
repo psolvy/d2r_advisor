@@ -44,3 +44,15 @@ jobs:
         run: python tests/test_vision.py
         env:
           PYTHONIOENCODING: utf-8
+
+  syntax-floor:
+    # README promises Python 3.9+ — two PEP 701 f-strings once broke
+    # import on <3.12 and the 3.12/3.13 matrix never noticed.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Compile all modules under 3.9
+        run: python -m compileall -q advisor d2rlootreader main.py

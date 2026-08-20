@@ -109,6 +109,11 @@ def resolve_rules_file(cfg):
     return ROOT / "rules.yaml"
 
 
+def _dbg_prune(dbg_dir):
+    from advisor.dbg import prune
+    prune(dbg_dir)
+
+
 APP_NAME = "D2R Item Advisor"
 
 
@@ -189,10 +194,12 @@ class App:
                 crop, box = fallback_region(img, local_cursor)
                 used_fallback = True
 
-            stamp = datetime.now().strftime("%H%M%S")
+            from advisor.dbg import stamp as _stamp, prune as _prune
+            stamp = _stamp()
             if self.cfg.get("debug"):
                 dbg = ROOT / "debug"
                 dbg.mkdir(exist_ok=True)
+                _dbg_prune(dbg)
                 cv2.imwrite(str(dbg / f"{stamp}_full.png"), img)
                 cv2.imwrite(str(dbg / f"{stamp}_crop.png"), crop)
 
@@ -209,6 +216,7 @@ class App:
                 # no annotations (they poison offline tuning)
                 dbg = ROOT / "debug"
                 dbg.mkdir(exist_ok=True)
+                _dbg_prune(dbg)
                 cx, cy = local_cursor
                 cv2.imwrite(str(dbg / f"{stamp}_scanfail_{cx}x{cy}_full.png"),
                             img)
@@ -303,6 +311,8 @@ class App:
 
     def log_history(self, verdict, item, rule_name):
         """Append the scan to history.log (one JSON object per line)."""
+        from advisor.dbg import rotate
+        rotate(ROOT / "history.log")
         if not self.cfg.get("history", True):
             return
         try:
@@ -380,7 +390,9 @@ class App:
                 # truth for fixing any misread remotely
                 dbg = ROOT / "debug"
                 dbg.mkdir(exist_ok=True)
-                debug_out = dbg / f"{datetime.now():%H%M%S}_gamble_grid.png"
+                _dbg_prune(dbg)
+                from advisor.dbg import stamp as _stamp
+                debug_out = dbg / f"{_stamp()}_gamble_grid.png"
                 entries = scan_gamble_icons(img, screen_rect,
                                             debug_out=debug_out, diag=diag)
             except ValueError as e:
@@ -392,7 +404,9 @@ class App:
                 try:
                     dbg = ROOT / "debug"
                     dbg.mkdir(exist_ok=True)
-                    stamp = f"{datetime.now():%H%M%S}"
+                    _dbg_prune(dbg)
+                    from advisor.dbg import stamp as _stamp
+                    stamp = _stamp()
                     cv2.imwrite(str(dbg / f"{stamp}_gamble_fail_frame.png"), img)
                     with open(dbg / f"{stamp}_gamble_fail.txt", "w",
                               encoding="utf-8") as f:
@@ -515,7 +529,9 @@ class App:
             def dump(reason):
                 dbg = ROOT / "debug"
                 dbg.mkdir(exist_ok=True)
-                stamp = datetime.now().strftime("%H%M%S")
+                _dbg_prune(dbg)
+                from advisor.dbg import stamp as _stamp, prune as _prune
+                stamp = _stamp()
                 cv2.imwrite(str(dbg / f"{stamp}_cmp_full.png"), img)
                 if hov is not None:
                     cv2.imwrite(str(dbg / f"{stamp}_cmp_hovered.png"), hov)

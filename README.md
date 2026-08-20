@@ -3,7 +3,7 @@
 [![CI](https://github.com/psolvy/d2r_advisor/actions/workflows/ci.yml/badge.svg)](https://github.com/psolvy/d2r_advisor/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-Hover an item in Diablo II: Resurrected, press **F8** — a verdict pops up
+Hover an item in Diablo II: Resurrected, press **F9** — a verdict pops up
 next to the cursor: **KEEP / CHECK / TRASH** (plus the recognized item and
 the rule that fired).
 
@@ -44,7 +44,7 @@ its roll range — clickable name opens the item's page.*
 - **English game client** (the OCR model is trained on the English D2R font)
 - In game settings: **Options → Interface → Large Font Mode = ON**
   (large tooltip font — greatly improves recognition accuracy)
-- **Tesseract OCR** — needed only for the tooltip verdicts (F8/F9), every
+- **Tesseract OCR** — needed only for the tooltip verdicts (F9), every
   other feature works without it:
   `winget install UB-Mannheim.TesseractOCR` (or the installer from
   https://github.com/UB-Mannheim/tesseract/wiki)
@@ -80,7 +80,7 @@ mode — in exclusive fullscreen the overlay may not show above the game.
 
 1. Start the app (`d2r-advisor.exe` or `run.bat`).
 2. In game, open the inventory and hover an item so its tooltip shows.
-3. Press **F8** (keep the mouse on the item). The verdict appears in
+3. Press **F9** (keep the mouse on the item). The verdict appears in
    ~1-2 seconds.
 4. Click the verdict popup to dismiss it.
 
@@ -284,7 +284,7 @@ After a game patch, refresh the knowledge bases:
 ## If recognition is poor
 
 1. Enable Large Font Mode (mandatory).
-2. Set `debug: true` in `config.yaml`, press F8 on the problematic item —
+2. Set `debug: true` in `config.yaml` (for the standalone exe, `config.yaml` and `debug/` live in the `_internal` folder next to `d2r-advisor.exe`), press F9 on the problematic item —
    `debug/` gets `*_full.png` and `*_crop.png`. If `_crop.png` is not the
    tooltip, the detector missed — share the images so it can be tuned.
 3. Tooltips over dark textures (equipped gear on the left) read worse —
@@ -292,7 +292,7 @@ After a game patch, refresh the knowledge bases:
 
 ## How it works
 
-`F8` → full-screen screenshot (mss) → dark tooltip rectangle search near
+`F9` → full-screen screenshot (mss) → dark tooltip rectangle search near
 the cursor (OpenCV) → D2R font OCR (Tesseract + the trained
 `d2r.traineddata` model) → stat parsing into JSON (fuzzy matching against
 the unique/set/affix database from

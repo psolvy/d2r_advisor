@@ -50,8 +50,8 @@ class GoalsWindow(tk.Toplevel):
                  font=("Segoe UI", int(13 * s), "bold")
                  ).grid(row=0, column=0, columnspan=3, sticky="w",
                         padx=pad, pady=(pad, int(4 * s)))
-        tk.Label(self, text="runes are collected from your scans "
-                            "automatically; use +/− to correct counts",
+        tk.Label(self, text="counts come from the tab scans below; "
+                            "use +/− to correct them by hand",
                  bg=BG, fg=DIM, font=self.f_sub
                  ).grid(row=1, column=0, columnspan=3, sticky="w", padx=pad)
 
@@ -359,8 +359,9 @@ class GoalsWindow(tk.Toplevel):
                 from pathlib import Path
                 dbg_dir = Path(__file__).resolve().parents[1] / "debug"
                 dbg_dir.mkdir(exist_ok=True)
-                dbg = dbg_dir / (datetime.now().strftime("%H%M%S")
-                                 + f"_tabscan_{what}.png")
+                from advisor.dbg import prune, stamp
+                prune(dbg_dir)
+                dbg = dbg_dir / (stamp() + f"_tabscan_{what}.png")
                 counts = scan_counted_tab(img, pts, names,
                                           screen_rect=rect,
                                           tesseract_cmd=tess,
