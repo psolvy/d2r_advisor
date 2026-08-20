@@ -38,6 +38,19 @@ from d2rlootreader.screen import capture_monitor_at
 
 IS_WINDOWS = sys.platform == "win32"
 
+_MUTEX = None  # keep a reference or Windows frees the handle
+
+
+def _claim_single_instance():
+    """Windows named mutex; False when another instance already holds it."""
+    global _MUTEX
+    try:
+        _MUTEX = ctypes.windll.kernel32.CreateMutexW(
+            None, False, "d2r-advisor-single-instance")
+        return ctypes.windll.kernel32.GetLastError() != 183  # ERROR_ALREADY_EXISTS
+    except Exception:
+        return True  # can't tell — don't block startup
+
 
 def load_config():
     cfg_path = ROOT / "config.yaml"
@@ -529,9 +542,25 @@ class App:
             self.busy.release()
 
     def on_compare_hotkey(self):
+        # Hide our own popup first — otherwise the previous verdict is
+        # captured and diffed as an "equipped" tooltip.
+        self.root.after(0, self.overlay.hide)
         threading.Thread(target=self.scan_compare, daemon=True).start()
 
     def on_hotkey(self):
+        # compare_hotkey is usually "shift+<hotkey>", and the keyboard lib
+        # fires the bare-key hotkey even with shift held — both handlers
+        # used to race for self.busy and compare silently lost half the
+        # time. Same guard as on_gamble_hotkey.
+        cmp_hk = str(self.cfg.get("compare_hotkey") or "").lower()
+        base_hk = str(self.cfg.get("hotkey", "f9")).lower()
+        if cmp_hk == f"shift+{base_hk}":
+            try:
+                import keyboard
+                if keyboard.is_pressed("shift"):
+                    return
+            except Exception:
+                pass
         # Hide our own popup first — otherwise it gets captured and OCR'd.
         self.root.after(0, self.overlay.hide)
         threading.Thread(target=self.scan, daemon=True).start()
@@ -638,7 +667,9 @@ class App:
 
     def _report_health(self, tray_icon):
         from advisor.health import health_report, summary_line
-        issues = health_report(self.cfg)
+        extra = [("error", "Hotkey failed to register", e)
+                 for e in getattr(self, "hotkey_errors", [])]
+        issues = health_report(self.cfg, extra=extra)
         for lv, title, detail in issues:
             mark = {"error": "ERROR", "warn": "warning", "ok": "note"}[lv]
             print(f"[{mark}] {title} — {detail}")
@@ -659,19 +690,39 @@ class App:
             print("WARNING: Tesseract not found — tooltip scans (hotkey "
                   "verdicts) are disabled. See Settings / README.")
 
-        import keyboard  # imported late: on some systems needs admin
+        # Refuse to run twice: two instances double every global hook and
+        # fight over config/history/log files.
+        if IS_WINDOWS and not _claim_single_instance():
+            print("Another instance is already running — exiting.")
+            return
 
         hotkey = self.cfg.get("hotkey", "f8")
-        keyboard.add_hotkey(hotkey, self.on_hotkey)
+        self.hotkey_errors = []
+
+        def _register(key, fn, what):
+            if not key:
+                return
+            try:
+                import keyboard  # late: on some systems needs admin
+                keyboard.add_hotkey(key, fn)
+            except Exception as e:
+                # a typo'd hotkey must not kill the whole app before the
+                # tray even exists — collect and surface via health
+                self.hotkey_errors.append(f"{what} '{key}': {e}")
+                print(f"WARNING: cannot register {what} hotkey '{key}': {e}")
+
+        _register(hotkey, self.on_hotkey, "scan")
         gamble_key = (self.cfg.get("gamble_hotkey") or "").strip()
-        if gamble_key:
-            keyboard.add_hotkey(gamble_key, self.on_gamble_hotkey)
+        _register(gamble_key, self.on_gamble_hotkey, "gamble")
         seed_key = (self.cfg.get("seed_hotkey") or "").strip()
-        if seed_key:
-            keyboard.add_hotkey(seed_key, self.open_finder)
+        # threaded: the first open imports a 2300-line module — done inline
+        # it stalls the keyboard hook thread for seconds
+        _register(seed_key,
+                  lambda: threading.Thread(target=self.open_finder,
+                                           daemon=True).start(),
+                  "seed finder")
         compare_key = (self.cfg.get("compare_hotkey") or "").strip()
-        if compare_key:
-            keyboard.add_hotkey(compare_key, self.on_compare_hotkey)
+        _register(compare_key, self.on_compare_hotkey, "compare")
         bits = [f"[{hotkey.upper()}] item verdict"]
         if compare_key:
             bits.append(f"[{compare_key.upper()}] compare vs equipped "
