@@ -89,7 +89,8 @@ def write_config(updates, sf_updates, path=None):
     """Rewrite values in place; comments and layout survive. Keys the file
     does not have yet are APPENDED — configs frozen by the updater's
     keep-list used to silently drop every new setting saved from the UI."""
-    path = path or ROOT / "config.yaml"
+    from advisor.paths import STATE_DIR
+    path = path or STATE_DIR / "config.yaml"
     lines = path.read_text(encoding="utf-8").splitlines()
     seen, sf_seen = set(), set()
     out, in_sf = [], False

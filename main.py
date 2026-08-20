@@ -11,9 +11,11 @@ import sys
 if getattr(sys, "frozen", False):
     # The exe is a WINDOWED build (tray app, no console): sys.stdout is
     # None there and every print() would crash — route it to a log file
-    # next to the exe (tray menu "Open log" shows it).
-    from pathlib import Path
-    _log = open(Path(sys.executable).parent / "advisor.log", "a",
+    # in the state dir (tray menu "Open log" shows it). Opening it next
+    # to the exe died instantly under Program Files (read-only).
+    from advisor.paths import STATE_DIR, migrate_legacy
+    migrate_legacy()  # move state older builds wrote into _internal
+    _log = open(STATE_DIR / "advisor.log", "a",
                 encoding="utf-8", buffering=1)
     sys.stdout = sys.stderr = _log
 

@@ -21,6 +21,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from advisor.paths import STATE_DIR  # mutable state (frozen: %LOCALAPPDATA%)
+
 from advisor.ocr import scan_tooltip
 from advisor.overlay import Overlay
 from advisor.parse import parse_best
@@ -53,7 +55,7 @@ def _claim_single_instance():
 
 
 def load_config():
-    cfg_path = ROOT / "config.yaml"
+    cfg_path = STATE_DIR / "config.yaml"
     try:
         with open(cfg_path, encoding="utf-8") as f:
             return yaml.safe_load(f) or {}
@@ -106,7 +108,7 @@ def resolve_rules_file(cfg):
         if candidate.exists():
             return candidate
         print(f"WARNING: preset '{preset}' not found ({candidate}), falling back to rules.yaml")
-    return ROOT / "rules.yaml"
+    return STATE_DIR / "rules.yaml"
 
 
 def _dbg_prune(dbg_dir):
@@ -197,7 +199,7 @@ class App:
             from advisor.dbg import stamp as _stamp, prune as _prune
             stamp = _stamp()
             if self.cfg.get("debug"):
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
                 _dbg_prune(dbg)
                 cv2.imwrite(str(dbg / f"{stamp}_full.png"), img)
@@ -214,7 +216,7 @@ class App:
             if not item.get("tooltip"):
                 # always dump the RAW frame on failure — cursor in the name,
                 # no annotations (they poison offline tuning)
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
                 _dbg_prune(dbg)
                 cx, cy = local_cursor
@@ -295,7 +297,7 @@ class App:
 
             if self.cfg.get("debug"):
                 dump = {k: v for k, v in item.items() if k != "tooltip"}
-                with open(ROOT / "debug" / f"{stamp}_parse.txt", "w", encoding="utf-8") as f:
+                with open(STATE_DIR / "debug" / f"{stamp}_parse.txt", "w", encoding="utf-8") as f:
                     f.write(f"hint: {quality_hint}\nverdict: {verdict} ({rule_name})\n\n")
                     f.write("OCR lines:\n" + "\n".join(item.get("tooltip") or []) + "\n\n")
                     f.write("item:\n" + json.dumps(dump, ensure_ascii=False, indent=1, default=str))
@@ -312,7 +314,7 @@ class App:
     def log_history(self, verdict, item, rule_name):
         """Append the scan to history.log (one JSON object per line)."""
         from advisor.dbg import rotate
-        rotate(ROOT / "history.log")
+        rotate(STATE_DIR / "history.log")
         if not self.cfg.get("history", True):
             return
         try:
@@ -325,7 +327,7 @@ class App:
                 "base": item.get("base"),
                 "rule": rule_name,
             }
-            with open(ROOT / "history.log", "a", encoding="utf-8") as f:
+            with open(STATE_DIR / "history.log", "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         except OSError:
             pass
@@ -388,7 +390,7 @@ class App:
                 from advisor.gamble_vision import scan_gamble_icons
                 # always keep the recognition overlay — it is the ground
                 # truth for fixing any misread remotely
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
                 _dbg_prune(dbg)
                 from advisor.dbg import stamp as _stamp
@@ -402,7 +404,7 @@ class App:
             if entries is None:
                 # always dump a failure bundle — this is what fixes it remotely
                 try:
-                    dbg = ROOT / "debug"
+                    dbg = STATE_DIR / "debug"
                     dbg.mkdir(exist_ok=True)
                     _dbg_prune(dbg)
                     from advisor.dbg import stamp as _stamp
@@ -527,7 +529,7 @@ class App:
             hov, others = find_compare_tooltips(img, local_cursor)
 
             def dump(reason):
-                dbg = ROOT / "debug"
+                dbg = STATE_DIR / "debug"
                 dbg.mkdir(exist_ok=True)
                 _dbg_prune(dbg)
                 from advisor.dbg import stamp as _stamp, prune as _prune

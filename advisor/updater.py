@@ -145,6 +145,7 @@ def _update_frozen(asset_url, on_step):
         f"echo app exited, copying >> \"{log}\"\n"
         f"robocopy \"{new_dir}\" \"{exe_dir}\" /E /NFL /NDL /NJH /NJS "
         "/XF config.yaml gamble_clicks.json advisor.log rules.yaml "
+        "season_goals.json "
         f">> \"{log}\" 2>&1\n"
         f"echo robocopy exit %errorlevel% >> \"{log}\"\n"
         f"start \"\" \"{exe_dir / 'd2r-advisor.exe'}\"\n"

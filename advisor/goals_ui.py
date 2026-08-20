@@ -357,7 +357,8 @@ class GoalsWindow(tk.Toplevel):
                 tess = resolve_tesseract(self.cfg or load_config())
                 from datetime import datetime
                 from pathlib import Path
-                dbg_dir = Path(__file__).resolve().parents[1] / "debug"
+                from advisor.paths import STATE_DIR
+                dbg_dir = STATE_DIR / "debug"
                 dbg_dir.mkdir(exist_ok=True)
                 from advisor.dbg import prune, stamp
                 prune(dbg_dir)

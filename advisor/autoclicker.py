@@ -20,7 +20,8 @@ from pathlib import Path
 IS_WINDOWS = sys.platform == "win32"
 
 CALIB_KEYS = ("refresh", "cell00", "cell99")
-CALIB_FILE = Path(__file__).resolve().parents[1] / "gamble_clicks.json"
+from advisor.paths import STATE_DIR
+CALIB_FILE = STATE_DIR / "gamble_clicks.json"
 
 
 def load_calib():

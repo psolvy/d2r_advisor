@@ -12,7 +12,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STATE_FILE = ROOT / "season_goals.json"
+from advisor.paths import STATE_DIR
+STATE_FILE = STATE_DIR / "season_goals.json"
 
 # ladder-start classics — seeded on first run, editable in the UI
 DEFAULT_GOALS = ["Stealth", "Lore", "Rhyme", "Ancients' Pledge", "Smoke",

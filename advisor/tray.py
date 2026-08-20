@@ -57,7 +57,8 @@ def start_tray(app):
         else:
             # windowed exe: no console exists — show the log file instead
             import os
-            log = Path(sys.executable).parent / "advisor.log"
+            from advisor.paths import STATE_DIR
+            log = STATE_DIR / "advisor.log"
             if log.exists():
                 os.startfile(log)
 

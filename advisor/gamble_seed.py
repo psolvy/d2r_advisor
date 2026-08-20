@@ -877,7 +877,8 @@ def _search_full_node(level, platform, entries, on_progress=None, stop=None,
     import shutil as _shutil
     import threading as _th
     node_exe = _shutil.which("node") or "node"
-    err_path = here.parent / "debug" / "node_search.log"
+    from advisor.paths import STATE_DIR
+    err_path = STATE_DIR / "debug" / "node_search.log"
     err_path.parent.mkdir(exist_ok=True)
     hello_sent = [False]
 
