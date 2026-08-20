@@ -78,8 +78,25 @@ jobs:
         # Built from the checkout, which contains no third-party assets —
         # the exe downloads icons + fast-search workers on its first run.
         run: |
-          pip install pyinstaller
+          # pinned: PyInstaller majors move the onedir layout (_MEIPASS vs
+          # _internal), which silently relocates every state file
+          pip install pyinstaller==6.11.1
           python -m PyInstaller --noconfirm --clean --windowed --name d2r-advisor --icon assets/icon.ico --hidden-import pystray._win32 --add-data "config.yaml;." --add-data "rules.yaml;." --add-data "presets;presets" --add-data "assets;assets" --add-data "d2rlootreader/repository;d2rlootreader/repository" --add-data "d2rlootreader/tessdata;d2rlootreader/tessdata" --add-data "advisor/brute_host.js;advisor" --add-data "tools/setup_assets.py;tools" --add-data "tools/get_gamble_icons.py;tools" --add-data "tools/get_dbm_workers.py;tools" main.py
+
+      - name: Smoke-test the built exe
+        # a missing hidden import or data file crashes on launch — CD used
+        # to publish such a build anyway. The exe must stay alive 20 s and
+        # have written its log.
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist/d2r-advisor/d2r-advisor.exe" -PassThru
+          Start-Sleep -Seconds 20
+          $alive = Get-Process -Id $p.Id -ErrorAction SilentlyContinue
+          $log = Join-Path $env:LOCALAPPDATA "d2r-advisor/advisor.log"
+          if (-not $alive) { Get-Content $log -ErrorAction SilentlyContinue; throw "exe died within 20s" }
+          if (-not (Test-Path $log)) { throw "advisor.log was not created" }
+          Stop-Process -Id $p.Id -Force
+          Get-Content $log
 
       - name: Zip the exe bundle
         run: Compress-Archive -Path dist/d2r-advisor -DestinationPath d2r-advisor-${{ steps.ver.outputs.version }}-windows-x64.zip
