@@ -4,15 +4,46 @@ Rules are evaluated top-down; the first matching rule wins.
 Verdicts: keep / check / trash.
 """
 
+from pathlib import Path
+
 import yaml
 
 VERDICTS = ("keep", "check", "trash")
+
+_DEFS_FILE = Path(__file__).resolve().parents[1] / "presets" / "_common.yaml"
+
+
+def _load_defs():
+    try:
+        return yaml.safe_load(_DEFS_FILE.read_text(encoding="utf-8")) or {}
+    except OSError:
+        return {}
+
+
+def expand_refs(rules, defs=None):
+    """Resolve affix_any_ref / affix_all_ref against presets/_common.yaml:
+    {list: skill_trees, min: 1} becomes one {affix: name, min: 1}
+    condition per name. The 21-entry skiller list and the 28-entry
+    +2-skills list used to be copy-pasted across all four rule files."""
+    defs = _load_defs() if defs is None else defs
+    for rule in rules:
+        when = rule.get("when") or {}
+        for key in ("affix_any", "affix_all"):
+            ref = when.pop(key + "_ref", None)
+            if not ref:
+                continue
+            names = defs.get(ref.get("list")) or []
+            extra = {k: v for k, v in ref.items() if k != "list"}
+            when[key] = (when.get(key) or []) + [
+                {"affix": n, **extra} for n in names]
+    return rules
 
 
 def load_rules(path):
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
-    return data.get("rules", []), data.get("default", {"verdict": "trash", "note": ""})
+    rules = expand_refs(data.get("rules", []))
+    return rules, data.get("default", {"verdict": "trash", "note": ""})
 
 
 def _as_list(v):
