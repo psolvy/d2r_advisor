@@ -9,7 +9,9 @@ Open a [GitHub issue](../../issues/new/choose) and pick the matching
 template:
 
 - **Bug report** — attach the `debug/*_full.png` / `*_crop.png` pair for
-  recognition bugs (set `debug: true` in `config.yaml` and press F8/F10
+  recognition bugs; failed scans save a raw frame automatically. For the
+  standalone exe, `config.yaml` and `debug/` live in
+  `%LOCALAPPDATA%\d2r-advisor` (set `debug: true` and press F9/F10
   on the problematic item first), the console output, and your
   game/graphics settings (Large Font Mode, resolution, legacy vs
   resurrected graphics).
@@ -34,12 +36,12 @@ pure Python and testable anywhere.
 ## Tests
 
 ```bash
-python tests/test_regression.py   # 54 offline tests: engine, parser, planner
+python tests/test_regression.py   # 80 offline tests: engine, parser, planner, goals, settings
 python tests/test_vision.py       # icon recognition (skips without icons)
 ```
 
 - Every PR must keep `test_regression.py` green — CI runs it on Python
-  3.12 and 3.13.
+  3.12 and 3.13 (plus a 3.9 syntax-floor compile job).
 - Engine changes (`advisor/gamble_seed.py`, `advisor/gamble_plan.py`)
   must stay **bit-exact** against the DBM site's workers: run the
   harnesses in `tools/dbm_validation/` (`validate_planner.py`,

@@ -8,6 +8,10 @@
 #   text_all  — ALL substrings must appear somewhere in the tooltip,
 #   line_any  — exact whole-line match (runes, gems),
 #   affix_all / affix_any — {affix: "template from repository/affixes.json", min: N, max: N}
+#   affix_any_ref / affix_all_ref — {list: <name from presets/_common.yaml>, min: N}
+#     expands to one {affix: ..., min: N} condition per listed template.
+#   A value OCR read as 0 makes the rule INDETERMINATE: it is skipped and
+#   the item lands on "check", never on default trash.
 #
 # Note: charms in D2 are only Magic (blue) or Unique. "Yellow socketables"
 # are rare jewels — they have their own rule.
