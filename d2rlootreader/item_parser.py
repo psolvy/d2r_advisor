@@ -275,8 +275,11 @@ class ItemParser:
         for scorer in self._scorers:
             matches = process.extract(base_line, bases.keys(), scorer=scorer, score_cutoff=85)
             if matches:
-                longest_match = max(matches, key=lambda m: len(m[0]))
-                return longest_match[0], bases[longest_match[0]]["slot"], bases[longest_match[0]]["tier"], lines[1:]
+                # SCORE first, length only as a tie-break: "Ring" matched
+                # itself 100 and "Ring Mail" 90, and picking the longest
+                # turned every ring into body armour
+                best = max(matches, key=lambda m: (m[1], len(m[0])))[0]
+                return best, bases[best]["slot"], bases[best]["tier"], lines[1:]
 
         return None, None, None, lines
 

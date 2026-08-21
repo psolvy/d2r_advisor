@@ -381,8 +381,12 @@ class App:
                                        default=str) + "\n")
                 print("logged to tuning.jsonl — thanks, this tunes the "
                       "rules/parser")
+                # the click had NO visible effect before — the popup line
+                # now says so (overlay swaps the label to what we return)
+                return "✓ logged for tuning — thanks!"
             except OSError as e:
                 print(f"could not write tuning.jsonl: {e}")
+                return f"could not write tuning.jsonl: {e}"
         return log_wrong
 
     def log_history(self, verdict, item, rule_name):
@@ -600,7 +604,9 @@ class App:
             cursor = get_cursor_pos()
             img, local_cursor, screen_rect = capture_monitor_at(cursor)
             from advisor.tooltip import find_compare_tooltips
-            hov, others = find_compare_tooltips(img, local_cursor)
+            blocks = {}
+            hov, others = find_compare_tooltips(img, local_cursor,
+                                                diag=blocks)
 
             def dump(reason):
                 dbg = STATE_DIR / "debug"
@@ -645,6 +651,19 @@ class App:
                 return
             if self.cfg.get("debug"):
                 dump("ok")
+            # tiny always-on trace: when a tooltip-looking block was seen
+            # but not used, record WHY (box/score/bg) — a 14 MB frame is
+            # not needed to diagnose the next miss
+            if len(blocks.get("candidates") or []) > 1 + len(others):
+                try:
+                    dbg = STATE_DIR / "debug"
+                    dbg.mkdir(exist_ok=True)
+                    from advisor.dbg import stamp as _stamp
+                    with open(dbg / f"{_stamp()}_cmp_blocks.json", "w",
+                              encoding="utf-8") as f:
+                        json.dump(blocks, f, indent=1)
+                except OSError:
+                    pass
             from advisor.compare import diff_items
             # sections render as COLUMNS, so a second equipped item costs
             # width, not height — no need to trim its lines any more

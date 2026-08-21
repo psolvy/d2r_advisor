@@ -369,11 +369,11 @@ from advisor.tooltip import overlap_frac, pick_equipped
 
 # these numbers are the real geometry/brightness measured on the user's
 # 4K failure frames (debug/20260821_02*_cmp_full.png)
-_HOVERED = (1168, 744, 1287, 1416)          # Tal Rasha's, bg 14
-_ADJACENT = (195, 673, 1049, 1287)          # Angelic Mantle, bg 15
-_BIG = (146, 183, 1246, 1215)               # Nokozan frame: hovered, bg 27
+_HOVERED = (1168, 744, 1287, 1416)          # Tal Rasha's, bg 9
+_ADJACENT = (195, 673, 1049, 1287)          # Angelic Mantle, bg 7
+_BIG = (146, 183, 1246, 1215)               # over the stash, bg 13
 _SMALL = (1270, 494, 1113, 436)             # ...its Chaos Torc, 4 lines
-_PANEL = (2571, 183, 1031, 528)             # inventory panel, bg 47
+_PANEL = (2571, 183, 1031, 528)             # inventory panel, bg 42
 
 check("compare: side-by-side tooltips are not duplicates",
       overlap_frac(_HOVERED, _ADJACENT) < 0.3,
@@ -384,16 +384,16 @@ check("compare: a contained box IS a duplicate",
 # the old code demanded ZERO overlap -> "Need BOTH tooltips" on a frame
 # that plainly had both
 check("compare: adjacent equipped tooltip is kept",
-      pick_equipped([(_HOVERED, 35099, 14.3), (_ADJACENT, 22076, 14.9)],
+      pick_equipped([(_HOVERED, 35099, 9.0), (_ADJACENT, 22076, 7.0)],
                     _HOVERED) == [_ADJACENT])
 # a 4-line amulet next to a 20-line runeword: the old 35%-of-hovered
 # score floor deleted it
 check("compare: small equipped tooltip survives a huge hovered one",
-      pick_equipped([(_BIG, 35414, 26.5), (_SMALL, 5572, 11.7)],
+      pick_equipped([(_BIG, 35414, 13.0), (_SMALL, 5572, 9.0)],
                     _BIG) == [_SMALL])
 # ...but panel/chat text (bright background) must NOT become an equipped
 check("compare: bright panel text is not an equipped tooltip",
-      pick_equipped([(_HOVERED, 35414, 14.3), (_PANEL, 7792, 46.7)],
+      pick_equipped([(_HOVERED, 35414, 9.0), (_PANEL, 7792, 42.0)],
                     _HOVERED) == [])
 
 _hdr = diff_items({"affixes": [], "tooltip": ["Defense: 10"]},
@@ -401,6 +401,48 @@ _hdr = diff_items({"affixes": [], "tooltip": ["Defense: 10"]},
                    "name": "Spirit"}, label="#2")[0][0]
 check("compare: header names the item, not the last stat line",
       _hdr == "vs equipped #2: Spirit", _hdr)
+
+# ------------------------------------------------------- popup clipboard
+
+from advisor.overlay import Overlay
+
+_ov = Overlay.__new__(Overlay)          # _clip_text needs no tk root
+_clip = _ov._clip_text(
+    "keep",
+    {"name": "Chance Guards", "base": "Chain Gloves", "quality": "Unique",
+     "affixes": [["+# to Attack Rating", [25]]]},
+    [{"label": "25-40% Better Chance of Getting Magic Items",
+      "roll": 33, "var": True},
+     {"label": "+20-30% Enhanced Defense", "roll": 30, "perfect": True,
+      "var": True}])
+_lines = _clip.splitlines()
+check("clip: header names the item and the verdict",
+      _lines[0] == "[KEEP] Chance Guards" and _lines[1] == "Unique · Chain Gloves",
+      _lines[:2])
+check("clip: one stat per line, rolls annotated",
+      len(_lines) == 4 and _lines[2].endswith("-> 33")
+      and _lines[3].endswith("-> 30 (MAX)"), _lines[2:])
+
+_ov_src = (ROOT / "advisor" / "overlay.py").read_text(encoding="utf-8")
+check("clip: copy is offered for verdicts, not for compare",
+      'copyable = bool(item) and verdict not in ("compare", "scan", "error")'
+      in _ov_src
+      and "if copyable:" in _ov_src)
+check("popup: an in-app action reports back on its own label",
+      "said = u()" in _ov_src and "lbl.unbind" in _ov_src
+      and "_flash_hint" in _ov_src)
+
+# "Ring" scored 100 against itself and 90 against "Ring Mail"; picking the
+# LONGEST match turned every ring into body armour
+_ring = parse_best(iter([["The Stone of Jordan", "Ring",
+                          "Required Level: 29", "+1 to All Skills"]]),
+                   quality_hint="Unique")
+check("base match: a Ring is a Ring, not Ring Mail",
+      _ring.get("base") == "Ring" and _ring.get("slot") == "Ring",
+      f"{_ring.get('base')} / {_ring.get('slot')}")
+_mail = parse_best(iter([["Ring Mail", "Defense: 45"]]), quality_hint="Base")
+check("base match: Ring Mail still matches itself",
+      _mail.get("base") == "Ring Mail", _mail.get("base"))
 
 # ---------------------------------------------------------------- auto-clicker
 

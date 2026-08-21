@@ -46,34 +46,61 @@ class Overlay:
         return max(8, int(size * self.scale))
 
     def _clip_text(self, verdict, item, ranges):
-        """Trade-chat-ready text for the shown item."""
+        """Trade-ready text for the shown item: a header line and one stat
+        per line (a single semicolon-joined blob was unreadable once an
+        item had more than three affixes)."""
         name = item.get("name") or item.get("base") or "?"
-        head = name
         quality, base = item.get("quality") or "", item.get("base") or ""
-        if quality or (base and base != name):
-            bits = [b for b in (quality, base if base != name else "") if b]
-            head += f" ({' '.join(bits)})"
-        stats = []
+        sub = [b for b in (quality, base if base != name else "",
+                           item.get("tier") or "") if b and b != "Normal"]
+        lines = [f"[{verdict.upper()}] {name}"]
+        if sub:
+            lines.append(" · ".join(sub))
         if ranges:
             for p in ranges:
-                s = p["label"]
+                text = p["label"]
                 if "roll" in p:
-                    s += f" = {p['roll']}" + (" (perfect)" if p.get("perfect") else "")
-                stats.append(s)
+                    text += f" -> {p['roll']}"
+                    if p.get("perfect"):
+                        text += " (MAX)"
+                    elif p.get("offrange"):
+                        text += " (?)"
+                lines.append(f"  {text}")
         else:
             for tmpl, params in item.get("affixes") or []:
-                stats.append(_render_affix(tmpl, params))
-        return head + (" | " + "; ".join(stats) if stats else "")
+                lines.append(f"  {_render_affix(tmpl, params)}")
+        return "\n".join(lines)
 
     def _copy_clip(self, event=None):
-        if self._clip:
-            try:
-                self.root.clipboard_clear()
-                self.root.clipboard_append(self._clip)
-                print(f"copied: {self._clip}")
-            except Exception:
-                pass
+        if not self._clip:
+            return "break"
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(self._clip)
+            print("copied:\n" + self._clip)
+            self._flash_hint("✓ copied to clipboard", "#4dff64")
+        except Exception:
+            self._flash_hint("could not reach the clipboard", "#ff9a6a")
         return "break"
+
+    def _flash_hint(self, text, color):
+        """The copy/tuning affordances used to act with NO visible sign —
+        say what happened on the hint line, then restore it."""
+        lbl = getattr(self, "_hint_lbl", None)
+        if lbl is None:
+            return
+        try:
+            was = (lbl.cget("text"), lbl.cget("fg"))
+            lbl.configure(text=text, fg=color)
+            self.root.after(1800, lambda: self._restore_hint(lbl, was))
+        except tk.TclError:
+            pass
+
+    def _restore_hint(self, lbl, was):
+        try:
+            lbl.configure(text=was[0], fg=was[1])
+        except tk.TclError:
+            pass
 
     def _label(self, win, bg, text, size=10, fg="#cccccc", bold=False, italic=False,
                pady=(0, 0), link=None):
@@ -93,10 +120,16 @@ class Overlay:
         if link:
             lbl.configure(cursor="hand2")
 
-            def _open(event, u=link):
+            def _open(event, u=link, lbl=lbl, size=size):
                 try:
                     if callable(u):  # in-app action, not a web link
-                        u()
+                        said = u()
+                        # clicking used to do its work in total silence
+                        if isinstance(said, str) and said:
+                            lbl.configure(text=said, fg="#4dff64",
+                                          cursor="",
+                                          font=("Segoe UI", self._fs(size)))
+                            lbl.unbind("<Button-1>")
                     else:
                         webbrowser.open(u)
                 except Exception:
@@ -173,6 +206,7 @@ class Overlay:
     def show(self, verdict, item=None, rule="", note="", pos=None, seconds=8, ranges=None,
              screen_rect=None, extra=None, tier=None):
         self.hide()
+        self._hint_lbl = None   # belongs to the window we just destroyed
         bg, accent = COLORS.get(verdict, COLORS["error"])
         title = TITLES.get(verdict, verdict.upper())
 
@@ -241,11 +275,15 @@ class Overlay:
             self._label(win, bg, note, size=10, fg="#cccccc", italic=True, pady=(2, 8))
         else:
             tk.Label(win, text="", bg=bg).pack(pady=(0, self._fs(6)))
+        copyable = bool(item) and verdict not in ("compare", "scan", "error")
         if item:
             # the copy affordance was invisible — nothing hinted at it
-            tk.Label(win, text="right-click: copy for trade chat · click: "
-                     "close", font=("Segoe UI", self._fs(8)), fg="#777777",
-                     bg=bg).pack(pady=(0, self._fs(4)))
+            hint = ("right-click: copy for trade chat · click: close"
+                    if copyable else "click: close")
+            self._hint_lbl = tk.Label(
+                win, text=hint, font=("Segoe UI", self._fs(8)),
+                fg="#777777", bg=bg)
+            self._hint_lbl.pack(pady=(0, self._fs(4)))
 
         win.update_idletasks()
         w, h = win.winfo_reqwidth(), win.winfo_reqheight()
@@ -265,8 +303,11 @@ class Overlay:
         win.bind("<Button-1>", lambda e: self.hide())
         win.bind("<Escape>", lambda e: self.hide())
         # Right-click anywhere on the popup: copy trade-ready item text.
-        self._clip = f"[{title}] " + self._clip_text(verdict, item, ranges) if item else ""
-        win.bind("<Button-3>", self._copy_clip)
+        # Compare diffs are not a tradeable item — no clip, no hint.
+        self._clip = (self._clip_text(verdict, item, ranges)
+                      if copyable else "")
+        if copyable:
+            win.bind("<Button-3>", self._copy_clip)
 
         self.win = win
         self._close_job = self.root.after(int(seconds * 1000), self.hide)

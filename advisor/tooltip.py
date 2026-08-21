@@ -10,10 +10,13 @@ import numpy as np
 
 from advisor.colors import text_mask
 
-# Mean brightness of the non-text pixels inside a block. The game draws
-# every tooltip on its own dark translucent box (measured 11-16 on real
-# 4K frames), while inventory/stash panels and chat sit at 40-50.
-TOOLTIP_BG_MAX = 32.0
+# MEDIAN brightness of the non-text pixels inside a block. The game draws
+# every tooltip on its own dark translucent box: measured 6-13 on real 4K
+# frames (13 even for a tooltip lying over the lit stash), while
+# inventory/stash panels and chat measure 23-42. The median is what makes
+# that gap safe — the mean of the same tooltip-over-stash block was 26.5,
+# a hair away from the panels.
+TOOLTIP_BG_MAX = 18.0
 
 
 def _text_bright(img_bgr):
@@ -75,7 +78,7 @@ def _evaluate(bright, gray, boxes, scale, W, cursor):
                 rejected_near_cursor.append((x, y, w, h))
             continue
         non_text = gray[y:y + h, x:x + w][block == 0]
-        bg = float(non_text.mean()) if non_text.size else 255.0
+        bg = float(np.median(non_text)) if non_text.size else 255.0
         score = (float(w * h) ** 0.5
                  / (1.0 + _cursor_dist((x, y, w, h), cursor) / (100.0 * scale))
                  / (1.0 + max(0.0, bg - 25.0) / 10.0))
@@ -186,7 +189,7 @@ def pick_equipped(scored, hovered, max_others=2, dup=0.3, floor_frac=0.08):
     return others
 
 
-def find_compare_tooltips(img_bgr, cursor=None):
+def find_compare_tooltips(img_bgr, cursor=None, diag=None):
     """The game's Shift-compare shows TWO tooltips: the hovered item near
     the cursor and the equipped one elsewhere. Returns
     (hovered_crop, [other_crops]) — up to two others (both rings).
@@ -215,7 +218,7 @@ def find_compare_tooltips(img_bgr, cursor=None):
         if not (0.02 <= density <= 0.55 and row_groups >= 4):
             continue
         non_text = gray[y:y + h, x:x + w][block == 0]
-        bg = float(non_text.mean()) if non_text.size else 255.0
+        bg = float(np.median(non_text)) if non_text.size else 255.0
         score = ((float(w * h) ** 0.5) * row_groups
                  / (1.0 + max(0.0, bg - 25.0) / 20.0))
         scored.append(((x, y, w, h), score, bg))
@@ -227,6 +230,16 @@ def find_compare_tooltips(img_bgr, cursor=None):
     hovered = by_cursor[0][0]
 
     others = pick_equipped(scored, hovered)
+    if diag is not None:
+        # a few hundred bytes that explain any future miss without asking
+        # for a 14 MB frame: which blocks were seen and why they lost
+        diag["cursor"] = list(cursor) if cursor else None
+        diag["bg_max"] = TOOLTIP_BG_MAX
+        diag["candidates"] = [{"box": list(b), "score": round(sc, 1),
+                               "bg": round(bg, 1)} for b, sc, bg in
+                              sorted(scored, key=lambda c: -c[1])[:8]]
+        diag["hovered"] = list(hovered)
+        diag["others"] = [list(b) for b in others]
 
     def crop(box, neighbours=()):
         """Pad the block out to the tooltip's own border — but never past
