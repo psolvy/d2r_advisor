@@ -415,6 +415,24 @@ _single[20:380, 40:1160] = 255
 check("compare: a solid tooltip is not split",
       len(_split(_single, (0, 0, 1200, 400), 2.0)) == 1)
 
+# tooltips are found by the ONE thing always true of them: every line is
+# centred on the same axis. Two touching tooltips (no gap at all) must
+# still come out as two, and panel labels at other centres must not.
+from advisor.tooltip import _tooltip_clusters as _clu
+_f = _np.zeros((600, 1400), _np.uint8)
+for _i in range(6):                      # left tooltip, centred on 300
+    _w = 300 + 40 * (_i % 3)
+    _f[60 + _i * 60: 90 + _i * 60, 300 - _w // 2: 300 + _w // 2] = 255
+for _i in range(5):                      # right one, centred on 900
+    _w = 260 + 50 * (_i % 3)
+    _f[60 + _i * 60: 90 + _i * 60, 900 - _w // 2: 900 + _w // 2] = 255
+_f[500:530, 40:200] = 255                # a stray panel label
+_boxes = sorted(_clu(_f, 1.0), key=lambda b: b[0])
+check("compare: touching tooltips split by their line centres",
+      len(_boxes) == 2, _boxes)
+check("compare: a stray label is not a tooltip",
+      all(b[1] < 500 for b in _boxes), _boxes)
+
 check("compare: bright panel text is not an equipped tooltip",
       pick_equipped([(_HOVERED, 35414, 9.0, 0.94), (_PANEL, 7792, 42.0, 0.53)],
                     _HOVERED) == [])

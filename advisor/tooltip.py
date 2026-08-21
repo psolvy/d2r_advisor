@@ -214,6 +214,50 @@ def pick_equipped(scored, hovered, max_others=2, dup=0.3, floor_frac=0.08):
     return others
 
 
+def _text_lines(bright, scale):
+    """Bounding boxes of text LINES (characters merged horizontally)."""
+    k = cv2.getStructuringElement(
+        cv2.MORPH_RECT, (max(15, int(26 * scale)), max(3, int(4 * scale))))
+    merged = cv2.morphologyEx(bright, cv2.MORPH_CLOSE, k)
+    n, _lbl, stats, _c = cv2.connectedComponentsWithStats(merged, 8)
+    return [tuple(int(v) for v in stats[i][:4]) for i in range(1, n)
+            if stats[i][2] >= 60 * scale
+            and 10 * scale <= stats[i][3] <= 60 * scale]
+
+
+def _tooltip_clusters(bright, scale, min_lines=4):
+    """Tooltip boxes, found by the one thing that is always true of them:
+    EVERY line of a tooltip is centred on the same axis.
+
+    Blocks of text can fuse — a tooltip with the stash panel behind it,
+    or with the tooltip next to it — and no whitespace separates them.
+    Line centres do: the stash's own labels sit at other centres and
+    never gather four lines, while two adjacent tooltips keep their own
+    axes even when their boxes touch."""
+    groups = []
+    for (x, y, w, h) in sorted(_text_lines(bright, scale), key=lambda b: b[1]):
+        cx = x + w / 2.0
+        for g in groups:
+            near_y = (y >= g["y0"] - 5 * h and y <= g["y1"] + 5 * h)
+            if abs(g["cx"] - cx) <= 30 * scale and near_y:
+                g["items"].append((x, y, w, h))
+                g["cx"] = sum(i[0] + i[2] / 2.0
+                              for i in g["items"]) / len(g["items"])
+                g["y0"], g["y1"] = min(g["y0"], y), max(g["y1"], y + h)
+                break
+        else:
+            groups.append({"cx": cx, "y0": y, "y1": y + h,
+                           "items": [(x, y, w, h)]})
+    boxes = []
+    for g in groups:
+        if len(g["items"]) < min_lines:
+            continue
+        x0 = min(i[0] for i in g["items"])
+        x1 = max(i[0] + i[2] for i in g["items"])
+        boxes.append((x0, g["y0"], x1 - x0, g["y1"] - g["y0"]))
+    return boxes
+
+
 def find_compare_tooltips(img_bgr, cursor=None, diag=None):
     """The game's Shift-compare shows TWO tooltips: the hovered item near
     the cursor and the equipped one elsewhere. Returns
