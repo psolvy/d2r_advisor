@@ -666,13 +666,16 @@ class App:
                     # thumbnails of what each crop actually held: the
                     # numbers alone cannot show a fused pair
                     small = [cv2.IMWRITE_JPEG_QUALITY, 60]
-                    # the whole frame at half size (~3 MB, not 14): the
-                    # crops alone cannot show a block that FUSED two
-                    # tooltips before either was cropped. PNG, not JPEG:
-                    # compression artefacts wreck the colour-keyed text
-                    # mask, and a trace nobody can re-run is worthless
-                    cv2.imwrite(str(dbg / f"{st}_cmp_frame.png"),
-                                cv2.resize(img, None, fx=0.5, fy=0.5))
+                    # FULL resolution: half-size resampling thickens the
+                    # glyphs and the detector then behaves differently
+                    # than it did live — the trace has to be the same
+                    # pixels the scan saw. Bounded to the 2 newest.
+                    for old in sorted(dbg.glob("*_cmp_frame.png"))[:-1]:
+                        try:
+                            old.unlink()
+                        except OSError:
+                            pass
+                    cv2.imwrite(str(dbg / f"{st}_cmp_frame.png"), img)
                     for tag, crop in [("hov", hov)] + [
                             (f"eq{i}", o) for i, o in enumerate(others, 1)]:
                         if crop is None or not crop.size:

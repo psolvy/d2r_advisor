@@ -314,6 +314,8 @@ def find_compare_tooltips(img_bgr, cursor=None, diag=None):
                                "dark": round(c[3], 2)}
                               for c in sorted(scored,
                                               key=lambda c: -c[1])[:8]]
+        diag["clusters"] = [list(c) for c in clusters]
+        diag["lines"] = len(_text_lines(bright, scale))
         diag["hovered"] = list(hovered)
         diag["others"] = [list(b) for b in others]
 
