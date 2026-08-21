@@ -666,6 +666,12 @@ class App:
                     # thumbnails of what each crop actually held: the
                     # numbers alone cannot show a fused pair
                     small = [cv2.IMWRITE_JPEG_QUALITY, 60]
+                    # the whole frame at half size (~1.5 MB, not 14): the
+                    # crops alone cannot show a block that FUSED two
+                    # tooltips before either was cropped
+                    cv2.imwrite(str(dbg / f"{st}_cmp_frame.jpg"),
+                                cv2.resize(img, None, fx=0.5, fy=0.5),
+                                [cv2.IMWRITE_JPEG_QUALITY, 75])
                     for tag, crop in [("hov", hov)] + [
                             (f"eq{i}", o) for i, o in enumerate(others, 1)]:
                         if crop is None or not crop.size:
