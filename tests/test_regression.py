@@ -365,6 +365,7 @@ check("finder: only a new search wipes the seed field",
 # ------------------------------------------------------- compare detection
 
 from advisor.compare import diff_items
+import cv2 as _cv2
 from advisor.tooltip import overlap_frac, pick_equipped
 
 # these numbers are the real geometry/brightness measured on the user's
@@ -432,6 +433,23 @@ check("compare: touching tooltips split by their line centres",
       len(_boxes) == 2, _boxes)
 check("compare: a stray label is not a tooltip",
       all(b[1] < 500 for b in _boxes), _boxes)
+
+# the diag branch shipped a NameError to users because every test called
+# the detector WITHOUT diag: exercise the traced path on a real frame-ish
+# image so the wiring itself is covered
+from advisor.tooltip import find_compare_tooltips as _fct
+_scene = _np.zeros((1080, 1920, 3), _np.uint8)
+_scene[:] = 12
+for _cx in (400, 1100):
+    for _i in range(6):
+        _y = 200 + _i * 40
+        _cv2.putText(_scene, "Faster Cast Rate 20%", (_cx - 180, _y),
+                     _cv2.FONT_HERSHEY_SIMPLEX, 0.6, (210, 210, 240), 2)
+_trace = {}
+_fct(_scene, (400, 300), diag=_trace)
+check("compare: the traced path runs and records its decision",
+      "clusters" in _trace and "candidates" in _trace and "lines" in _trace,
+      sorted(_trace))
 
 check("compare: bright panel text is not an equipped tooltip",
       pick_equipped([(_HOVERED, 35414, 9.0, 0.94), (_PANEL, 7792, 42.0, 0.53)],

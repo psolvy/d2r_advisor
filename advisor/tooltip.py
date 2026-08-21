@@ -234,8 +234,9 @@ def _tooltip_clusters(bright, scale, min_lines=4):
     Line centres do: the stash's own labels sit at other centres and
     never gather four lines, while two adjacent tooltips keep their own
     axes even when their boxes touch."""
+    lines = _text_lines(bright, scale)
     groups = []
-    for (x, y, w, h) in sorted(_text_lines(bright, scale), key=lambda b: b[1]):
+    for (x, y, w, h) in sorted(lines, key=lambda b: b[1]):
         cx = x + w / 2.0
         for g in groups:
             near_y = (y >= g["y0"] - 5 * h and y <= g["y1"] + 5 * h)
@@ -254,7 +255,19 @@ def _tooltip_clusters(bright, scale, min_lines=4):
             continue
         x0 = min(i[0] for i in g["items"])
         x1 = max(i[0] + i[2] for i in g["items"])
-        boxes.append((x0, g["y0"], x1 - x0, g["y1"] - g["y0"]))
+        y0, y1 = g["y0"], g["y1"]
+        # absorb short lines that sit INSIDE this width just above or
+        # below it — the item's NAME is short, so its centre can miss the
+        # tolerance, and losing it turns "Cathan's Seal" into "Ring"
+        pitch = max(30 * scale, (y1 - y0) / max(1, len(g["items"])))
+        for (lx, ly, lw, lh) in lines:
+            if lx < x0 - 10 * scale or lx + lw > x1 + 10 * scale:
+                continue
+            if y0 - 3 * pitch <= ly <= y0:
+                y0 = min(y0, ly)
+            elif y1 <= ly + lh <= y1 + 3 * pitch:
+                y1 = max(y1, ly + lh)
+        boxes.append((x0, y0, x1 - x0, y1 - y0))
     return boxes
 
 
@@ -271,11 +284,19 @@ def find_compare_tooltips(img_bgr, cursor=None, diag=None):
     bright = _text_bright(img_bgr)
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
     raw = _detect_blocks(bright, scale, 64)
-    boxes = []
+    # centred-line clusters are the trustworthy candidates; a text block
+    # that CONTAINS one is the stash/inventory panel the tooltip sits on,
+    # never a tooltip itself — letting it compete is how a whole panel
+    # won as "hovered" and swallowed an equipped ring.
+    clusters = _tooltip_clusters(bright, scale)
+    boxes = list(clusters)
     for b in raw:
         # split EVERY block: the old "only if wider than 45% of the
         # screen" gate let two fused tooltips through as one item
-        boxes.extend(_split_fused(bright, b, scale))
+        for part in _split_fused(bright, b, scale):
+            if any(overlap_frac(part, c) > 0.3 for c in clusters):
+                continue
+            boxes.append(part)
 
     scored = []
     for x, y, w, h in boxes:
