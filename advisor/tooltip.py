@@ -10,13 +10,14 @@ import numpy as np
 
 from advisor.colors import text_mask
 
-# MEDIAN brightness of the non-text pixels inside a block. The game draws
-# every tooltip on its own dark translucent box: measured 6-13 on real 4K
-# frames (13 even for a tooltip lying over the lit stash), while
-# inventory/stash panels and chat measure 23-42. The median is what makes
-# that gap safe — the mean of the same tooltip-over-stash block was 26.5,
-# a hair away from the panels.
-TOOLTIP_BG_MAX = 18.0
+# What a tooltip's own dark translucent box looks like from behind the
+# text, measured on every recorded 4K frame:
+#   real tooltips  median 4-20,  dark(<45) fraction 0.72-0.98
+#   panels / chat  median 27-47, dark fraction        0.37-0.65
+# Both gates are applied: the median alone rejected a legitimate tooltip
+# lying over the lit inventory (median 19) at the old cut of 18.
+TOOLTIP_BG_MAX = 22.0
+TOOLTIP_DARK_MIN = 0.70
 
 
 def _text_bright(img_bgr):
@@ -128,31 +129,48 @@ def find_tooltip(img_bgr, cursor=None):
 
 
 def _split_fused(bright, box, scale, gap=30.0):
-    """Two side-by-side tooltips can merge into one block — split it at
-    wide vertical whitespace gaps.
+    """Two side-by-side tooltips can merge into one block — split them at
+    the VALLEY in the text-mass profile.
 
-    gap 30*scale, not 40: measured on a 4K ring compare, the gap between
-    the two equipped tooltips was ~73 px while 40*scale demanded 80, so
-    they fused and the pair was read as one garbled item. No genuine
-    single tooltip splits at 30 on any recorded frame."""
+    Adjacent game tooltips touch: between them there is no empty column
+    (the stash/inventory behind keeps painting text), just a deep dip —
+    measured 9-15 px of text per column against 30-100 inside the
+    tooltips. Splitting on strictly empty columns therefore read a ring
+    pair as one garbled item."""
     x, y, w, h = box
-    col = bright[y:y + h, x:x + w].sum(axis=0)
-    empty = col == 0
-    gaps, start = [], None
-    for i, e in enumerate(empty):
-        if e and start is None:
+    cols = (bright[y:y + h, x:x + w] > 0).sum(axis=0).astype(float)
+    win = max(5, int(20 * scale))
+    smooth = np.convolve(cols, np.ones(win) / win, mode="same")
+    mass = float(np.median(smooth[smooth > 0])) if (smooth > 0).any() else 0.0
+    if mass <= 0:
+        return [box]
+    floor = max(2.0, 0.45 * mass)
+    min_run = int(gap * scale)
+    min_part = int(90 * scale)
+    cuts, start = [], None
+    for i, v in enumerate(smooth):
+        if v <= floor and start is None:
             start = i
-        elif not e and start is not None:
-            if i - start >= gap * scale:
-                gaps.append((start, i))
+        elif v > floor and start is not None:
+            if i - start >= min_run:
+                cuts.append((start + i) // 2)
             start = None
+    if start is not None and len(smooth) - start >= min_run:
+        cuts.append((start + len(smooth)) // 2)
     parts, prev = [], 0
-    for g0, g1 in gaps:
-        if g0 - prev > 90 * scale:
-            parts.append((x + prev, y, g0 - prev, h))
-        prev = g1
-    if w - prev > 90 * scale:
-        parts.append((x + prev, y, w - prev, h))
+    for c in cuts + [w]:
+        if c - prev >= min_part:
+            # trim each part to ITS OWN vertical text extent: a short
+            # tooltip inheriting the tall block's height dragged half the
+            # stash into its background and failed the darkness gate
+            sub = bright[y:y + h, x + prev:x + c] > 0
+            rows = np.where(sub.any(axis=1))[0]
+            if rows.size:
+                top, bot = int(rows[0]), int(rows[-1]) + 1
+                parts.append((x + prev, y + top, c - prev, bot - top))
+            else:
+                parts.append((x + prev, y, c - prev, h))
+        prev = c
     return parts if len(parts) > 1 else [box]
 
 
@@ -177,15 +195,17 @@ def pick_equipped(scored, hovered, max_others=2, dup=0.3, floor_frac=0.08):
     translucent box, so panel/chat text (bg ~40-50) is rejected by
     BRIGHTNESS, not by a score ratio — an amulet's 4-line tooltip
     legitimately scores a fraction of a runeword's 20-line one."""
-    hovered_score = next((sc for b, sc, _bg in scored if b == hovered), 0.0)
+    hovered_score = next((c[1] for c in scored if c[0] == hovered), 0.0)
     floor = floor_frac * hovered_score
     others = []
-    for box, sc, bg in sorted((s for s in scored
-                               if overlap_frac(s[0], hovered) < dup),
-                              key=lambda b: -b[1]):
+    for cand in sorted((c for c in scored
+                        if overlap_frac(c[0], hovered) < dup),
+                       key=lambda c: -c[1]):
+        box, sc, bg = cand[0], cand[1], cand[2]
+        dark = cand[3] if len(cand) > 3 else 1.0
         if sc < floor:
             break
-        if bg > TOOLTIP_BG_MAX:
+        if bg > TOOLTIP_BG_MAX or dark < TOOLTIP_DARK_MIN:
             continue
         if all(overlap_frac(box, o) < dup for o in others):
             others.append(box)
@@ -224,10 +244,14 @@ def find_compare_tooltips(img_bgr, cursor=None, diag=None):
         if not (0.02 <= density <= 0.55 and row_groups >= 4):
             continue
         non_text = gray[y:y + h, x:x + w][block == 0]
-        bg = float(np.median(non_text)) if non_text.size else 255.0
+        if non_text.size:
+            bg = float(np.median(non_text))
+            dark = float((non_text < 45).mean())
+        else:
+            bg, dark = 255.0, 0.0
         score = ((float(w * h) ** 0.5) * row_groups
                  / (1.0 + max(0.0, bg - 25.0) / 20.0))
-        scored.append(((x, y, w, h), score, bg))
+        scored.append(((x, y, w, h), score, bg, dark))
     if not scored:
         return None, None
     # hovered: best candidate weighted toward the cursor
@@ -241,9 +265,11 @@ def find_compare_tooltips(img_bgr, cursor=None, diag=None):
         # for a 14 MB frame: which blocks were seen and why they lost
         diag["cursor"] = list(cursor) if cursor else None
         diag["bg_max"] = TOOLTIP_BG_MAX
-        diag["candidates"] = [{"box": list(b), "score": round(sc, 1),
-                               "bg": round(bg, 1)} for b, sc, bg in
-                              sorted(scored, key=lambda c: -c[1])[:8]]
+        diag["candidates"] = [{"box": list(c[0]), "score": round(c[1], 1),
+                               "bg": round(c[2], 1),
+                               "dark": round(c[3], 2)}
+                              for c in sorted(scored,
+                                              key=lambda c: -c[1])[:8]]
         diag["hovered"] = list(hovered)
         diag["others"] = [list(b) for b in others]
 

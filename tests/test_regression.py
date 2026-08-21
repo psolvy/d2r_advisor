@@ -402,13 +402,32 @@ _fused[20:380, 633:1160] = 255    # right one, 73 px away
 _parts = _split(_fused, (0, 0, 1200, 400), 2.0)
 check("compare: a 73px gap splits fused tooltips at 4K",
       len(_parts) == 2, _parts)
+# real adjacent tooltips leave no EMPTY column — only a valley (measured
+# 9-15 px of text per column against 30-100 inside them)
+_valley = _np.zeros((400, 1200), _np.uint8)
+_valley[20:380, 40:560] = 255
+_valley[20:380, 633:1160] = 255
+_valley[180:220, 560:633] = 255   # faint text bridging the gap
+check("compare: a valley (not a gap) still splits the pair",
+      len(_split(_valley, (0, 0, 1200, 400), 2.0)) == 2)
 _single = _np.zeros((400, 1200), _np.uint8)
 _single[20:380, 40:1160] = 255
 check("compare: a solid tooltip is not split",
       len(_split(_single, (0, 0, 1200, 400), 2.0)) == 1)
 
 check("compare: bright panel text is not an equipped tooltip",
-      pick_equipped([(_HOVERED, 35414, 9.0), (_PANEL, 7792, 42.0)],
+      pick_equipped([(_HOVERED, 35414, 9.0, 0.94), (_PANEL, 7792, 42.0, 0.53)],
+                    _HOVERED) == [])
+# a tooltip lying over the lit inventory measures median 19 / dark 0.78:
+# the 18 cut dropped it and the ring compare lost an equipped ring
+check("compare: a tooltip over a lit panel still counts",
+      pick_equipped([(_HOVERED, 30420, 8.0, 0.91),
+                     ((2097, 183, 1505, 976), 18840, 19.0, 0.78)],
+                    _HOVERED) == [(2097, 183, 1505, 976)])
+# ...and a dark-ish but non-tooltip block (median 20, dark 0.59) is not
+check("compare: darkness fraction rejects a non-tooltip block",
+      pick_equipped([(_HOVERED, 30420, 8.0, 0.91),
+                     ((361, 183, 1697, 957), 18864, 20.0, 0.59)],
                     _HOVERED) == [])
 
 _hdr = diff_items({"affixes": [], "tooltip": ["Defense: 10"]},
