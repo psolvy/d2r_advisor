@@ -114,6 +114,10 @@ def get_item_ranges(item):
                 p["roll"] = val
                 p["perfect"] = val >= p["max"]
                 p["offrange"] = not (p["min"] <= val <= p["max"])
+    for p in props:
+        # generated labels glue a negative value into a template that
+        # already carries the sign: "Requirements --25%"
+        p["label"] = re.sub(r"([+-])\s*-", r"-", p.get("label") or "")
     return props
 
 

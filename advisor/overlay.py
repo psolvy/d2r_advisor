@@ -46,30 +46,42 @@ class Overlay:
         return max(8, int(size * self.scale))
 
     def _clip_text(self, verdict, item, ranges):
-        """Trade-ready text for the shown item: a header line and one stat
-        per line (a single semicolon-joined blob was unreadable once an
-        item had more than three affixes)."""
+        """A ready-to-post SALE message.
+
+        Nobody pastes an advisor verdict into a trade channel, and nobody
+        wants the roll RANGES there either — a buyer wants the item, its
+        rolls, and what is perfect. So: WTS header, the actual values,
+        stars on maxed stats, and an empty B/O line to fill in."""
+        import re as _re
         name = item.get("name") or item.get("base") or "?"
-        quality, base = item.get("quality") or "", item.get("base") or ""
-        sub = [b for b in (quality, base if base != name else "",
-                           item.get("tier") or "") if b and b != "Normal"]
-        lines = [f"[{verdict.upper()}] {name}"]
-        if sub:
-            lines.append(" · ".join(sub))
+        base, quality = item.get("base") or "", item.get("quality") or ""
+        tier = item.get("tier") or ""
+        bits = [b for b in (base if base and base != name else "",
+                            tier if tier and tier != "Normal" else "",
+                            quality if quality in ("Rare", "Crafted",
+                                                   "Magic") else "") if b]
+        head = f"WTS {name}" + (f" ({', '.join(bits)})" if bits else "")
+        stars = 0
+        lines = []
         if ranges:
             for p in ranges:
                 text = p["label"]
-                if "roll" in p:
-                    text += f" -> {p['roll']}"
+                if p.get("var") and "roll" in p:
+                    # show what it ROLLED, not what it could roll
+                    text = _re.sub(r"\d+\s*-\s*\d+", str(p["roll"]),
+                                   text, count=1)
                     if p.get("perfect"):
-                        text += " (MAX)"
+                        text += "  ★ PERFECT"
+                        stars += 1
                     elif p.get("offrange"):
-                        text += " (?)"
-                lines.append(f"  {text}")
+                        text += "  (?)"
+                lines.append(f"- {text}")
         else:
             for tmpl, params in item.get("affixes") or []:
-                lines.append(f"  {_render_affix(tmpl, params)}")
-        return "\n".join(lines)
+                lines.append(f"- {_render_affix(tmpl, params)}")
+        if stars:
+            head += f"  ★{stars}"
+        return "\n".join([head] + lines + ["B/O: "])
 
     def _copy_clip(self, event=None):
         if not self._clip:

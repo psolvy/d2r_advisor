@@ -486,12 +486,25 @@ _clip = _ov._clip_text(
      {"label": "+20-30% Enhanced Defense", "roll": 30, "perfect": True,
       "var": True}])
 _lines = _clip.splitlines()
-check("clip: header names the item and the verdict",
-      _lines[0] == "[KEEP] Chance Guards" and _lines[1] == "Unique · Chain Gloves",
-      _lines[:2])
-check("clip: one stat per line, rolls annotated",
-      len(_lines) == 4 and _lines[2].endswith("-> 33")
-      and _lines[3].endswith("-> 30 (MAX)"), _lines[2:])
+# the clipboard is a SALE post, not an advisor verdict: no [KEEP] tag,
+# no roll ranges - the buyer wants the rolls and what is maxed
+check("clip: header is a WTS line naming the item",
+      _lines[0].startswith("WTS Chance Guards (Chain Gloves)")
+      and "[KEEP]" not in _clip, _lines[0])
+check("clip: rolls replace their ranges",
+      "- 33% Better Chance of Getting Magic Items" in _lines
+      and not any("25-40" in ln for ln in _lines), _lines)
+check("clip: a maxed roll is starred and counted",
+      any(ln.endswith("★ PERFECT") for ln in _lines)
+      and _lines[0].endswith("★1"), _lines)
+check("clip: ends with a B/O line to fill in", _lines[-1] == "B/O: ")
+
+# generated range labels glued a negative into a signed template
+_req = get_item_ranges({"quality": "Unique", "name": "The Reaper's Toll",
+                        "base": "Thresher", "affixes": []})
+check("ranges: no double sign in labels",
+      all("--" not in p["label"] for p in _req or []),
+      [p["label"] for p in _req or [] if "--" in p["label"]])
 
 _ov_src = (ROOT / "advisor" / "overlay.py").read_text(encoding="utf-8")
 check("clip: copy is offered for verdicts, not for compare",
