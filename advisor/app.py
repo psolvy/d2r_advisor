@@ -659,9 +659,22 @@ class App:
                     dbg = STATE_DIR / "debug"
                     dbg.mkdir(exist_ok=True)
                     from advisor.dbg import stamp as _stamp
-                    with open(dbg / f"{_stamp()}_cmp_blocks.json", "w",
+                    st = _stamp()
+                    with open(dbg / f"{st}_cmp_blocks.json", "w",
                               encoding="utf-8") as f:
                         json.dump(blocks, f, indent=1)
+                    # thumbnails of what each crop actually held: the
+                    # numbers alone cannot show a fused pair
+                    small = [cv2.IMWRITE_JPEG_QUALITY, 60]
+                    for tag, crop in [("hov", hov)] + [
+                            (f"eq{i}", o) for i, o in enumerate(others, 1)]:
+                        if crop is None or not crop.size:
+                            continue
+                        k = 700.0 / max(crop.shape[1], 1)
+                        thumb = (cv2.resize(crop, None, fx=k, fy=k)
+                                 if k < 1 else crop)
+                        cv2.imwrite(str(dbg / f"{st}_cmp_{tag}.jpg"),
+                                    thumb, small)
                 except OSError:
                     pass
             from advisor.compare import diff_items

@@ -392,6 +392,21 @@ check("compare: small equipped tooltip survives a huge hovered one",
       pick_equipped([(_BIG, 35414, 13.0), (_SMALL, 5572, 9.0)],
                     _BIG) == [_SMALL])
 # ...but panel/chat text (bright background) must NOT become an equipped
+# two side-by-side tooltips fused into ONE block on a 4K ring compare:
+# their gap was ~73 px while the split demanded 40*scale = 80
+import numpy as _np
+from advisor.tooltip import _split_fused as _split
+_fused = _np.zeros((400, 1200), _np.uint8)
+_fused[20:380, 40:560] = 255      # left tooltip text mass
+_fused[20:380, 633:1160] = 255    # right one, 73 px away
+_parts = _split(_fused, (0, 0, 1200, 400), 2.0)
+check("compare: a 73px gap splits fused tooltips at 4K",
+      len(_parts) == 2, _parts)
+_single = _np.zeros((400, 1200), _np.uint8)
+_single[20:380, 40:1160] = 255
+check("compare: a solid tooltip is not split",
+      len(_split(_single, (0, 0, 1200, 400), 2.0)) == 1)
+
 check("compare: bright panel text is not an equipped tooltip",
       pick_equipped([(_HOVERED, 35414, 9.0), (_PANEL, 7792, 42.0)],
                     _HOVERED) == [])

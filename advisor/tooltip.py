@@ -127,9 +127,14 @@ def find_tooltip(img_bgr, cursor=None):
     return img_bgr[y0:y1, x0:x1], (x0, y0, x1 - x0, y1 - y0)
 
 
-def _split_fused(bright, box, scale):
-    """Two side-by-side tooltips can merge into one wide block — split it
-    at wide vertical whitespace gaps."""
+def _split_fused(bright, box, scale, gap=30.0):
+    """Two side-by-side tooltips can merge into one block — split it at
+    wide vertical whitespace gaps.
+
+    gap 30*scale, not 40: measured on a 4K ring compare, the gap between
+    the two equipped tooltips was ~73 px while 40*scale demanded 80, so
+    they fused and the pair was read as one garbled item. No genuine
+    single tooltip splits at 30 on any recorded frame."""
     x, y, w, h = box
     col = bright[y:y + h, x:x + w].sum(axis=0)
     empty = col == 0
@@ -138,7 +143,7 @@ def _split_fused(bright, box, scale):
         if e and start is None:
             start = i
         elif not e and start is not None:
-            if i - start >= 40 * scale:
+            if i - start >= gap * scale:
                 gaps.append((start, i))
             start = None
     parts, prev = [], 0
@@ -204,8 +209,9 @@ def find_compare_tooltips(img_bgr, cursor=None, diag=None):
     raw = _detect_blocks(bright, scale, 64)
     boxes = []
     for b in raw:
-        boxes.extend(_split_fused(bright, b, scale)
-                     if b[2] > W * 0.45 else [b])
+        # split EVERY block: the old "only if wider than 45% of the
+        # screen" gate let two fused tooltips through as one item
+        boxes.extend(_split_fused(bright, b, scale))
 
     scored = []
     for x, y, w, h in boxes:
